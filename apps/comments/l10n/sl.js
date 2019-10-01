@@ -1,0 +1,25 @@
+OC.L10N.register(
+    "comments",
+    {
+    "Comments" : "Opombe",
+    "You commented" : "Vaša opomba",
+    "%1$s commented" : "%1$s opomb",
+    "%1$s commented on %2$s" : "%1$s opomb ob %2$s",
+    "<strong>Comments</strong> for files" : "<strong>Opombe</strong> za datoteke",
+    "Edit comment" : "Uredi opombo",
+    "Delete comment" : "Izbriši opombo",
+    "New comment …" : "Nova opomba ...",
+    "Post" : "Objavi",
+    "Cancel" : "Prekliči",
+    "[Deleted user]" : "[Izbrisan uporabnik]",
+    "No comments yet, start the conversation!" : "Ni še odzivov, bodite prvi!",
+    "More comments …" : "Več opomb ...",
+    "Save" : "Shrani",
+    "Allowed characters {count} of {max}" : "Dovoljeni znaki: {count} od {max}",
+    "Error occurred while updating comment with id {id}" : "Prišlo je do napake med posodabljanjem opombe z oznako {id}",
+    "Error occurred while posting comment" : "Prišlo je do napake med objavo opombe",
+    "_%n unread comment_::_%n unread comments_" : ["%n  neprebrana opomba","%n  neprebrani opombi","%n  neprebrane opombe","%n neprebranih opomb"],
+    "_1 new comment_::_{unread} new comments_" : ["{unread} nova opomba","{unread} novi opombi","{unread} nove opombe","{unread} novih opomb"],
+    "Comment" : "Opomba"
+},
+"nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);");

@@ -1,0 +1,28 @@
+OC.L10N.register(
+    "files_trashbin",
+    {
+    "Deleted files" : "ゴミ箱",
+    "restored" : "復元済",
+    "This application enables users to restore files that were deleted from the system." : "このアプリケーションを使用すると、ユーザーはシステムから削除されたファイルを復元できます。",
+    "Restore" : "復元",
+    "Delete permanently" : "完全に削除する",
+    "Error while restoring file from trashbin" : "ごみ箱からファイルを復元中にエラーが発生しました",
+    "Error while removing file from trashbin" : "ごみ箱からファイルを削除中にエラーが発生しました",
+    "Error while restoring files from trashbin" : "ごみ箱からファイルを復元する際のエラー",
+    "Error while emptying trashbin" : "ごみ箱を空にする際にエラーが発生",
+    "Error while removing files from trashbin" : "ごみ箱からファイルを削除中にエラーが発生しました",
+    "This operation is forbidden" : "この操作は禁止されています",
+    "This directory is unavailable, please check the logs or contact the administrator" : "このディレクトリは利用できません。ログを確認するか管理者に問い合わせてください。",
+    "No deleted files" : "削除されたファイルはありません",
+    "You will be able to recover deleted files from here" : "ここから削除されたファイルを元に戻すことができます。",
+    "No entries found in this folder" : "このフォルダーにはエントリーがありません",
+    "Select all" : "すべて選択",
+    "Name" : "名前",
+    "Actions" : "アクション",
+    "Deleted" : "削除日時",
+    "Delete" : "削除",
+    "Couldn't delete %s permanently" : "%s を完全に削除できませんでした",
+    "Couldn't restore %s" : "%s を復元できませんでした",
+    "Error" : "エラー"
+},
+"nplurals=1; plural=0;");
