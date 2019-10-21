@@ -141,7 +141,7 @@ abstract class Avatar implements IAvatar {
 			return false;
 		}
 		try {
-			$font = __DIR__ . '/../../core/fonts/Nunito-Regular.ttf';
+			$font = '/usr/share/fonts/SourceHan/SourceHanSans-Regular.ttc';
 			$svg = $this->getAvatarVector($size);
 			$avatar = new Imagick();
 			$avatar->setFont($font);
@@ -176,7 +176,7 @@ abstract class Avatar implements IAvatar {
 		$white = imagecolorallocate($im, 255, 255, 255);
 		imagefilledrectangle($im, 0, 0, $size, $size, $background);
 
-		$font = __DIR__ . '/../../../core/fonts/Nunito-Regular.ttf';
+		$font = '/usr/share/fonts/SourceHan/SourceHanSans-Regular.ttc';
 
 		$fontSize = $size * 0.4;
 		list($x, $y) = $this->imageTTFCenter(
