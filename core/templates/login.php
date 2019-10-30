@@ -54,6 +54,16 @@ use OC\Core\Controller\LoginController;
 			<label for="password" class="infield"><?php p($l->t('Password')); ?></label>
 		</p>
 
+		<p class="captcha-wrapper">
+			<input type="text" name="captcha" id="captcha" value=""
+				placeholder="驗證碼" aria-label="captcha"
+				autocomplete="off" autocapitalize="none" autocorrect="off" required>
+			<label for="password" class="infield">captcha</label>
+			<a href="./" target="_self">
+				<img id="imgcode" src="<?php p($_['showCaptcha']); ?> "/>
+			</a>
+		</p>
+
 		<div id="submit-wrapper">
 			<input type="submit" id="submit" class="login primary" title="" value="<?php p($l->t('Log in')); ?>" disabled="disabled" />
 			<div class="submit-icon icon-confirm-white"></div>
@@ -66,6 +76,10 @@ use OC\Core\Controller\LoginController;
 		<?php } else if (!empty($_[LoginController::LOGIN_MSG_USERDISABLED])) { ?>
 			<p class="warning userDisabledMsg">
 				<?php p(\OC::$server->getL10N('lib')->t('User disabled')); ?>
+			</p>
+		<?php } else if (!empty($_[LoginController::LOGIN_MSG_INVALIDCAPTCHA])) { ?>
+			<p class="warning wrongCaptchaMsg">
+				驗證碼錯誤
 			</p>
 		<?php } ?>
 

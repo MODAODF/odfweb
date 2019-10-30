@@ -61,6 +61,7 @@ class LoginController extends Controller {
 
 	const LOGIN_MSG_INVALIDPASSWORD = 'invalidpassword';
 	const LOGIN_MSG_USERDISABLED = 'userdisabled';
+	const LOGIN_MSG_INVALIDCAPTCHA = 'invalidcaptcha';
 
 	/** @var IUserManager */
 	private $userManager;
@@ -209,6 +210,8 @@ class LoginController extends Controller {
 		Util::addHeader('meta', ['property' => 'og:type', 'content' => 'website']);
 		Util::addHeader('meta', ['property' => 'og:image', 'content' => $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('core', 'favicon-touch.png'))]);
 
+		$parameters['showCaptcha'] = $this->createCaptcha();
+
 		return new TemplateResponse(
 			$this->appName, 'login', $parameters, 'guest'
 		);
@@ -280,7 +283,7 @@ class LoginController extends Controller {
 	 * @param string $timezone_offset
 	 * @return RedirectResponse
 	 */
-	public function tryLogin($user, $password, $redirect_url, $remember_login = true, $timezone = '', $timezone_offset = '') {
+	public function tryLogin($user, $password, $captcha, $redirect_url, $remember_login = true, $timezone = '', $timezone_offset = '') {
 		if(!is_string($user)) {
 			throw new \InvalidArgumentException('Username must be string');
 		}
@@ -330,6 +333,16 @@ class LoginController extends Controller {
 			return $this->createLoginFailedResponse($user, $originalUser,
 				$redirect_url, self::LOGIN_MSG_INVALIDPASSWORD);
 		}
+
+		$randomCaptcha = $this->session->get('randomCaptcha');
+		if (!isset($randomCaptcha) || empty($randomCaptcha) || 
+			!isset($captcha)       || empty($captcha)       ||
+			strtoupper($randomCaptcha) !== strtoupper($captcha)
+		) {
+			return $this->createLoginFailedResponse($user, $originalUser,
+				$redirect_url, self::LOGIN_MSG_INVALIDCAPTCHA);
+		}
+		$this->session->remove('randomCaptcha');
 
 		// TODO: remove password checks from above and let the user session handle failures
 		// requires https://github.com/owncloud/core/pull/24616
@@ -434,5 +447,44 @@ class LoginController extends Controller {
 		$confirmTimestamp = time();
 		$this->session->set('last-password-confirm', $confirmTimestamp);
 		return new DataResponse(['lastLogin' => $confirmTimestamp], Http::STATUS_OK);
+	}
+
+	/**
+	 * create random captcha
+	 * @param int $letterNums
+	 * @param int $width
+	 * @param int $height
+	 * @param string $randomCaptcha
+	 * @return string
+	 */
+	public function createCaptcha($letterNums = 5, $width = 110, $height = 40) {
+		$str = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMPQRSTUVWXYZ";
+		$randomCaptcha = '';
+        for ($i = 0; $i < $letterNums; $i++) {
+            $randomCaptcha .= $str[mt_rand(0, strlen($str)-1)];
+		}
+		$this->session->set('randomCaptcha', $randomCaptcha);
+
+		$image = imagecreate($width, $height);
+		$bg_color = imagecolorallocate($image, 255, 255, 255);
+		$text_color = imagecolorallocate($image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+		$ttf_path =  dirname(__DIR__, 1).'/fonts/Nunito-Bold.ttf';
+		imagefill($image, 0, 0, $bg_color);
+
+		$x = mt_rand(0, intval($height/$letterNums));
+		for ($i = 0; $i < $letterNums; $i++) {
+			$size = mt_rand(15, 25);
+			$angle = mt_rand(-15, 15);
+			$y = mt_rand(25, $height-5);
+			imagettftext($image, $size, $angle, $x, $y, $text_color, $ttf_path, substr($randomCaptcha, $i, 1));
+			$x += 20;
+		}
+
+        ob_start();
+        imagepng($image);
+        imagedestroy($image);
+		$img = ob_get_clean();
+		$data = 'data:image/png;base64,'.base64_encode($img);
+		return $data;
 	}
 }
