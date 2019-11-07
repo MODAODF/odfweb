@@ -210,7 +210,11 @@ class LoginController extends Controller {
 		Util::addHeader('meta', ['property' => 'og:type', 'content' => 'website']);
 		Util::addHeader('meta', ['property' => 'og:image', 'content' => $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('core', 'favicon-touch.png'))]);
 
-		$parameters['showCaptcha'] = $this->createCaptcha();
+		$captchaImg = $this->createCaptcha();
+		while ($captchaImg['width'] > 100 || $captchaImg['width'] < 50) {
+			$captchaImg = $this->createCaptcha();
+		}
+		$parameters['showCaptcha'] = $captchaImg['data'];
 
 		return new TemplateResponse(
 			$this->appName, 'login', $parameters, 'guest'
@@ -454,8 +458,7 @@ class LoginController extends Controller {
 	 * @param int $letterNums
 	 * @param int $width
 	 * @param int $height
-	 * @param string $randomCaptcha
-	 * @return string
+	 * @return array
 	 */
 	public function createCaptcha($letterNums = 5, $width = 110, $height = 40) {
 		$str = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMPQRSTUVWXYZ";
@@ -471,13 +474,13 @@ class LoginController extends Controller {
 		$ttf_path =  dirname(__DIR__, 1).'/fonts/Nunito-Bold.ttf';
 		imagefill($image, 0, 0, $bg_color);
 
-		$x = mt_rand(0, intval($height/$letterNums));
+		$x = mt_rand(1, 5);
 		for ($i = 0; $i < $letterNums; $i++) {
 			$size = mt_rand(15, 25);
-			$angle = mt_rand(-15, 15);
-			$y = mt_rand(25, $height-5);
-			imagettftext($image, $size, $angle, $x, $y, $text_color, $ttf_path, substr($randomCaptcha, $i, 1));
-			$x += 20;
+			$angle = mt_rand(-10, 10);
+			$y = mt_rand($size, $height-8);
+			$boxCoordinate = imagettftext($image, $size, $angle, $x, $y, $text_color, $ttf_path, substr($randomCaptcha, $i, 1));
+			$x += $boxCoordinate[2] - $boxCoordinate[0];
 		}
 
         ob_start();
@@ -485,6 +488,9 @@ class LoginController extends Controller {
         imagedestroy($image);
 		$img = ob_get_clean();
 		$data = 'data:image/png;base64,'.base64_encode($img);
-		return $data;
+		return array(
+			'width' => $x,
+			'data' => $data
+		);
 	}
 }

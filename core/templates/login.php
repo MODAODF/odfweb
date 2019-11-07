@@ -60,7 +60,7 @@ use OC\Core\Controller\LoginController;
 				autocomplete="off" autocapitalize="none" autocorrect="off" required>
 			<label for="password" class="infield">captcha</label>
 			<a href="./" target="_self">
-				<img id="imgcode" src="<?php p($_['showCaptcha']); ?> "/>
+				<img id="imgcode" src="<?php p($_['showCaptcha']); ?>" title="點選更換驗證碼。"/>
 			</a>
 		</p>
 
