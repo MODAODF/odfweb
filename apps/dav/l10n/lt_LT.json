@@ -41,6 +41,14 @@
     "A calendar <strong>event</strong> was modified" : "Kalendoriaus <strong>įvykis</strong> buvo pakeistas",
     "A calendar <strong>todo</strong> was modified" : "Kalendoriaus <strong>užduotis</strong> buvo pakeista",
     "Contact birthdays" : "Adresatų gimtadieniai",
+    "Calendar:" : "Kalendorius:",
+    "Date:" : "Data:",
+    "Where:" : "Kur:",
+    "Description:" : "Aprašas:",
+    "Calendar: %s" : "Kalendorius: %s",
+    "Date: %s" : "Data: %s",
+    "Description: %s" : "Aprašas: %s",
+    "Where: %s" : "Kur: %s",
     "%1$s via %2$s" : "%1$s per %2$s",
     "Invitation canceled" : "Kvietimas atšauktas",
     "Hello %s," : "Sveiki, %s,",
@@ -48,8 +56,6 @@
     "Invitation updated" : "Pakvietimas atnaujintas",
     "%1$s invited you to »%2$s«" : "%1$s jus pakvietė į »%2$s«",
     "When:" : "Kada:",
-    "Where:" : "Kur:",
-    "Description:" : "Aprašas:",
     "Link:" : "Nuoroda:",
     "Accept" : "Priimti",
     "Decline" : "Atmesti",
@@ -63,9 +69,6 @@
     "Request ID: %s" : "Užklausos ID: %s",
     "Are you accepting the invitation?" : "Ar priimate pakvietimą?",
     "Save" : "Įrašyti",
-    "Calendar server" : "Kalendoriaus serveris",
-    "%s via %s" : "%s per %s",
-    "The meeting »%s« with %s was canceled." : "Susikimas „%s“ su  %s atšauktas.",
-    "%s invited you to »%s«" : "%s pakvietė jus į »%s«"
+    "Calendar server" : "Kalendoriaus serveris"
 },"pluralForm" :"nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);"
 }

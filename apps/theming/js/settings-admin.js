@@ -78,10 +78,10 @@ function preview(setting, value, serverCssUrl) {
 
 function hideUndoButton(setting, value) {
 	var themingDefaults = {
-		name: 'ODF文件WEB應用元件網路儲存空間',
+		name: 'Nextcloud',
 		slogan: t('lib', 'a safe home for all your data'),
-		url: '',
-		color: '#404050',
+		url: 'https://nextcloud.com',
+		color: '#0082c9',
 		logoMime: '',
 		backgroundMime: '',
 		imprintUrl: '',

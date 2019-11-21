@@ -220,7 +220,7 @@ webroot of your nginx installation. In this example it is
     <span class="c1">#pagespeed off;</span>
 
     <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
-        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/index.php</span><span class="nv">$request_uri</span><span class="p">;</span>
+        <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/index.php</span><span class="p">;</span>
     <span class="p">}</span>
 
     <span class="kn">location</span> <span class="p">~</span> <span class="sr">^\/(?:build|tests|config|lib|3rdparty|templates|data)\/</span> <span class="p">{</span>
@@ -232,9 +232,11 @@ webroot of your nginx installation. In this example it is
 
     <span class="kn">location</span> <span class="p">~</span> <span class="sr">^\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+)\.php(?:$|\/)</span> <span class="p">{</span>
         <span class="kn">fastcgi_split_path_info</span> <span class="s">^(.+?\.php)(\/.*|)</span>$<span class="p">;</span>
+        <span class="kn">set</span> <span class="nv">$path_info</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
+        <span class="kn">try_files</span> <span class="nv">$fastcgi_script_name</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
         <span class="kn">include</span> <span class="s">fastcgi_params</span><span class="p">;</span>
         <span class="kn">fastcgi_param</span> <span class="s">SCRIPT_FILENAME</span> <span class="nv">$document_root$fastcgi_script_name</span><span class="p">;</span>
-        <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
+        <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$path_info</span><span class="p">;</span>
         <span class="kn">fastcgi_param</span> <span class="s">HTTPS</span> <span class="no">on</span><span class="p">;</span>
         <span class="c1"># Avoid sending the security headers twice</span>
         <span class="kn">fastcgi_param</span> <span class="s">modHeadersAvailable</span> <span class="s">true</span><span class="p">;</span>
@@ -380,7 +382,7 @@ your nginx installation.</p>
         <span class="c1">#pagespeed off;</span>
 
         <span class="kn">location</span> <span class="s">/nextcloud</span> <span class="p">{</span>
-            <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/nextcloud/index.php</span><span class="nv">$request_uri</span><span class="p">;</span>
+            <span class="kn">rewrite</span> <span class="s">^</span> <span class="s">/nextcloud/index.php</span><span class="p">;</span>
         <span class="p">}</span>
 
         <span class="kn">location</span> <span class="p">~</span> <span class="sr">^\/nextcloud\/(?:build|tests|config|lib|3rdparty|templates|data)\/</span> <span class="p">{</span>
@@ -392,9 +394,11 @@ your nginx installation.</p>
 
         <span class="kn">location</span> <span class="p">~</span> <span class="sr">^\/nextcloud\/(?:index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[ms]-provider\/.+)\.php(?:$|\/)</span> <span class="p">{</span>
             <span class="kn">fastcgi_split_path_info</span> <span class="s">^(.+?\.php)(\/.*|)</span>$<span class="p">;</span>
+            <span class="kn">set</span> <span class="nv">$path_info</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
+            <span class="kn">try_files</span> <span class="nv">$fastcgi_script_name</span> <span class="p">=</span><span class="mi">404</span><span class="p">;</span>
             <span class="kn">include</span> <span class="s">fastcgi_params</span><span class="p">;</span>
             <span class="kn">fastcgi_param</span> <span class="s">SCRIPT_FILENAME</span> <span class="nv">$document_root$fastcgi_script_name</span><span class="p">;</span>
-            <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$fastcgi_path_info</span><span class="p">;</span>
+            <span class="kn">fastcgi_param</span> <span class="s">PATH_INFO</span> <span class="nv">$path_info</span><span class="p">;</span>
             <span class="kn">fastcgi_param</span> <span class="s">HTTPS</span> <span class="no">on</span><span class="p">;</span>
             <span class="c1"># Avoid sending the security headers twice</span>
             <span class="kn">fastcgi_param</span> <span class="s">modHeadersAvailable</span> <span class="s">true</span><span class="p">;</span>

@@ -1,23 +1,4 @@
 # Changelogs
-## 0.15.1
-- The right click menu was not loaded.
-
-## 0.15.0
-- Add multiple translations thanks to Transifex
-- RightClick does no more load in log in screen.
-- Fix IE11 incompatibily
-
-## 0.14.2
-- Keys are handled when right clicking. By default, the right click menu does not show up if a mod key is pressed (ctrl, shift, alt).
-- Allow developer to use the regular right click (https://github.com/nextcloud/files_rightclick/issues/59 thanks to @juliushaertl)
-
-## 0.14.1
-- Fix printed options
-
-## 0.14.0
-- Improve README
-- App embended by default for NC 17
-
 ## 0.13.0
 - Remove regular click option: "Open folder" for example
 - Improve outside clicks detection

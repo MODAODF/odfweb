@@ -1,7 +1,6 @@
 OC.L10N.register(
     "oauth2",
     {
-"OAuth 2.0 allows external services to request access to {instanceName}." : "OAuth 2.0 允許外部服務連結至 {instanceName}。",
     "OAuth 2.0" : "OAuth 2.0",
     "OAuth 2.0 clients" : "OAuth 2.0 客戶端",
     "Name" : "名稱",

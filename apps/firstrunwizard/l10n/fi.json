@@ -9,6 +9,10 @@
     "Add your profile information! Set a profile picture and full name for easier recognition across all features." : "Lisää profiilitietosi! Lisää profiilikuva ja koko nimi, jotta sinut on helpompi tunnistaa.",
     "Add your profile information! Set a full name for easier recognition across all features." : "Lisää profiilitietosi! Lisää koko nimesi, jotta sinut on helpompi tunnistaa.",
     "Add your profile information! Set a profile picture for easier recognition across all features." : "Lisää profiilitietosi! Lisää profiilikuva, jotta sinut on helpompi tunnistaa.",
+    "App recommendation: Nextcloud Calendar" : "Sovellussuositus: Nextcloud-kalenteri",
+    "App recommendation: Nextcloud Contacts" : "Sovellussuositus: Nextcloud-yhteystiedot",
+    "App recommendation: Nextcloud Mail" : "Sovellussuositus: Nextcloud-sähköposti",
+    "App recommendation: Nextcloud Talk" : "Sovellussuositus: Nextcloud Talk",
     "About" : "Tietoja",
     "A welcome and introduction wizard for Nextcloud" : "Nextcloudin ensimmäisen käyttökerran avustaja",
     "Start using Nextcloud" : "Aloita Nextcloudin käyttäminen",
@@ -58,8 +62,9 @@
     "Connect other apps to %s" : "Yhdistä muita sovelluksia %siin",
     "Besides the sync clients you can connect any other software that supports the WebDAV/CalDAV/CardDAV protocols to %s." : "Synkronointisovellusten lisäksi voit yhdistää minkä tahansa WebDAV-, CalDAV- ja CardDAV-yhteyskäytäntöjä tukevan ohjelmiston %siin.",
     "Server address" : "Palvelimen osoite",
-    "Use this URL to connect your clients to this server:" : "Käytä tätä osoitetta yhdistääksesi muut sovelluksesi tähän palvelimeen:",
+    "Use this link to connect your apps and desktop client to this server:" : "Käytä tätä linkkiä yhdistääksesi sovellukset ja työpöytäsovelluksen tähän palvelimeen:",
     "Previous" : "Edellinen",
-    "Next" : "Seuraava"
+    "Next" : "Seuraava",
+    "Use this URL to connect your clients to this server:" : "Käytä tätä osoitetta yhdistääksesi muut sovelluksesi tähän palvelimeen:"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -54,10 +54,9 @@
 
 	.dismiss-all {
 		display: flex;
+		justify-content: center;
 		color: var(--color-text-maxcontrast);
 		padding: 10px;
-		margin-left: auto;
-		margin-right: auto;
 
 		&:hover,
 		.icon-close {
@@ -121,6 +120,11 @@
 
 	.notification-subject {
 		display: flex;
+		align-items: center;
+
+		& > .image {
+			align-self: flex-start;
+		}
 
 		& > span.text,
 		& > a > span.text {
@@ -131,7 +135,8 @@
 	.notification-message,
 	.notification-full-message {
 		line-height: 20px;
-		opacity: .57;
+		padding-left: 42px; // 32px icon + 10px title padding
+		color: var(--color-text-maxcontrast);
 
 		& > .collapsed {
 			overflow: hidden;
@@ -175,6 +180,8 @@
 	}
 
 	.notification-actions {
+		overflow: hidden;
+
 		.action-button.primary {
 			color: var(--color-primary-text);
 		}

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "federatedfilesharing",
     {
-    "Federated sharing" : "Compartició federada",
     "Do you want to add the remote share {name} from {owner}@{remote}?" : "Voleu afegir la compartició remota {nom} des de {owner}@{remote}?",
     "Remote share" : "Compartició remota",
     "Remote share password" : "Contrasenya de compartició remota",
@@ -24,6 +23,7 @@ OC.L10N.register(
     "File is already shared with %s" : "El fitxer ja està compartit amb %s",
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Ha fallat la compartició %1$s, no s'ha pogut trobar %2$s, potser el servidor és inaccessible actualment o fa servir un certificat auto-signat.",
     "Could not find share" : "No s'ha pogut trobar la compartició",
+    "Federated sharing" : "Compartició federada",
     "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Heu rebut \"/%3$s\" com una compartició remota des de %1$s (de part de %2$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Heu rebut {share} com un recompte remot de {user} (en nom de {nom})",
     "You received \"%3$s\" as a remote share from %1$s" : "Heu rebut \"/%3$s\" com una compartició remota de %1$s",
@@ -50,8 +50,6 @@ OC.L10N.register(
     "Share it so your friends can share files with you:" : "Compartiu-lo perquè els vostres amics us puguin compartir fitxers:",
     "Add to your website" : "Afegiu a la vostra pàgina web",
     "Share with me via Nextcloud" : "Comparteix amb mi mitjançant Nextcloud",
-    "HTML Code:" : "Codi HTML:",
-    "Sharing %s failed, because this item is already shared with %s" : "No s'ha pogut compartir %s, perquè l'element ja està compartit amb %s",
-    "Sharing %s failed, could not find %s, maybe the server is currently unreachable or uses a self-signed certificate." : "Ha fallat la compartició %s, no s'ha pogut trobar%s, potser el servidor és inaccessible actualment o fa servir un certificat auto-signat."
+    "HTML Code:" : "Codi HTML:"
 },
 "nplurals=2; plural=(n != 1);");

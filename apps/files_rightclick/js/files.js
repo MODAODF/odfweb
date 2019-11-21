@@ -94,11 +94,9 @@
             }
         }
 
-        var fileOptions = menu.find('li:not(.hidden)');
-
-        for (var key in fileOptions) {
+        for (var key in menu.find('li:not(.hidden)')) {
             if (!isNaN(key)) {
-                var li = $(fileOptions[key]);
+                var li = $(menu.find('li')[key]);
                 var spans = $(li.find('span'));
 
                 options.append(new RightClick.Option($(li.find('a')).attr('data-action'), $(spans[1]).text(), $(spans[0]).attr('class'), function (event, option) {

@@ -187,10 +187,19 @@ class Push {
 		$data = [
 			'nid' => $id,
 			'app' => $notification->getApp(),
-			'subject' => $notification->getParsedSubject(),
+			'subject' => '',
 			'type' => $notification->getObjectType(),
 			'id' => $notification->getObjectId(),
 		];
+
+		// Max length of encryption is 255, so we need to shorten the subject to be shorter
+		$subject = $notification->getParsedSubject();
+		$dataLength = 245 - strlen(json_encode($data));
+		if (strlen($subject) > $dataLength) {
+			$data['subject'] = substr($subject, 0, $dataLength) . '…';
+		} else {
+			$data['subject'] = $subject;
+		}
 
 		if ($isTalkNotification) {
 			$priority = 'high';

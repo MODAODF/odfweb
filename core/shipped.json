@@ -3,6 +3,7 @@
     "accessibility",
     "activity",
     "admin_audit",
+    "bruteforcesettings",
     "cloud_federation_api",
     "comments",
     "dav",
@@ -12,6 +13,7 @@
     "files",
     "files_external",
     "files_pdfviewer",
+    "files_rightclick",
     "files_sharing",
     "files_texteditor",
     "files_trashbin",
@@ -25,23 +27,22 @@
     "notifications",
     "oauth2",
     "password_policy",
-    "privacy",
     "provisioning_api",
     "recommendations",
+    "richdocuments",
     "serverinfo",
     "sharebymail",
-    "support",
-    "survey_client",
     "systemtags",
     "theming",
     "twofactor_backupcodes",
-    "updatenotification",
     "user_ldap",
-    "viewer",
-    "workflowengine"
+    "viewer"
   ],
   "alwaysEnabled": [
+    "richdocuments",
+    "bruteforcesettings",
     "files",
+    "files_external",
     "cloud_federation_api",
     "dav",
     "federatedfilesharing",
@@ -49,6 +50,6 @@
     "provisioning_api",
     "oauth2",
     "twofactor_backupcodes",
-    "workflowengine"
+    "user_ldap"
   ]
 }

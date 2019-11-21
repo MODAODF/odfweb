@@ -1,15 +1,18 @@
 OC.L10N.register(
     "theming",
     {
-    "Loading preview…" : "S'està carregant la vista prèvia ...",
+    "Loading preview…" : "S'està carregant la previsualització...",
     "Saved" : "Desat",
     "Admin" : "Administrador",
     "a safe home for all your data" : "un lloc segur per a les vostres dades",
     "Name cannot be empty" : "El nom del fitxer no pot estar buit",
     "The given name is too long" : "El nom introduït és massa llarg",
     "The given web address is too long" : "L'adreça web proporcionada és massa llarga",
+    "The given web address is not a valid URL" : "L'adreça web no és una URL vàlida",
     "The given legal notice address is too long" : "L'adreça d'avís legal és massa llarga",
+    "The given legal notice address is not a valid URL" : "L'adreça proporcionada per notificacions no és una URL vàlida",
     "The given privacy policy address is too long" : "L'adreça de política de privadesa és massa llarga",
+    "The given privacy policy address is not a valid URL" : "L'adreça proporcionada per a la política de privacitat no és una URL vàlida",
     "The given slogan is too long" : "L'eslògan proporcionat és massa llarg",
     "The given color is invalid" : "El color proporcionat no és vàlid",
     "The file was uploaded" : "S'ha carregat el fitxer",
@@ -39,13 +42,13 @@ OC.L10N.register(
     "Login image" : "Imatge d'inici de sessió",
     "Upload new login background" : "Carrega un nou fons d'inici de sessió",
     "Remove background image" : "Suprimeix la imatge de fons",
-    "Advanced options" : "Opcions avançades",
+    "Advanced options" : "Paràmetres avançats",
     "Legal notice link" : "Enllaç a l'avís legal",
     "Privacy policy link" : "Enllaç a la política de privadesa",
     "Header logo" : "Logotip de capçalera",
     "Upload new header logo" : "Carrega un nou logotip de capçalera",
-    "Favicon" : "Favicon",
+    "Favicon" : "Icona de web",
     "Upload new favicon" : "Carrega un nou favicon",
-    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Instal·la l'extensió Imagemagick per al PHP i es generarà automàticament un favicon a partir del logo i del color del tema."
+    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Instal·leu l'extensió PHP de l'ImageMagick compatible amb imatges SVG per generar automàticament una icona de web a partir del logotip pujat i del color."
 },
 "nplurals=2; plural=(n != 1);");
