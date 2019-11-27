@@ -22,7 +22,7 @@ body {
 	font-family: 'Nunito', 'Open Sans', Frutiger, Calibri, 'Myriad Pro', Myriad, sans-serif;
 	color: #000;
 	text-align: center;
-	background-color: #0082c9;
+	background-color: #ECECFF;
 	background-image: url('../img/background.png?v=2');
 	background-position: 50% 50%;
 	background-repeat: no-repeat;
@@ -80,12 +80,13 @@ body {
 #header .logo {
 	background-image: url('../img/logo/logo.svg?v=1');
 	background-repeat: no-repeat;
-	background-size: 175px;
+	background-size: 200px;
 	background-position: center;
 	width: 256px;
-	min-height: 128px;
-	max-height: 200px;
+	min-height: 200px;
+	max-height: 300px;
 	margin: 0 auto;
+	margin-bottom: 22px;
 	position: relative;
 	left: unset;
 }
@@ -264,7 +265,7 @@ input.primary,
 button.primary,
 a.primary {
 	border: 1px solid #fff;
-	background-color: #0082c9;
+	background-color: #ECECFF;
 	color: #fff;
 	transition: color 100ms ease-in-out;
 }
@@ -504,7 +505,7 @@ form .warning input[type='checkbox']+label {
 	display: inline-block;
 	text-align: center;
 	box-sizing: border-box;
-	background-color: #0082c9;
+	background-color: #ECECFF;
 	color: white;
 	border-radius: 100px; /* --border-radius-pill */
 }
@@ -907,7 +908,7 @@ a.legal {
 .captcha-wrapper a {
 	width: 120px;
 	height: 50px;
-	margin: 5px;
+	padding: 0;
     outline: none;
     border-radius: 3px;
 	background-color:white;

@@ -56,7 +56,8 @@ $invert: luma($color-primary) > 0.6;
 	#body-login {
 
 		input,
-		#alternative-logins li a {
+		#alternative-logins li a,
+		a.button {
 			border: 1px solid nc-lighten($color-primary-text, 50%);
 		}
 		input.primary,
@@ -128,7 +129,7 @@ $invert: luma($color-primary) > 0.6;
 	@if ($invert) {
 		#theming-preview-logo,
 		#header .logo {
-			opacity: .6;
+			opacity: 1;
 		}
 	}
 }

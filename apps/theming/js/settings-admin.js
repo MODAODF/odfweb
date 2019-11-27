@@ -78,10 +78,10 @@ function preview(setting, value, serverCssUrl) {
 
 function hideUndoButton(setting, value) {
 	var themingDefaults = {
-		name: 'Nextcloud',
+		name: '政府 ODF Web 文件應用元件',
 		slogan: t('lib', 'a safe home for all your data'),
-		url: 'https://nextcloud.com',
-		color: '#0082c9',
+		url: 'https://www.ndc.gov.tw',
+		color: '#ECECFF',
 		logoMime: '',
 		backgroundMime: '',
 		imprintUrl: '',

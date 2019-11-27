@@ -4,7 +4,7 @@
 
 /* NC blue */
 .wy-side-nav-search {
-	background-color: #0082c9;
+	background-color: #ECECFF;
 }
 
 /* Reduce size of logo in top left */
@@ -43,7 +43,7 @@
 .rst-versions .rst-current-version {
 	display: flex;
 	align-items: center;
-	color: #0082c9;
+	color: #ECECFF;
 }
 .rst-versions .rst-current-version .fa-caret-down {
 	margin-left: 5px;

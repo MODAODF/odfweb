@@ -1454,7 +1454,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 			right: 0;
 			height: 45px;
 			line-height: 2.5em;
-			background-color: #0082c9;
+			background-color: #ECECFF;
 			box-sizing: border-box;
 		}
 		.header-appname {
@@ -1645,7 +1645,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 		}
 
 		button:hover, button:focus, a.button:hover, a.button:focus {
-			border-color: #0082c9;
+			border-color: #ECECFF;
 		}
 
 		code {

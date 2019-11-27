@@ -48,6 +48,7 @@
     "lookup_server_connector",
     "provisioning_api",
     "oauth2",
+    "theming",
     "twofactor_backupcodes",
     "user_ldap"
   ]
