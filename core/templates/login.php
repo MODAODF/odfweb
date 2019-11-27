@@ -54,15 +54,18 @@ use OC\Core\Controller\LoginController;
 			<label for="password" class="infield"><?php p($l->t('Password')); ?></label>
 		</p>
 
-		<p class="captcha-wrapper">
-			<input type="text" name="captcha" id="captcha" value=""
-				placeholder="驗證碼" aria-label="captcha"
-				autocomplete="off" autocapitalize="none" autocorrect="off" required>
-			<label for="password" class="infield">captcha</label>
-			<a href="./" target="_self">
-				<img id="imgcode" src="<?php p($_['showCaptcha']); ?>" title="點選更換驗證碼。"/>
-			</a>
-		</p>
+		<?php if ($_['showCaptcha']) : ?>
+			<p class="captcha-wrapper">
+				<input type="text" name="captcha" id="captcha" value=""
+					placeholder="<?php p($l->t('Captcha')); ?>"
+					aria-label="<?php p($l->t('Captcha')); ?>"
+					autocomplete="off" autocapitalize="none" autocorrect="off" required>
+				<label for="password" class="infield"><?php p($l->t('Captcha')); ?></label>
+				<a class="button" href="./" target="_self">
+					<img id="imgcode" src="<?php p($_['showCaptcha']); ?>" title="<?php p($l->t('Click to refresh captcha')); ?>"/>
+				</a>
+			</p>
+		<?php endif; ?>
 
 		<div id="submit-wrapper">
 			<input type="submit" id="submit" class="login primary" title="" value="<?php p($l->t('Log in')); ?>" disabled="disabled" />
@@ -79,7 +82,7 @@ use OC\Core\Controller\LoginController;
 			</p>
 		<?php } else if (!empty($_[LoginController::LOGIN_MSG_INVALIDCAPTCHA])) { ?>
 			<p class="warning wrongCaptchaMsg">
-				驗證碼錯誤
+				<?php p($l->t('Wrong captcha')); ?>
 			</p>
 		<?php } ?>
 

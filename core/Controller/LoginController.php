@@ -210,11 +210,13 @@ class LoginController extends Controller {
 		Util::addHeader('meta', ['property' => 'og:type', 'content' => 'website']);
 		Util::addHeader('meta', ['property' => 'og:image', 'content' => $this->urlGenerator->getAbsoluteURL($this->urlGenerator->imagePath('core', 'favicon-touch.png'))]);
 
-		$captchaImg = $this->createCaptcha();
-		while ($captchaImg['width'] > 100 || $captchaImg['width'] < 50) {
+		if ($this->config->getSystemValue('useCaptcha') === true) {
 			$captchaImg = $this->createCaptcha();
+			while ($captchaImg['width'] > 100 || $captchaImg['width'] < 50) {
+				$captchaImg = $this->createCaptcha();
+			}
+			$parameters['showCaptcha'] = $captchaImg['data'];
 		}
-		$parameters['showCaptcha'] = $captchaImg['data'];
 
 		return new TemplateResponse(
 			$this->appName, 'login', $parameters, 'guest'
@@ -338,15 +340,17 @@ class LoginController extends Controller {
 				$redirect_url, self::LOGIN_MSG_INVALIDPASSWORD);
 		}
 
-		$randomCaptcha = $this->session->get('randomCaptcha');
-		if (!isset($randomCaptcha) || empty($randomCaptcha) || 
-			!isset($captcha)       || empty($captcha)       ||
-			strtoupper($randomCaptcha) !== strtoupper($captcha)
-		) {
-			return $this->createLoginFailedResponse($user, $originalUser,
-				$redirect_url, self::LOGIN_MSG_INVALIDCAPTCHA);
+		if ($this->config->getSystemValue('useCaptcha') === true) {
+			$randomCaptcha = $this->session->get('randomCaptcha');
+			if (!isset($randomCaptcha) || empty($randomCaptcha) ||
+				!isset($captcha)       || empty($captcha)       ||
+				strtoupper($randomCaptcha) !== strtoupper($captcha)
+			) {
+				return $this->createLoginFailedResponse($user, $originalUser,
+					$redirect_url, self::LOGIN_MSG_INVALIDCAPTCHA);
+			}
+			$this->session->remove('randomCaptcha');
 		}
-		$this->session->remove('randomCaptcha');
 
 		// TODO: remove password checks from above and let the user session handle failures
 		// requires https://github.com/owncloud/core/pull/24616
