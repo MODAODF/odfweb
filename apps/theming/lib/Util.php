@@ -266,7 +266,7 @@ class Util {
 	 * @return string
 	 */
 	public function colorizeSvg($svg, $color) {
-		$svg = preg_replace('/#0082c9/i', $color, $svg);
+		$svg = preg_replace('/#ECECFF/i', $color, $svg);
 		return $svg;
 	}
 

@@ -15,7 +15,6 @@ a, a *, input, input *, select, .button span, label { cursor:pointer; }
 ul { list-style:none; }
 
 body {
-	background-color: #ffffff;
 	font-weight: normal;
 	/* bring the default font size up to 14px */
 	font-size: .875em;
@@ -23,9 +22,9 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 	color: #000;
 	text-align: center;
-	background-color: #0082c9;
+	background-color: #ECECFF;
 	background-image: url('../img/background.png?v=2');
-	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #0082c9 0%, rgba(28,175,255,1) 100%);
+	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #ECECFF 0%, rgba(28,175,255,1) 100%);
 	background-position: 50% 50%;
 	background-repeat: repeat;
 	background-size: 275px, contain;
@@ -36,7 +35,7 @@ body {
 
 /* Various fonts settings */
 #body-login a {
-	color: #fff;
+	color: #000;
 	font-weight: 600;
 }
 #body-login a:not(.button):hover,
@@ -46,7 +45,7 @@ body {
 }
 
 #showAdvanced {
-	color: #fff;
+	color: #000;
 }
 
 em {
@@ -82,12 +81,13 @@ body {
 #header .logo {
 	background-image: url('../img/logo/logo.svg?v=1');
 	background-repeat: no-repeat;
-	background-size: 175px;
+	background-size: 200px;
 	background-position: center;
 	width: 256px;
-	min-height: 128px;
-	max-height: 200px;
+	min-height: 200px;
+	max-height: 300px;
 	margin: 0 auto;
+	margin-bottom: 22px;
 	position: relative;
 	left: unset;
 }
@@ -338,9 +338,9 @@ input::-moz-focus-inner {
 input.primary,
 button.primary,
 a.primary {
-	border: 1px solid #fff;
-	background-color: #0082c9;
-	color: #fff;
+	border: 1px solid #000;
+	background-color: #ECECFF;
+	color: #000;
 	transition: color 100ms ease-in-out;
 }
 
@@ -420,7 +420,7 @@ input[type='checkbox'].checkbox--white:checked + label:before {
 }
 .tooltip-inner {
 	font-weight: bold;
-	color: #ccc;
+	color: #555;
 	padding: 3px 6px;
 	text-align: center;
 }
@@ -479,7 +479,7 @@ form fieldset legend,
 form fieldset .warning-info,
 form input[type='checkbox']+label {
 	text-align: center;
-	color: #fff;
+	color: #000;
 }
 /* overrides another !important statement that sets this to unreadable black */
 form .warning input[type='checkbox']:hover+label,
@@ -588,7 +588,7 @@ form .warning input[type='checkbox']+label {
 	text-align: center;
 	box-sizing: border-box;
 	border: 2px solid #ffffff;
-	background-color: #0082c9;
+	background-color: #ECECFF;
 	color: #ffffff;
 	border-radius: 100px; /* --border-radius-pill */
 }
@@ -690,7 +690,7 @@ form #selectDbType label span {
 	margin-top: 15px;
 	padding: 15px;
 	background-color: rgba(0,0,0,.3);
-	color: #fff;
+	color: #000;
 	text-align: left;
 	word-wrap: break-word;
 	border-radius: 10px; /* --border-radius-large */
@@ -705,7 +705,7 @@ form #selectDbType label span {
 .warning h2,
 .update h2,
 .error h2 {
-	color: #fff;
+	color: #000;
 	text-align: center;
 }
 
@@ -729,7 +729,7 @@ form #selectDbType label span {
 .warning legend,
 .warning a,
 .error a {
-	color: #fff !important;
+	color: #000 !important;
 	font-weight: bold !important;
 	opacity: 1;
 }
@@ -821,6 +821,9 @@ p.info {
 /* Icons */
 .icon-info-white {
 	background-image: url('../img/actions/info-white.svg?v=2');
+}
+.icon-error {
+	background-image: url('../img/actions/error.svg?v=1');
 }
 .icon-error-white {
 	background-image: url('../img/actions/error-white.svg?v=1');

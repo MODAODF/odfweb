@@ -82,6 +82,37 @@ $invert: luma($color-primary) > 0.6;
 	#appmenu .icon-more-white {
 		@include icon-color('more', 'actions', $color-black, 1, true);
 	}
+	/* Radio & Checkboxes */
+	$color-checkbox-radio-border: nc-darken($color-main-background, 47%);
+	.app-files input {
+		&[type='checkbox'], &[type='radio'] {
+			&.radio, &.checkbox {
+				+ label:before {
+					border: 1px solid $color-checkbox-radio-border;
+				}
+			}
+			&:not(:disabled):not(:checked) + label:hover:before,
+			&:focus + label:before {
+				border-color: darken($color-checkbox-radio-border, 17%);
+			}
+			&:checked + label:before,
+			&.checkbox:indeterminate + label:before {
+				background-color: $color-checkbox-radio-border;
+				border-color: $color-checkbox-radio-border;
+			}
+		}
+	}
+
+	/* richdocument online header icon */
+	#richdocuments-header > div {
+		.icon-shared {
+			@include icon-color('shared', 'actions', $color-black, 1, true);
+		}
+		.icon-more {
+			@include icon-color('more', 'actions', $color-black, 1, true);
+		}
+	}
+
 } @else {
 	#appmenu:not(.inverted) svg {
 		filter: none;
@@ -89,6 +120,31 @@ $invert: luma($color-primary) > 0.6;
 	#appmenu.inverted svg {
 		filter: invert(1);
 	}
+	#body-login {
+		input.primary:not(:disabled):hover,
+		input.primary:not(:disabled):focus {
+			color: rgba(255, 255, 255, .8);
+		}
+		footer * {
+			color: #fff;
+		}
+	}
+
+	/* Errors */
+
+	.body-login-container,
+	.warning,
+	.update,
+	.error {
+		color: #fff;
+	}
+	.body-login-container h2,
+	.warning h2,
+	.update h2,
+	.error h2 {
+		color: #fff;
+	}
+
 }
 
 /* Colorized svg images */
@@ -141,7 +197,7 @@ $invert: luma($color-primary) > 0.6;
 	@if ($invert) {
 		#theming-preview-logo,
 		#header .logo {
-			opacity: .6;
+			opacity: 1;
 		}
 	}
 }
