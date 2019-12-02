@@ -1,0 +1,24 @@
+{ "translations": {
+    "Collabora Online" : "【ODF文件WEB應用元件】",
+    "Collabora Online is a powerful LibreOffice-based online office suite with collaborative editing, which supports all major documents, spreadsheet and presentation file formats and works together with all modern browsers." : "【ODF文件WEB應用元件】是一款基於 LibreOffice Online 並具有共同編輯能力的線上辦公室套件，它支援所有主流的文件、試算表及簡報檔應用及標準的ODF格式，可在所有現代瀏覽器皿使用。",
+    "URL (and Port) of Collabora Online-server" : "ODF文件WEB應用元件伺服器的URL(及服務port號)",
+    "Saved with error: Collabora Online should use the same protocol as the server installation." : "儲存時出錯：ODF文件WEB應用元件需使用與伺服器相同的協定。",
+    "Apply" : "套用",
+    "Collabora Online requires a seperate server acting as a WOPI-Client to provide editing capabilities." : "線上共同編輯需要一台獨立的伺服器作為 WOPI Client 端以提供編輯功能。",
+    "Disable certificate verification (insecure)" : "關閉 SSL 加密憑證機制（不安全）",
+    "Enable if your Collabora Online server uses a self signed certificate" : "若您的 ODF文件WEB應用元件伺服器使用自行發行的憑證，請啟用",
+    "Restrict usage to specific groups" : "限制特定群組使用者使用",
+    "Collabora Online is enabled for all users by default. When this setting is active, only members of the specified groups can use it." : "線上共編的功能預設是開放給所有使用者使用，當此設定生效時，將只有特定的群組成員才能使用此功能。",
+    "Restrict edit to specific groups" : "限制特定群組成員的编辑权限",
+    "All users can edit documents with Collabora Online by default. When this setting is active, only the members of the specified groups can edit and the others can only view documents." : "預設情況下所有使用者都能使用線上共編功能編輯文件，當此設定啟用時，只有特定群組成員才能編輯文件，而其它使用者只能查看文件。",
+    "Advanced Settings" : "進階設定",
+    "Use Office Open XML (OOXML) instead of OpenDocument Format (ODF) by default for new files" : "預設使用Office Open XML (OOXML)格式而不是OpenDocument Format (ODF)格式建立新文件",
+    "Enable access for external apps" : "啟用外部應用的存取權限",
+    "Save" : "保存",
+    "Add" : "增加",
+    "Use Canonical webroot" : "使用Canonical webroot",
+    "Canonical webroot, in case there are multiple, for Collabora to use. Provide the one with least restrictions. Eg: Use non-shibbolized webroot if this instance is accessed by both shibbolized and non-shibbolized webroots. You can ignore this setting if only one webroot is used to access this instance." : "給ODF文件WEB應用元件使用的canonical webroot（如果有多個）。請提供一個限制最少的。例如：若這個instance同時被shibbolized和非shibbolized的webroot訪問，則應選擇非shibbolized的webroot。如果只有一個webroot用來訪問這個instance，可忽略此設定。",
+    "Saved" : "已儲存",
+    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "該鏈結已失效或不存在。詳情請聯繫文件擁有者。"
+},"pluralForm" :"nplurals=1; plural=0;"
+}
