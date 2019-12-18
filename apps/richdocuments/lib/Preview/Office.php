@@ -69,43 +69,41 @@ abstract class Office extends Provider {
 			return false;
 		}
 
-		$useTempFile = $fileInfo->isEncrypted() || !$fileInfo->getStorage()->isLocal();
-		if ($useTempFile) {
-			$fileName = $fileview->toTmpFile($path);
-			$stream = fopen($fileName, 'r');
-		} else {
-			$stream = $fileview->fopen($path, 'r');
-		}
+		// $useTempFile = $fileInfo->isEncrypted() || !$fileInfo->getStorage()->isLocal();
+		// if ($useTempFile) {
+		// 	$fileName = $fileview->toTmpFile($path);
+		// 	$stream = fopen($fileName, 'r');
+		// } else {
+		// 	$stream = $fileview->fopen($path, 'r');
+		// }
 
-		$client = $this->clientService->newClient();
-		$options = ['timeout' => 10];
+		// $client = $this->clientService->newClient();
+		// $options = ['timeout' => 10];
 
-		if ($this->config->getAppValue('richdocuments', 'disable_certificate_verification') === 'yes') {
-			$options['verify'] = false;
-		}
+		// if ($this->config->getAppValue('richdocuments', 'disable_certificate_verification') === 'yes') {
+		// 	$options['verify'] = false;
+		// }
 
-		$options['multipart'] = [['name' => $path, 'contents' => $stream]];
+		// $options['multipart'] = [['name' => $path, 'contents' => $stream]];
 
-		try {
-			$response = $client->post($this->getWopiURL(). '/lool/convert-to/png', $options);
-		} catch (\Exception $e) {
-			$this->logger->logException($e, [
-				'message' => 'Failed to convert file to preview',
-				'level' => ILogger::INFO,
-				'app' => 'richdocuments',
-			]);
-			return false;
-		}
+		// try {
+		// 	$response = $client->post($this->getWopiURL(). '/lool/convert-to/png', $options);
+		// } catch (\Exception $e) {
+		// 	$this->logger->logException($e, [
+		// 		'message' => 'Failed to convert file to preview',
+		// 		'level' => ILogger::INFO,
+		// 		'app' => 'richdocuments',
+		// 	]);
+		// 	return false;
+		// }
 
-		$image = new Image();
-		$image->loadFromData($response->getBody());
+		// $image = new Image();
+		// $image->loadFromData($response->getBody());
 
-		if ($image->valid()) {
-			$image->scaleDownToFit($maxX, $maxY);
-			return $image;
-		}
+		// if ($image->valid()) {
+		// 	$image->scaleDownToFit($maxX, $maxY);
+		// 	return $image;
+		// }
 		return false;
-
 	}
-
 }
