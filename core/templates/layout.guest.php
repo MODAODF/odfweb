@@ -1,3 +1,9 @@
+<?php
+$remoteIp = \OC::$server->getConfig()->getSystemValue('remoteIp');
+if (isset($remoteIp) && !empty($remoteIp))  {
+	header("Access-Control-Allow-Origin: $remoteIp");
+}
+?>
 <!DOCTYPE html>
 <html class="ng-csp" data-placeholder-focus="false" lang="<?php p($_['language']); ?>" data-locale="<?php p($_['locale']); ?>" >
 	<head
