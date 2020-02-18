@@ -20,15 +20,14 @@ OC.L10N.register(
     "File is already shared with %s" : "Fitxategia 1%s-rekin partekatua dago iada",
     "Could not find share" : "Ezin da partekatzea topatu",
     "Federated sharing" : "Federatutako partekatzea",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu ( 3%2$s-en ordez)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "{user}-en {share} urruneko partekatze bezala jaso duzu ({behalf} ordez)",
-    "You received \"%3$s\" as a remote share from %1$s" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu",
     "You received {share} as a remote share from {user}" : "{user}-en {share} urruneko partekatze bezala jaso duzu",
     "Accept" : "Onartu",
     "Decline" : "Ezeztatu",
     "Share with me through my #Nextcloud Federated Cloud ID, see %s" : "Nirekin partekatu #Nextcloud Federatutako Hodei IDa erabiliz, 1%s ikusi",
     "Share with me through my #Nextcloud Federated Cloud ID" : "Nirekin partekatu #Nextcloud Federatutako Hodei IDa erabiliz, ",
     "Sharing" : "Partekatzea",
+    "Federated file sharing" : "Fitxategien partekatze federatua",
     "Federated Cloud Sharing" : "Federatutako Hodei Partekatzea",
     "Open documentation" : "Ireki dokumentazioa",
     "Adjust how people can share between servers." : "Pertsonen zerbitzarien arteko partekatzea konfiguratu",
@@ -41,6 +40,8 @@ OC.L10N.register(
     "Share it so your friends can share files with you:" : "Partekatu zure lagunek fitxategiak zurekin partekatzeko:",
     "Add to your website" : "Zure webgunera gehitu",
     "Share with me via Nextcloud" : "Partekatu nirekin Nextcloud-en bidez",
-    "HTML Code:" : "HTML kodea:"
+    "HTML Code:" : "HTML kodea:",
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu ( 3%2$s-en ordez)",
+    "You received \"%3$s\" as a remote share from %1$s" : "2%1$s-ren \"1%3$s\" urruneko partekatze bezala jaso duzu"
 },
 "nplurals=2; plural=(n != 1);");

@@ -530,15 +530,12 @@ it, replacing the <strong>Directory</strong> and other filepaths with your own f
 
 <span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/&gt;</span>
   <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
-  <span class="n">Options</span> <span class="n">FollowSymlinks</span> <span class="n">MultiViews</span>
   <span class="n">AllowOverride</span> <span class="n">All</span>
+  <span class="n">Options</span> <span class="n">FollowSymLinks</span> <span class="n">MultiViews</span>
 
- <span class="o">&lt;</span><span class="n">IfModule</span> <span class="n">mod_dav</span><span class="o">.</span><span class="n">c</span><span class="o">&gt;</span>
-  <span class="n">Dav</span> <span class="n">off</span>
- <span class="o">&lt;/</span><span class="n">IfModule</span><span class="o">&gt;</span>
-
- <span class="n">SetEnv</span> <span class="n">HOME</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span>
- <span class="n">SetEnv</span> <span class="n">HTTP_HOME</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span>
+  <span class="o">&lt;</span><span class="n">IfModule</span> <span class="n">mod_dav</span><span class="o">.</span><span class="n">c</span><span class="o">&gt;</span>
+    <span class="n">Dav</span> <span class="n">off</span>
+  <span class="o">&lt;/</span><span class="n">IfModule</span><span class="o">&gt;</span>
 
 <span class="o">&lt;/</span><span class="n">Directory</span><span class="o">&gt;</span>
 </pre></div>
@@ -552,7 +549,7 @@ it, replacing the <strong>Directory</strong> and other filepaths with your own f
   <span class="n">DocumentRoot</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/</span>
   <span class="n">ServerName</span>  <span class="n">your</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">com</span>
 
-  <span class="o">&lt;</span><span class="n">Directory</span> <span class="s2">&quot;/var/www/nextcloud/&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">Directory</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/&gt;</span>
     <span class="n">Require</span> <span class="nb">all</span> <span class="n">granted</span>
     <span class="n">AllowOverride</span> <span class="n">All</span>
     <span class="n">Options</span> <span class="n">FollowSymLinks</span> <span class="n">MultiViews</span>

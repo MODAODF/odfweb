@@ -6,6 +6,7 @@ OC.L10N.register(
     "failed!" : "mistókst!",
     "Saved" : "Vistað",
     "There was a problem saving your changes. Click to resume editing." : "Það kom upp vandamál við að vista breytingarnar þínar. Smelltu til að halda ritun áfram.",
+    "Edit in plain text editor" : "Breyta með hreinum textaritli",
     "An error occurred!" : "Villa kom upp!",
     "Edit" : "Breyta",
     "Mixed" : "Blandað",
@@ -27,6 +28,7 @@ OC.L10N.register(
     "Share not found" : "Sameign fannst ekki",
     "You are not authorized to open this share" : "Þú hefur ekki heimild til að opna þessa sameign",
     "Invalid range request" : "Ógild fyrirspurn um gagnasvið",
+    "Plain text editor" : "Ritill fyrir hreinan texta",
     "Text editor" : "Textaritill"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

@@ -572,10 +572,6 @@ class Request implements \ArrayAccess, \Countable, IRequest {
 			return true;
 		}
 
-		$remoteIp = $this->config->getSystemValue('remoteIp');
-		if(isset($remoteIp) && !empty($remoteIp)){
-			return true;
-		}
 		$cookieName = $this->getProtectedCookieName('nc_sameSiteCookielax');
 		if($this->getCookie($cookieName) === 'true') {
 			return true;

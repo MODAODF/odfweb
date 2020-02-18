@@ -19,14 +19,13 @@ OC.L10N.register(
     "File is already shared with %s" : "File ja es compartite con %s",
     "Could not find share" : "Impossibile trovar le compartite",
     "Federated sharing" : "Compartir Federate",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Tu recipeva \"%3$s\" como un compartimento remote de %1$s (in nomine de %2$s)",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Tu recipeva {share} como un compartimento remote de {user} (in nomine de {behalf})",
-    "You received \"%3$s\" as a remote share from %1$s" : "Tu recipeva \"%3$s\" como un compartimento remote de %1$s",
     "You received {share} as a remote share from {user}" : "Tu recipeva {share} como un compartimento remote de {user}",
     "Accept" : "Acceptar",
     "Decline" : "Refusar",
     "Share with me through my #Nextcloud Federated Cloud ID, see %s" : "Comparti con me per mi ID de Nube Federate #Nextcloud, vide %s",
     "Share with me through my #Nextcloud Federated Cloud ID" : "Comparti con me per mi ID de Nube Federate #Nextcloud",
+    "Sharing" : "Compartente",
     "Federated Cloud Sharing" : "Compartimento del Nube Federate",
     "Open documentation" : "Documentation aperte",
     "Allow users on this server to send shares to other servers" : "Permitter usatores in iste servitor a inviar elementos compartite a altere servitores",
@@ -36,6 +35,8 @@ OC.L10N.register(
     "Your Federated Cloud ID:" : "Tu ID de Nube Federate:",
     "Add to your website" : "Adde a tu sito web",
     "Share with me via Nextcloud" : "Comparti con me via Nextcloud",
-    "HTML Code:" : "Codice HTML:"
+    "HTML Code:" : "Codice HTML:",
+    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Tu recipeva \"%3$s\" como un compartimento remote de %1$s (in nomine de %2$s)",
+    "You received \"%3$s\" as a remote share from %1$s" : "Tu recipeva \"%3$s\" como un compartimento remote de %1$s"
 },
 "nplurals=2; plural=(n != 1);");
