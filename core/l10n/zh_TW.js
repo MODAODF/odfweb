@@ -281,7 +281,6 @@ OC.L10N.register(
     "Finishing …" : "即將完成…",
     "Need help?" : "需要協助嗎？",
     "See the documentation" : "閱讀 odfweb 安裝說明書",
-    "Odfweb-install documentation link" : "https://cloud.ossii.com.tw/index.php/s/CCi28nzxA4JmmR6#pdfviewer",
     "It looks like you are trying to reinstall your Nextcloud. However the file CAN_INSTALL is missing from your config directory. Please create the file CAN_INSTALL in your config folder to continue." : "您似乎正在嘗試重新安裝您的Nextcloud。然而，檔案 CAN_INSTALL 並未在您的config目錄中。請在您的config目錄中建立 CAN_INSTALL檔以繼續。",
     "Could not remove CAN_INSTALL from the config folder. Please remove this file manually." : "無法從您的 config 目錄中移除 CAN_INSTALL 檔案。請手動移除他。",
     "This application requires JavaScript for correct operation. Please {linkstart}enable JavaScript{linkend} and reload the page." : "這個應用程式需要啟用 Javascript 才能正常運作，請{linkstart}啟用Javascript{linkend}然後重新整理頁面。",
