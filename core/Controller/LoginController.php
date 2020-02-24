@@ -297,8 +297,12 @@ class LoginController extends Controller {
 		// If the user is already logged in and the CSRF check does not pass then
 		// simply redirect the user to the correct page as required. This is the
 		// case when an user has already logged-in, in another tab.
-		if(!$this->request->passesCSRFCheck()) {
-			return $this->generateRedirect($redirect_url);
+		$remoteIp = $this->config->getSystemValue('remoteIp');
+		$checkOrigin = $this->request->server['HTTP_ORIGIN'] === $remoteIp ? true : false;
+		if (!$this->request->passesCSRFCheck() && !$checkOrigin) {
+			if (!isset($remoteIp) || empty($remoteIp)) {
+				return $this->generateRedirect($redirect_url);
+			}
 		}
 
 		if ($this->userManager instanceof PublicEmitter) {

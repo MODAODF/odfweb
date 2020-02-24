@@ -53,8 +53,28 @@ $invert: luma($color-primary) > 0.6;
 		@include icon-color('more', 'actions', $color-black, 1, true);
 	}
 
-	#body-login {
+	/* Radio & Checkboxes */
+	$color-checkbox-radio-border: nc-darken($color-main-background, 47%);
+	.app-files input {
+		&[type='checkbox'], &[type='radio'] {
+			&.radio, &.checkbox {
+				+ label:before {
+					border: 1px solid $color-checkbox-radio-border;
+				}
+			}
+			&:not(:disabled):not(:checked) + label:hover:before,
+			&:focus + label:before {
+				border-color: darken($color-checkbox-radio-border, 17%);
+			}
+			&:checked + label:before,
+			&.checkbox:indeterminate + label:before {
+				background-color: $color-checkbox-radio-border;
+				border-color: $color-checkbox-radio-border;
+			}
+		}
+	}
 
+	#body-login {
 		input,
 		#alternative-logins li a,
 		a.button {
@@ -66,11 +86,15 @@ $invert: luma($color-primary) > 0.6;
 			background-color: $color-primary;
 			color: $color-primary-text;
 		}
+		input.primary:not(:disabled):hover,
+		input.primary:not(:disabled):focus {
+			color: rgba(0, 0, 0, .5);
+		}
 		a,
 		label,
 		p,
 		#alternative-logins legend,
-		.lost-password-container #lost-password {
+		.lost-password-container > a {
 			color: $color-primary-text;
 		}
 		input[type='checkbox'].checkbox--white + label:before {
@@ -86,6 +110,17 @@ $invert: luma($color-primary) > 0.6;
 			@include icon-color('checkbox-mark', 'actions', $color-white, 1, true);
 		}
 	}
+
+	/* richdocument online header icon */
+	#richdocuments-header > div {
+		.icon-shared {
+			@include icon-color('shared', 'actions', $color-black, 1, true);
+		}
+		.icon-more {
+			@include icon-color('more', 'actions', $color-black, 1, true);
+		}
+	}
+
 } @else {
 	#appmenu:not(.inverted) svg {
 		filter: none;
@@ -93,6 +128,31 @@ $invert: luma($color-primary) > 0.6;
 	#appmenu.inverted svg {
 		filter: invert(1);
 	}
+	#body-login {
+		input.primary:not(:disabled):hover,
+		input.primary:not(:disabled):focus {
+			color: rgba(255, 255, 255, .8);
+		}
+		footer * {
+			color: #fff;
+		}
+	}
+
+	/* Errors */
+	/* Warnings and errors are the same */
+	.body-login-container,
+	.warning,
+	.update,
+	.error {
+		color: #fff;
+	}
+	.body-login-container h2,
+	.warning h2,
+	.update h2,
+	.error h2 {
+		color: #fff;
+	}
+
 }
 
 /* Colorized svg images */

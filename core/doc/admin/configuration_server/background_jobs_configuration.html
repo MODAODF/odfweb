@@ -206,12 +206,10 @@ path to your current Nextcloud installation.</p>
 <span class="p">[</span><span class="n">Service</span><span class="p">]</span>
 <span class="n">User</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span>
 <span class="n">ExecStart</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">php</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/</span><span class="n">cron</span><span class="o">.</span><span class="n">php</span>
-
-<span class="p">[</span><span class="n">Install</span><span class="p">]</span>
-<span class="n">WantedBy</span><span class="o">=</span><span class="n">basic</span><span class="o">.</span><span class="n">target</span>
 </pre></div>
 </div>
 <p>Replace the user <code class="docutils literal notranslate"><span class="pre">www-data</span></code> with the user of your http server and <code class="docutils literal notranslate"><span class="pre">/var/www/nextcloud/cron.php</span></code> with the location of <strong>cron.php</strong> in your nextcloud directory.</p>
+<p>Note that the <strong>.service</strong> unit file does not need an <code class="docutils literal notranslate"><span class="pre">[Install]</span></code> section. Please check your setup because we recommended it in earlier versions of this admin manual.</p>
 <p><strong>nextcloudcron.timer</strong> should look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>
 <span class="n">Description</span><span class="o">=</span><span class="n">Run</span> <span class="n">Nextcloud</span> <span class="n">cron</span><span class="o">.</span><span class="n">php</span> <span class="n">every</span> <span class="mi">5</span> <span class="n">minutes</span>
@@ -230,7 +228,7 @@ path to your current Nextcloud installation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">systemctl</span> <span class="n">enable</span> <span class="o">--</span><span class="n">now</span> <span class="n">nextcloudcron</span><span class="o">.</span><span class="n">timer</span>
 </pre></div>
 </div>
-<p>When the option <code class="docutils literal notranslate"><span class="pre">--now</span></code> is used with <code class="docutils literal notranslate"><span class="pre">enable</span></code>, the resp. unit will also be started.</p>
+<p>When the option <code class="docutils literal notranslate"><span class="pre">--now</span></code> is used with <code class="docutils literal notranslate"><span class="pre">enable</span></code>, the respective unit will also be started.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Selecting the option <code class="docutils literal notranslate"><span class="pre">Cron</span></code> in the admin menu for background jobs is not mandatory, because once <cite>cron.php</cite> is executed from the command line or cron service it will set it automatically to <code class="docutils literal notranslate"><span class="pre">Cron</span></code>.</p>

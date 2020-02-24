@@ -2154,4 +2154,3 @@ if(strpos($updaterUrl, 'index.php') === false) {
 <?php endif; ?>
 
 </html>
-

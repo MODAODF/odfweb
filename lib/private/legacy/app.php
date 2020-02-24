@@ -55,6 +55,7 @@ use OC\App\Platform;
 use OC\DB\MigrationService;
 use OC\Installer;
 use OC\Repair;
+use OC\ServerNotAvailableException;
 use OCP\App\ManagerEvent;
 use OCP\ILogger;
 
@@ -153,9 +154,13 @@ class OC_App {
 			try {
 				self::requireAppFile($app);
 			} catch (Throwable $ex) {
+				if($ex instanceof ServerNotAvailableException) {
+					throw $ex;
+				}
 				\OC::$server->getLogger()->logException($ex);
-				if (!\OC::$server->getAppManager()->isShipped($app)) {
-					// Only disable apps which are not shipped
+
+				if (!\OC::$server->getAppManager()->isShipped($app) && !self::isType($app, ['authentication'])) {
+					// Only disable apps which are not shipped and that are not authentication apps
 					\OC::$server->getAppManager()->disableApp($app, true);
 				}
 			}

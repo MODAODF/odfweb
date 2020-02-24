@@ -15,7 +15,6 @@ a, a *, input, input *, select, .button span, label { cursor:pointer; }
 ul { list-style:none; }
 
 body {
-	background-color: #ffffff;
 	font-weight: normal;
 	font-size: .8em;
 	line-height: 1.6em;
@@ -34,7 +33,7 @@ body {
 
 /* Various fonts settings */
 #body-login a {
-	color: #fff;
+	color: #000;
 	font-weight: 600;
 }
 #body-login a:not(.button):hover,
@@ -44,7 +43,7 @@ body {
 }
 
 #showAdvanced {
-	color: #fff;
+	color: #000;
 }
 
 em {
@@ -264,9 +263,9 @@ input::-moz-focus-inner {
 input.primary,
 button.primary,
 a.primary {
-	border: 1px solid #fff;
+	border: 1px solid #000;
 	background-color: #ECECFF;
-	color: #fff;
+	color: #000;
 	transition: color 100ms ease-in-out;
 }
 
@@ -276,7 +275,7 @@ button.primary:not(:disabled):hover,
 button.primary:not(:disabled):focus,
 a.primary:not(:disabled):hover,
 a.primary:not(:disabled):focus {
-	color: rgba(255, 255, 255, .8);
+	color: rgba(0, 0, 0, .5);
 }
 
 /* Checkboxes - white only for login */
@@ -345,7 +344,7 @@ input[type='checkbox'].checkbox--white:checked + label:before {
 }
 .tooltip-inner {
 	font-weight: bold;
-	color: #ccc;
+	color: #555;
 	padding: 3px 6px;
 	text-align: center;
 }
@@ -404,7 +403,7 @@ form fieldset legend,
 form fieldset .warning-info,
 form input[type='checkbox']+label {
 	text-align: center;
-	color: #fff;
+	color: #000;
 }
 /* overrides another !important statement that sets this to unreadable black */
 form .warning input[type='checkbox']:hover+label,
@@ -595,7 +594,7 @@ form #selectDbType label span {
 	margin-top: 15px;
 	padding: 15px;
 	background-color: rgba(0,0,0,.3);
-	color: #fff;
+	color: #000;
 	text-align: left;
 	word-wrap: break-word;
 	border-radius: 10px; /* --border-radius-large */
@@ -610,7 +609,7 @@ form #selectDbType label span {
 .warning h2,
 .update h2,
 .error h2 {
-	color: #fff;
+	color: #000;
 	text-align: center;
 }
 
@@ -634,7 +633,7 @@ form #selectDbType label span {
 .warning legend,
 .warning a,
 .error a {
-	color: #fff !important;
+	color: #000 !important;
 	font-weight: bold !important;
 	opacity: 1;
 }
@@ -728,8 +727,14 @@ p.info {
 .icon-info-white {
 	background-image: url('../img/actions/info-white.svg?v=2');
 }
+.icon-error {
+	background-image: url('../img/actions/error.svg?v=1');
+}
 .icon-error-white {
 	background-image: url('../img/actions/error-white.svg?v=1');
+}
+.icon-caret {
+	background-image: url('../img/actions/caret.svg?v=1');
 }
 .icon-caret-white {
 	background-image: url('../img/actions/caret-white.svg?v=1');
@@ -919,6 +924,6 @@ a.legal {
 	margin: auto;
     top: 0;
 	bottom: 0;
-	right: 0;	
+	right: 0;
     left: 0;
 }
