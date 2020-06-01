@@ -25,6 +25,7 @@ use OC\Files\View;
 use OCA\Richdocuments\Db\Wopi;
 use OCA\Richdocuments\AppConfig;
 use OCA\Richdocuments\Db\WopiMapper;
+use OCA\Richdocuments\Service\UserScopeService;
 use OCA\Richdocuments\TemplateManager;
 use OCA\Richdocuments\TokenManager;
 use OCA\Richdocuments\Helper;
@@ -34,6 +35,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Files\File;
 use OCP\Files\Folder;
+use OCP\Files\GenericFileException;
 use OCP\Files\InvalidPathException;
 use OCP\Files\IRootFolder;
 use OCP\Files\Node;
@@ -45,7 +47,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\AppFramework\Http\StreamResponse;
 use OCP\IUserManager;
-use OCP\IUserSession;
+use OCP\Lock\LockedException;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager;
 
@@ -66,12 +68,12 @@ class WopiController extends Controller {
 	private $wopiMapper;
 	/** @var ILogger */
 	private $logger;
-	/** @var IUserSession */
-	private $userSession;
 	/** @var TemplateManager */
 	private $templateManager;
 	/** @var IManager */
 	private $shareManager;
+	/** @var UserScopeService */
+	private $userScopeService;
 
 	// Signifies LOOL that document has been changed externally in this storage
 	const LOOL_STATUS_DOC_CHANGED = 1010;
@@ -86,7 +88,6 @@ class WopiController extends Controller {
 	 * @param IUserManager $userManager
 	 * @param WopiMapper $wopiMapper
 	 * @param ILogger $logger
-	 * @param IUserSession $userSession
 	 * @param TemplateManager $templateManager
 	 */
 	public function __construct(
@@ -100,9 +101,9 @@ class WopiController extends Controller {
 		IUserManager $userManager,
 		WopiMapper $wopiMapper,
 		ILogger $logger,
-		IUserSession $userSession,
 		TemplateManager $templateManager,
-		IManager $shareManager
+		IManager $shareManager,
+		UserScopeService $userScopeService
 	) {
 		parent::__construct($appName, $request);
 		$this->rootFolder = $rootFolder;
@@ -113,9 +114,9 @@ class WopiController extends Controller {
 		$this->userManager = $userManager;
 		$this->wopiMapper = $wopiMapper;
 		$this->logger = $logger;
-		$this->userSession = $userSession;
 		$this->templateManager = $templateManager;
 		$this->shareManager = $shareManager;
+		$this->userScopeService = $userScopeService;
 	}
 
 	/**
@@ -146,6 +147,9 @@ class WopiController extends Controller {
 				throw new NotFoundException('No valid file found for ' . $fileId);
 			}
 		} catch (NotFoundException $e) {
+			$this->logger->debug($e->getMessage(), ['app' => 'richdocuments', '']);
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		} catch (DoesNotExistException $e) {
 			$this->logger->debug($e->getMessage(), ['app' => 'richdocuments', '']);
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		} catch (\Exception $e) {
@@ -197,10 +201,19 @@ class WopiController extends Controller {
 
 			];
 			$watermarkTemplate = $this->appConfig->getAppValue('watermark_text');
-			$response['WatermarkText'] = preg_replace_callback('/{(.+?)}/', function($matches) use ($replacements)
-			{
+			$response['WatermarkText'] = preg_replace_callback('/{(.+?)}/', function ($matches) use ($replacements) {
 				return $replacements[$matches[1]];
 			}, $watermarkTemplate);
+		}
+
+		/**
+		 * New approach for generating files from templates by creating an empty file
+		 * and providing an URL which returns the actual templyte
+		 */
+		if ($wopi->hasTemplateId()) {
+			$templateUrl = 'index.php/apps/richdocuments/wopi/template/' . $wopi->getTemplateId() . '?access_token=' . $wopi->getToken();
+			$templateUrl = $this->urlGenerator->getAbsoluteURL($templateUrl);
+			$response['TemplateSource'] = $templateUrl;
 		}
 
 		$user = $this->userManager->get($wopi->getEditorUid());
@@ -378,12 +391,19 @@ class WopiController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
+		// Set the user to register the change under his name
+		$this->userScopeService->setUserScope($wopi->getEditorUid());
+		$this->userScopeService->setFilesystemScope($isPutRelative ? $wopi->getEditorUid() : $wopi->getUserForFileAccess());
+
 		try {
 			if ($isPutRelative) {
 				// the new file needs to be installed in the current user dir
 				$userFolder = $this->rootFolder->getUserFolder($wopi->getEditorUid());
-				$file = $userFolder->getById($fileId)[0];
-
+				$file = $userFolder->getById($fileId);
+				if (count($file) === 0) {
+					return new JSONResponse([], Http::STATUS_NOT_FOUND);
+				}
+				$file = $file[0];
 				$suggested = $this->request->getHeader('X-WOPI-SuggestedTarget');
 				$suggested = iconv('utf-7', 'utf-8', $suggested);
 
@@ -416,10 +436,11 @@ class WopiController extends Controller {
 			} else {
 				$file = $this->getFileForWopiToken($wopi);
 				$wopiHeaderTime = $this->request->getHeader('X-LOOL-WOPI-Timestamp');
-				if ($wopiHeaderTime !== null && $wopiHeaderTime !== Helper::toISO8601($file->getMTime())) {
+
+				if ($wopiHeaderTime !== null && $wopiHeaderTime !== Helper::toISO8601($file->getMTime() ?? 0)) {
 					$this->logger->debug('Document timestamp mismatch ! WOPI client says mtime {headerTime} but storage says {storageTime}', [
 						'headerTime' => $wopiHeaderTime,
-						'storageTime' => Helper::toISO8601($file->getMTime())
+						'storageTime' => Helper::toISO8601($file->getMTime() ?? 0)
 					]);
 					// Tell WOPI client about this conflict.
 					return new JSONResponse(['LOOLStatusCode' => self::LOOL_STATUS_DOC_CHANGED], Http::STATUS_CONFLICT);
@@ -428,13 +449,14 @@ class WopiController extends Controller {
 
 			$content = fopen('php://input', 'rb');
 
-			// Set the user to register the change under his name
-			$editor = $this->userManager->get($wopi->getEditorUid());
-			if ($editor !== null) {
-				$this->userSession->setUser($editor);
+			try {
+				$this->retryOperation(function () use ($file, $content){
+					return $file->putContent($content);
+				});
+			} catch (LockedException $e) {
+				$this->logger->logException($e);
+				return new JSONResponse(['message' => 'File locked'], Http::STATUS_INTERNAL_SERVER_ERROR);
 			}
-
-			$file->putContent($content);
 
 			if ($isPutRelative) {
 				// generate a token for the new file (the user still has to be
@@ -446,7 +468,10 @@ class WopiController extends Controller {
 
 				return new JSONResponse([ 'Name' => $file->getName(), 'Url' => $url ], Http::STATUS_OK);
 			}
-
+			if ($wopi->hasTemplateId()) {
+				$wopi->setTemplateId(null);
+				$this->wopiMapper->update($wopi);
+			}
 			return new JSONResponse(['LastModifiedTime' => Helper::toISO8601($file->getMTime())]);
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'getFile failed']);
@@ -459,6 +484,8 @@ class WopiController extends Controller {
 	 * Expects a valid token in access_token parameter.
 	 * Just actually routes to the PutFile, the implementation of PutFile
 	 * handles both saving and saving as.* Given an access token and a fileId, replaces the files with the request body.
+	 *
+	 * FIXME Cleanup this code as is a lot of shared logic between putFile and putRelativeFile
 	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
@@ -526,7 +553,11 @@ class WopiController extends Controller {
 				$path = $this->rootFolder->getNonExistingName($path);
 				$file = $file->move($path);
 			} else {
-				$file = $userFolder->getById($fileId)[0];
+				$file = $userFolder->getById($fileId);
+				if (count($file) === 0) {
+					return new JSONResponse([], Http::STATUS_NOT_FOUND);
+				}
+				$file = $file[0];
 
 				$suggested = $this->request->getHeader('X-WOPI-SuggestedTarget');
 				$suggested = iconv('utf-7', 'utf-8', $suggested);
@@ -557,14 +588,17 @@ class WopiController extends Controller {
 			}
 
 			$content = fopen('php://input', 'rb');
-
 			// Set the user to register the change under his name
-			$editor = $this->userManager->get($wopi->getEditorUid());
-			if ($editor !== null) {
-				$this->userSession->setUser($editor);
-			}
+			$this->userScopeService->setUserScope($wopi->getEditorUid());
+			$this->userScopeService->setFilesystemScope($wopi->getEditorUid());
 
-			$file->putContent($content);
+			try {
+				$this->retryOperation(function () use ($file, $content){
+					return $file->putContent($content);
+				});
+			} catch (LockedException $e) {
+				return new JSONResponse(['message' => 'File locked'], Http::STATUS_INTERNAL_SERVER_ERROR);
+			}
 
 			// generate a token for the new file (the user still has to be
 			// logged in)
@@ -578,6 +612,29 @@ class WopiController extends Controller {
 			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'putRelativeFile failed']);
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	/**
+	 * Retry operation if a LockedException occurred
+	 * Other exceptions will still be thrown
+	 * @param callable $operation
+	 * @throws LockedException
+	 * @throws GenericFileException
+	 */
+	private function retryOperation(callable $operation) {
+		for ($i = 0; $i < 5; $i++) {
+			try {
+				if ($operation() !== false) {
+					return;
+				}
+			} catch (LockedException $e) {
+				if ($i === 4) {
+					throw $e;
+				}
+				usleep(500000);
+			}
+		}
+		throw new GenericFileException('Operation failed after multiple retries');
 	}
 
 	/**
@@ -600,14 +657,49 @@ class WopiController extends Controller {
 		} else {
 			// Unless the editor is empty (public link) we modify the files as the current editor
 			// TODO: add related share token to the wopi table so we can obtain the
-			$editor = $wopi->getEditorUid();
-			if ($editor === null) {
-				$editor = $wopi->getOwnerUid();
+			$userFolder = $this->rootFolder->getUserFolder($wopi->getUserForFileAccess());
+			$files = $userFolder->getById($wopi->getFileid());
+			if (isset($files[0]) && $files[0] instanceof File) {
+				$file = $files[0];
+			} else {
+				throw new NotFoundException('No valid file found for wopi token');
 			}
-
-			$userFolder = $this->rootFolder->getUserFolder($editor);
-			$file = $userFolder->getById($wopi->getFileid())[0];
 		}
 		return $file;
 	}
+
+	/**
+	 * Endpoint to return the template file that is requested by collabora to create a new document
+	 *
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 *
+	 * @param $fileId
+	 * @param $access_token
+	 * @return JSONResponse|StreamResponse
+	 */
+	public function getTemplate($fileId, $access_token) {
+		try {
+			$wopi = $this->wopiMapper->getPathForToken($access_token);
+		} catch (DoesNotExistException $e) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		if ((int)$fileId !== $wopi->getTemplateId()) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
+
+		try {
+			$this->templateManager->setUserId($wopi->getOwnerUid());
+			$file = $this->templateManager->get($wopi->getTemplateId());
+			$response = new StreamResponse($file->fopen('rb'));
+			$response->addHeader('Content-Disposition', 'attachment');
+			$response->addHeader('Content-Type', 'application/octet-stream');
+			return $response;
+		} catch (\Exception $e) {
+			$this->logger->logException($e, ['level' => ILogger::ERROR,	'app' => 'richdocuments', 'message' => 'getTemplate failed']);
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

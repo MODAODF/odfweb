@@ -32,7 +32,7 @@ return [
 		['name' => 'document#remote', 'url' => 'remote', 'verb' => 'GET'],
 		['name' => 'document#open', 'url' => 'open', 'verb' => 'GET'],
 
-		['name' => 'document#template', 'url' => 'indexTemplate', 'verb' => 'GET'],
+		['name' => 'document#createFromTemplate', 'url' => 'indexTemplate', 'verb' => 'GET'],
 		['name' => 'document#publicPage', 'url' => '/public', 'verb' => 'GET'],
 		['name' => 'document#create', 'url' => 'ajax/documents/create', 'verb' => 'POST'],
 
@@ -44,6 +44,7 @@ return [
 		['name' => 'wopi#getFile', 'url' => 'wopi/files/{fileId}/contents', 'verb' => 'GET'],
 		['name' => 'wopi#putFile', 'url' => 'wopi/files/{fileId}/contents', 'verb' => 'POST'],
 		['name' => 'wopi#putRelativeFile', 'url' => 'wopi/files/{fileId}', 'verb' => 'POST'],
+		['name' => 'wopi#getTemplate', 'url' => 'wopi/template/{fileId}', 'verb' => 'GET'],
 
 		//settings
 		['name' => 'settings#setPersonalSettings', 'url' => 'ajax/personal.php', 'verb' => 'POST'],

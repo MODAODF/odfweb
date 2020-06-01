@@ -1,5 +1,77 @@
 # Changelog
 
+## 3.5.3
+
+### Fixed
+- Hardening check for edit permissions when editing though iOS/Android
+- Fix editing though public share links as logged in users
+- Fix issues with setting the language properly in Collabora Online
+- Dependency bumps
+
+## 3.5.2
+
+### Fixed
+- Fix filesystem setup that caused save issues all over the place
+- Do not try to recreate a file from a template more than once
+- Do not open PDF files by default
+- Dependency bumps
+
+## 3.5.1
+
+### Fixed
+- Fix issue when shared files were not creating activity/version entries
+- Fix bug on public share links
+- Dependency bumps
+
+## 3.5.0
+
+### Added
+
+- Implement support for TemplateSource file creation method
+- Add occ command to update template files
+
+### Fixed
+
+- Fix inserting images with groupfolders that have ACL configured
+- Fix setting cache values when editing federated (@xklonx)
+- Dependency bumps
+
+## 3.4.6
+
+### Added
+- Force read operation to trigger audit log when issuing a token
+- Nextcloud 18 compatibility
+
+## 3.4.5
+
+### Fixed
+- Retry putContent operation if locked
+- Include locale in the loleaflet lang parameter
+- Make sure files created from the same template have a different WOPI file id
+- Always use the owner file owner to access for share links
+- Make sure Firefox doesn't navigate out of the current directory
+- Dependency bumps
+
+
+## 3.4.4
+
+### Fixed
+- Fix issue when creating files from templates
+- Make sure files are properly opened after creation
+
+
+## 3.4.3
+
+### Fixed
+- Update translations
+- Bump dependencies
+- Always open CSV files with collabora (#671)
+- Do not use template shipped by core (#670)
+- Fix undefined index warning (#652)
+- Check key before accessing (#645)
+- Move file list access to files app integration (#651)
+- Lower log level if the token does not exist (#653)
+
 ## 3.4.2
 
 ### Fixed

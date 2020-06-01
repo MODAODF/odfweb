@@ -21,10 +21,9 @@
 
 namespace OCA\Richdocuments;
 
-use OC\Share\Constants;
 use OCA\Richdocuments\Db\WopiMapper;
-use OCA\Richdocuments\Helper;
 use OCA\Richdocuments\Db\Wopi;
+use OCA\Richdocuments\Service\CapabilitiesService;
 use OCA\Richdocuments\WOPI\Parser;
 use OCP\Files\File;
 use OCP\Files\IRootFolder;
@@ -32,7 +31,6 @@ use OCP\Files\Node;
 use OCP\IGroupManager;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
-use OCP\Security\ISecureRandom;
 use OCP\Share\IManager;
 use OCP\IL10N;
 use OCP\Util;
@@ -58,6 +56,10 @@ class TokenManager {
 	private $userManager;
 	/** @var IGroupManager */
 	private $groupManager;
+	/** @var CapabilitiesService */
+	private $capabilitiesService;
+	/** @var Helper */
+	private $helper;
 
 	/**
 	 * @param IRootFolder $rootFolder
@@ -69,26 +71,32 @@ class TokenManager {
 	 * @param WopiMapper $wopiMapper
 	 * @param IL10N $trans
 	 */
-	public function __construct(IRootFolder $rootFolder,
-								IManager $shareManager,
-								IURLGenerator $urlGenerator,
-								Parser $wopiParser,
-								AppConfig $appConfig,
-								$UserId,
-								WopiMapper $wopiMapper,
-								IL10N $trans,
-								IUserManager $userManager,
-								IGroupManager $groupManager) {
+	public function __construct(
+		IRootFolder $rootFolder,
+		IManager $shareManager,
+		IURLGenerator $urlGenerator,
+		Parser $wopiParser,
+		CapabilitiesService $capabilitiesService,
+		AppConfig $appConfig,
+		$UserId,
+		WopiMapper $wopiMapper,
+		IL10N $trans,
+		IUserManager $userManager,
+		IGroupManager $groupManager,
+		Helper $helper
+	) {
 		$this->rootFolder = $rootFolder;
 		$this->shareManager = $shareManager;
 		$this->urlGenerator = $urlGenerator;
 		$this->wopiParser = $wopiParser;
+		$this->capabilitiesService = $capabilitiesService;
 		$this->appConfig = $appConfig;
 		$this->trans = $trans;
 		$this->userId = $UserId;
 		$this->wopiMapper = $wopiMapper;
 		$this->userManager = $userManager;
 		$this->groupManager = $groupManager;
+		$this->helper = $helper;
 	}
 
 	/**
@@ -99,11 +107,11 @@ class TokenManager {
 	 * @throws \Exception
 	 */
 	public function getToken($fileId, $shareToken = null, $editoruid = null, $direct = false, $isRemoteToken = false) {
-		list($fileId,, $version) = Helper::parseFileId($fileId);
+		list($fileId, , $version) = Helper::parseFileId($fileId);
 		$owneruid = null;
 		$hideDownload = false;
 		// if the user is not logged-in do use the sharers storage
-		if($shareToken !== null) {
+		if ($shareToken !== null) {
 			/** @var File $file */
 			$rootFolder = $this->rootFolder;
 			$share = $this->shareManager->getShareByToken($shareToken);
@@ -132,12 +140,12 @@ class TokenManager {
 				$editorUser = $this->userManager->get($editoruid);
 				if ($updatable && count($editGroups) > 0 && $editorUser) {
 					$updatable = false;
-					foreach($editGroups as $editGroup) {
-						 $editorGroup = $this->groupManager->get($editGroup);
-						 if ($editorGroup !== null && $editorGroup->inGroup($editorUser)) {
+					foreach ($editGroups as $editGroup) {
+						$editorGroup = $this->groupManager->get($editGroup);
+						if ($editorGroup !== null && $editorGroup->inGroup($editorUser)) {
 							$updatable = true;
 							break;
-						 }
+						}
 					}
 				}
 			} catch (\Exception $e) {
@@ -149,11 +157,22 @@ class TokenManager {
 			// this is required during WopiPutRelativeFile
 			if (is_null($editoruid)) {
 				\OC::$server->getLogger()->warning('Generating token for SaveAs without editoruid');
+				$updatable = true;
 			} else {
 				// Make sure we use the user folder if available since fetching all files by id from the root might be expensive
 				$rootFolder = $this->rootFolder->getUserFolder($editoruid);
+
+				$updatable = false;
+				$files = $rootFolder->getById($fileId);
+
+				foreach ($files as $file) {
+					if ($file->isUpdateable()) {
+						$updatable = true;
+						break;
+					}
+				}
 			}
-			$updatable = true;
+
 		}
 		/** @var File $file */
 		$file = $rootFolder->getById($fileId)[0];
@@ -167,24 +186,32 @@ class TokenManager {
 				$owneruid = $owner->getUID();
 			}
 		}
+
+		// force read operation to trigger possible audit logging
+		$fp = $file->fopen('r');
+		fclose($fp);
+
 		$serverHost = $this->urlGenerator->getAbsoluteURL('/');//$this->request->getServerProtocol() . '://' . $this->request->getServerHost();
 
-		if ($this->userId === null && isset($_COOKIE['guestUser']) && $_COOKIE['guestUser'] !== '') {
-			$guest_name = $this->trans->t('%s (Guest)', Util::sanitizeHTML($_COOKIE['guestUser']));
-		} else {
-			$guest_name = NULL;
+		$guest_name = null;
+		if ($this->userId === null) {
+			if ($guest_name = $this->helper->getGuestName()) {
+				$guest_name = $this->trans->t('%s (Guest)', Util::sanitizeHTML($guest_name));
+			} else {
+				$guest_name = $this->trans->t('Anonymous guest');
+			}
 		}
 
-		$wopi = $this->wopiMapper->generateFileToken($fileId, $owneruid, $editoruid, $version, (int)$updatable, $serverHost, $guest_name, 0, $hideDownload, $direct, $isRemoteToken);
+		$wopi = $this->wopiMapper->generateFileToken($fileId, $owneruid, $editoruid, $version, (int)$updatable, $serverHost, $guest_name, 0, $hideDownload, $direct, $isRemoteToken, 0, $shareToken);
 
 		try {
 
 			return [
-				$this->wopiParser->getUrlSrc($file->getMimeType())['urlsrc'],
+				$this->wopiParser->getUrlSrc($file->getMimeType())['urlsrc'], // url src might not be found ehre
 				$wopi->getToken(),
 				$wopi
 			];
-		} catch (\Exception $e){
+		} catch (\Exception $e) {
 			throw $e;
 		}
 	}
@@ -200,10 +227,18 @@ class TokenManager {
 		return $wopi;
 	}
 
-	public function getTokenForTemplate(File $file, $userId, $templateDestination, $direct = false) {
+	public function getTokenForTemplate(File $templateFile, $userId, $targetFileId, $direct = false) {
 		$owneruid = $userId;
 		$editoruid = $userId;
-		$updatable = $file->isUpdateable();
+		$rootFolder = $this->rootFolder->getUserFolder($editoruid);
+		/** @var File $targetFile */
+		$targetFile = $rootFolder->getById($targetFileId);
+		$targetFile = $targetFile[0] ?? null;
+		if (!$targetFile) {
+			// TODO: Exception
+			return null;
+		}
+		$updatable = $targetFile->isUpdateable();
 		// Check if the editor (user who is accessing) is in editable group
 		// UserCanWrite only if
 		// 1. No edit groups are set or
@@ -223,11 +258,16 @@ class TokenManager {
 
 		$serverHost = $this->urlGenerator->getAbsoluteURL('/');
 
-		$wopi = $this->wopiMapper->generateFileToken($file->getId(), $owneruid, $editoruid, 0, (int)$updatable, $serverHost, null, $templateDestination, $direct);
+		if ($this->capabilitiesService->hasTemplateSource()) {
+			$wopi = $this->wopiMapper->generateFileToken($targetFile->getId(), $owneruid, $editoruid, 0, (int)$updatable, $serverHost, null, 0, false, false, false, $templateFile->getId());
+		} else {
+			// Legacy way of creating new documents from a template
+			$wopi = $this->wopiMapper->generateFileToken($templateFile->getId(), $owneruid, $editoruid, 0, (int)$updatable, $serverHost, null, $targetFile->getId(), $direct);
+		}
 
 		return [
-			$this->wopiParser->getUrlSrc($file->getMimeType())['urlsrc'],
-			$wopi->getToken(),
+			$this->wopiParser->getUrlSrc($templateFile->getMimeType())['urlsrc'],
+			$wopi
 		];
 	}
 

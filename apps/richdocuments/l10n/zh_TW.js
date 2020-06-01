@@ -22,6 +22,7 @@ OC.L10N.register(
     "Please enter the filename to store the document as." : "請輸入要儲存文件的名稱",
     "Save As" : "另存為",
     "Save" : "儲存",
+    "Saved" : "已儲存",
     "New filename" : "新檔名",
     "Cancel" : "取消",
     "Insert from {name}" : "從 {name} 插入",
@@ -65,6 +66,12 @@ OC.L10N.register(
     "Wrong password. Please retry." : "密碼錯誤，請重試。",
     "Password" : "密碼",
     "OK" : "確定",
-    "Guest %s" : "訪客 %s"
+    "Guest %s" : "訪客 %s",
+    "Advanced settings" : "進階設定",
+    "Select groups" : "選擇群組",
+    "Failed to save settings" : "設定儲存失敗",
+    "Description" : "描述",
+    "No results" : "沒有符合搜尋的項目",
+    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "此連結已失效或不存在，詳細資訊請聯繫此連結的分享者。"
 },
 "nplurals=1; plural=0;");

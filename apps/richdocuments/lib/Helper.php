@@ -16,7 +16,13 @@ use \DateTimeZone;
 use OCP\Files\Folder;
 
 class Helper {
-	const APP_ID = 'richdocuments';
+
+	/** @var string|null */
+	private $userId;
+
+	public function __construct($userId) {
+		$this->userId = $userId;
+	}
 
 	/**
 	 * @param string $fileId
@@ -25,6 +31,7 @@ class Helper {
 	 */
 	public static function parseFileId($fileId) {
 		$arr = explode('_', $fileId);
+		$templateId = null;
 		if (count($arr) === 1) {
 			$fileId = $arr[0];
 			$instanceId = '';
@@ -38,10 +45,15 @@ class Helper {
 			throw new \Exception('$fileId has not the expected format');
 		}
 
+		if (strpos($fileId, '-') !== false) {
+			list($fileId, $templateId) = explode('/', $fileId);
+		}
+
 		return [
 			$fileId,
 			$instanceId,
 			$version,
+			$templateId
 		];
 	}
 
@@ -69,4 +81,12 @@ class Helper {
 
 		return $filename;
 	}
+
+	public function getGuestName() {
+		if ($this->userId !== null || !isset($_COOKIE['guestUser']) || $_COOKIE['guestUser'] === '') {
+			return null;
+		}
+		return $_COOKIE['guestUser'];
+	}
+
 }
