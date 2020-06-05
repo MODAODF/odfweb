@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<info>
+	<id>templaterepo</id>
+	<name>TemplateRepo</name>
+	<summary>Admin configured folders shared by everyone in a group</summary>
+	<description><![CDATA[Admin configured folders shared by everyone in a group.
+
+Folders can be configured from *Template Repo* in the admin settings.
+
+After a folder is created, the admin can give access to the folder to one or more groups, control their write/sharing permissions and assign a quota for the folder.
+
+Note: encrypting the contents of group folders is currently not supported.]]></description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author>Tommy.Wu</author>
+	<namespace>TemplateRepo</namespace>
+	<types>
+		<filesystem/>
+		<dav/>
+	</types>
+
+	<category>files</category>
+
+	<dependencies>
+		<nextcloud min-version="16" max-version="16" />
+	</dependencies>
+
+	<background-jobs>
+		<job>OCA\TemplateRepo\BackgroundJob\ExpireGroupVersions</job>
+	</background-jobs>
+
+	<commands>
+		<command>OCA\TemplateRepo\Command\ExpireGroupVersions</command>
+		<command>OCA\TemplateRepo\Command\ListCommand</command>
+		<command>OCA\TemplateRepo\Command\ACL</command>
+		<command>OCA\TemplateRepo\Command\Quota</command>
+		<command>OCA\TemplateRepo\Command\Group</command>
+		<command>OCA\TemplateRepo\Command\Create</command>
+		<command>OCA\TemplateRepo\Command\Rename</command>
+		<command>OCA\TemplateRepo\Command\Delete</command>
+		<command>OCA\TemplateRepo\Command\Scan</command>
+	</commands>
+
+	<settings>
+		<admin>OCA\TemplateRepo\Settings\Admin</admin>
+		<admin-section>OCA\TemplateRepo\Settings\Section</admin-section>
+	</settings>
+
+	<sabre>
+		<plugins>
+			<plugin>OCA\TemplateRepo\DAV\ACLPlugin</plugin>
+		</plugins>
+	</sabre>
+
+	<trash>
+		<backend for="OCA\TemplateRepo\Mount\TemplateRepoStorage">OCA\TemplateRepo\Trash\TrashBackend</backend>
+	</trash>
+
+	<versions>
+		<backend for="OCA\TemplateRepo\Mount\TemplateRepoStorage">OCA\TemplateRepo\Versions\VersionsBackend</backend>
+	</versions>
+</info>
