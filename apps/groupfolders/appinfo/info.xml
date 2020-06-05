@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<info>
+	<id>groupfolders</id>
+	<name>Group folders</name>
+	<summary>Admin configured folders shared by everyone in a group</summary>
+	<description><![CDATA[Admin configured folders shared by everyone in a group.
+
+Folders can be configured from *Group folders* in the admin settings.
+
+After a folder is created, the admin can give access to the folder to one or more groups, control their write/sharing permissions and assign a quota for the folder.
+
+Note: encrypting the contents of group folders is currently not supported.]]></description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author>Robin Appelman,Tommy Wu</author>
+	<namespace>GroupFolders</namespace>
+	<types>
+		<filesystem/>
+		<dav/>
+	</types>
+
+	<category>files</category>
+
+	<dependencies>
+		<nextcloud min-version="16" max-version="16" />
+	</dependencies>
+
+	<background-jobs>
+		<job>OCA\GroupFolders\BackgroundJob\ExpireGroupVersions</job>
+	</background-jobs>
+
+	<commands>
+		<command>OCA\GroupFolders\Command\ExpireGroupVersions</command>
+		<command>OCA\GroupFolders\Command\ListCommand</command>
+		<command>OCA\GroupFolders\Command\ACL</command>
+		<command>OCA\GroupFolders\Command\Quota</command>
+		<command>OCA\GroupFolders\Command\Group</command>
+		<command>OCA\GroupFolders\Command\Create</command>
+		<command>OCA\GroupFolders\Command\Rename</command>
+		<command>OCA\GroupFolders\Command\Delete</command>
+		<command>OCA\GroupFolders\Command\Scan</command>
+	</commands>
+
+	<settings>
+		<admin>OCA\GroupFolders\Settings\Admin</admin>
+		<admin-section>OCA\GroupFolders\Settings\Section</admin-section>
+	</settings>
+
+	<sabre>
+		<plugins>
+			<plugin>OCA\GroupFolders\DAV\ACLPlugin</plugin>
+		</plugins>
+	</sabre>
+
+	<trash>
+		<backend for="OCA\GroupFolders\Mount\GroupFolderStorage">OCA\GroupFolders\Trash\TrashBackend</backend>
+	</trash>
+
+	<versions>
+		<backend for="OCA\GroupFolders\Mount\GroupFolderStorage">OCA\GroupFolders\Versions\VersionsBackend</backend>
+	</versions>
+</info>
