@@ -23,3 +23,5 @@
 
 $app = new \OCA\AnnouncementCenter\AppInfo\Application();
 $app->register();
+
+\OCP\Util::addScript('announcementcenter', 'newannounce');
