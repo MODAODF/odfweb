@@ -152,11 +152,12 @@
 
 				self.announcements[announcement.id] = announcement;
 				var $html = self.announcementToHtml(announcement);
-				$('#app-content .section:eq(0)').after($html);
+				$('#app-content #newAnnounce').after($html);
 				$html.hide();
 				setTimeout(function() {
 					$html.slideDown();
 					$('#emptycontent').addClass('hidden');
+					$('#toggleForm').prop('checked', 0);
 				}, 750);
 
 				$('#subject').val('');

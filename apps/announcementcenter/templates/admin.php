@@ -36,7 +36,7 @@ script('announcementcenter', 'admin');
 	</p>
 	<br />
 
-	<p>
+	<!-- <p>
 		<input id="announcementcenter_create_activities" name="create_activities"
 			   type="checkbox" class="checkbox" value="1"
 			   <?php if ($_['createActivities']) print_unescaped('checked="checked"'); ?> />
@@ -55,5 +55,5 @@ script('announcementcenter', 'admin');
 			   type="checkbox" class="checkbox" value="1"
 			   <?php if ($_['allowComments']) print_unescaped('checked="checked"'); ?> />
 		<label for="announcementcenter_allow_comments"><?php p($l->t('Allow comments by default'));?></label><br/>
-	</p>
+	</p> -->
 </div>

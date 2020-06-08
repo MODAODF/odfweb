@@ -51,6 +51,7 @@ OC.L10N.register(
     "You announced {announcement}" : "您的公告內容 {announcement}",
     "{actor} announced {announcement}" : "{actor} 公告 {announcement}",
     "Announcement does not exist anymore" : "此公告已不存在",
-    "%1$s announced “%2$s”" : "%1$s 公告了「%2$s」"
+    "%1$s announced “%2$s”" : "%1$s 公告了「%2$s」",
+    "Subject:" : "主旨："
 },
 "nplurals=1; plural=0;");

@@ -1,17 +1,45 @@
+#newAnnounce {
+	border: 1px solid lightgray;
+    margin: 2rem 5rem;
+	border-radius: 9px;
+	overflow: hidden;
+
+	label {
+		padding: 15px 30px;
+		background-color: lightgray;
+		display: block;
+		transition: all 0.15s ease-in;
+		h2 {
+			margin: 0;
+			pointer-events: none;
+		}
+		&:hover {
+			background-color: darkgray;
+		}
+	}
+	#toggleForm {
+		display: none;
+		& + #announce {
+			display: none;
+		}
+		&:checked + #announce {
+			display: block;
+		}
+	}
+}
+
+#announce {
+	padding: 30px 70px;
+
+}
 #subject {
-	width: 706px;
+	width: 100%;
 	font-size: 20px;
 }
-
 #message {
-	width: 720px;
+	width: 100%;
 	height: 350px;
-}
-
-#app-content hr {
-	width: 85%;
-	border: none;
-	border-bottom: solid 1px var(--color-border-dark);
+	resize: none;
 }
 
 #announcement_submit_msg.success {
@@ -62,6 +90,27 @@
 
 @include icon-black-white('announcementcenter-dark', 'announcementcenter', 1);
 @include icon-black-white('notifications-off', 'announcementcenter', 1);
+
+div.section {
+	border: 1px solid lightgray;
+    margin: 2rem 5rem;
+    border-radius: 9px;
+	overflow: hidden;
+	position: relative;
+	& > p:nth-of-type(1) {
+		margin-top: 20px;
+	}
+	&::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 115px;
+    background-color: #f3f3f3;
+    top: 0;
+    right: 0;
+	z-index: -1;
+	}
+}
 
 .section > span {
 	padding-right: 7px;

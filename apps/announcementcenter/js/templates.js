@@ -49,6 +49,7 @@ templates['announcement'] = template({"1":function(container,depth0,helpers,part
   return "<div class=\"section\" data-announcement-id=\""
     + ((stack1 = ((helper = (helper = helpers.announcementId || (depth0 != null ? depth0.announcementId : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"announcementId","hash":{},"data":data}) : helper))) != null ? stack1 : "")
     + "\">\n	<h2>"
+    + t('announcementcenter', 'Subject:')
     + ((stack1 = ((helper = (helper = helpers.subject || (depth0 != null ? depth0.subject : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"subject","hash":{},"data":data}) : helper))) != null ? stack1 : "")
     + "</h2>\n	<span class=\"has-tooltip live-relative-timestamp\" data-timestamp=\""
     + alias4(((helper = (helper = helpers.timestamp || (depth0 != null ? depth0.timestamp : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"timestamp","hash":{},"data":data}) : helper)))
@@ -69,7 +70,7 @@ templates['announcement'] = template({"1":function(container,depth0,helpers,part
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.comments : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.isAdmin : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.message : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n<hr />\n";
+    + "</div>\n";
 },"useData":true});
 templates['comment'] = template({"1":function(container,depth0,helpers,partials,data) {
     return " unread";
