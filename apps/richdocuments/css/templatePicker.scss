@@ -20,43 +20,81 @@
  *
  */
 
-#template-picker {
+ #template-picker {
 	.template-container:not(.hidden) {
-		display: flex;
-		flex-wrap: wrap;
-		a {
-			$size: 170px;
-			$sizeY: $size / 210 * 297;
-			$space: 10px;
-			border-radius: 3px;						// 12&13 fallback
-			border-radius: $border-radius;
-			border: 1px solid $color-border;		// 12&13 fallback
-			margin: $space;
-			position: relative;
-
-			&:hover,
-			&:focus {
-				border-color: $color-primary-element;	// 12&13 fallback
-			}
-
-			> span {
-				display: flex;
-				flex-direction: column;
-				width: $size;
+		.folderWrapper > div:not(.foldersTab) {
+			display: flex;
+			flex-wrap: wrap;
+			a {
+				$size: 170px;
+				$sizeY: $size / 210 * 297;
+				$space: 10px;
+				border-radius: 3px;						// 12&13 fallback
+				border-radius: $border-radius;
+				border: 1px solid $color-border;		// 12&13 fallback
 				margin: $space;
-				cursor: pointer;
-				> img,
+				position: relative;
+
+				&:hover,
+				&:focus {
+					border-color: $color-primary-element;	// 12&13 fallback
+				}
+
 				> span {
+					display: flex;
+					flex-direction: column;
 					width: $size;
-					height: $sizeY;
-					background-color: nc-darken($color-main-background, 7%);	// 12&13 fallback
-					background-color: $color-background-dark;
-					background-size: 24px;
+					margin: $space;
+					cursor: pointer;
+					> img,
+					> span {
+						width: $size;
+						height: $sizeY;
+						background-color: nc-darken($color-main-background, 7%);	// 12&13 fallback
+						background-color: $color-background-dark;
+						background-size: 24px;
+					}
+					> h2 {
+						margin-top: $space;
+						font-size: inherit;
+						word-break: break-all;
+					}
 				}
-				> h2 {
-					margin-top: $space;
-					font-size: inherit;
+			}
+		}
+
+		.foldersTab {
+			padding-bottom: 0.5rem;
+			margin: 35px 10px 10px 10px;
+			display: flex;
+    		justify-content: space-between;
+			input {
+				display: none;
+				&:checked + label {
+					color: $color-primary-element;
+					border-bottom: 1.2px solid $color-primary-element;
+					pointer-events: none;
 				}
+				&:not(:checked) + label {
+					font-weight: normal;
+					color: lightgray;
+					border-bottom: 1.2px solid lightgray;
+					&:hover {
+						color: $color-primary-element;
+						font-weight: bold;
+						border-bottom: 1.2px solid $color-primary-element;
+						cursor: pointer;
+					}
+				}
+			}
+			label {
+				width: 40%;
+				display: inline-block;
+				font-size: 15px;
+				font-weight: bold;
+				text-align: center;
+				padding: 8px 20px;
+				transition: 0.1s;
 			}
 		}
 	}
