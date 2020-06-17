@@ -673,7 +673,7 @@
 			this.$showGridView.next('#view-toggle')
 				.removeClass('icon-toggle-filelist icon-toggle-pictures')
 				.addClass(show ? 'icon-toggle-filelist' : 'icon-toggle-pictures')
-				
+
 			$('.list-container').toggleClass('view-grid', show);
 			if (show) {
 				// If switching into grid view from list view, too few files might be displayed
@@ -1025,7 +1025,7 @@
 				if (type === OC.dialogs.FILEPICKER_TYPE_MOVE) {
 					self.move(files, targetPath, disableLoadingState);
 				}
-				self.dirInfo.dirLastCopiedTo = targetPath; 
+				self.dirInfo.dirLastCopiedTo = targetPath;
 			}, false, "httpd/unix-directory", true, actions, dialogDir);
 			event.preventDefault();
 		},
@@ -2154,8 +2154,8 @@
 
 			// get mime icon url
 			var iconURL = OC.MimeType.getIconUrl(mime);
-			var previewURL,
-				urlSpec = {};
+			// var previewURL,
+			var urlSpec = {};
 			ready(iconURL); // set mimeicon URL
 
 			urlSpec.fileId = fileId;
@@ -2178,24 +2178,27 @@
 				urlSpec.c = etag;
 			}
 
-			previewURL = self.generatePreviewUrl(urlSpec);
-			previewURL = previewURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
+			// previewURL = self.generatePreviewUrl(urlSpec);
+			// previewURL = previewURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
 
 			// preload image to prevent delay
 			// this will make the browser cache the image
 			var img = new Image();
-			img.onload = function(){
-				// if loading the preview image failed (no preview for the mimetype) then img.width will < 5
-				if (img.width > 5) {
-					ready(previewURL, img);
-				} else if (options.error) {
-					options.error();
-				}
-			};
-			if (options.error) {
-				img.onerror = options.error;
-			}
-			img.src = previewURL;
+
+			// img.onload = function(){
+			// 	// if loading the preview image failed (no preview for the mimetype) then img.width will < 5
+			// 	if (img.width > 5) {
+			// 		ready(previewURL, img);
+			// 	} else if (options.error) {
+			// 		options.error();
+			// 	}
+			// };
+			// if (options.error) {
+			// 	img.onerror = options.error;
+			// }
+
+			iconURL = iconURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
+			img.src = iconURL; // previewURL;
 		},
 
 		_updateDirectoryPermissions: function() {
@@ -3276,7 +3279,7 @@
 
 		/**
 		 * Are all files selected?
-		 * 
+		 *
 		 * @returns {Boolean} all files are selected
 		 */
 		isAllSelected: function() {
