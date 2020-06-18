@@ -61,8 +61,8 @@ class Version102020Date20180806161449 extends SimpleMigrationStep {
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'group_folder');
-			$table->addIndex(['group_id'], 'group_folder_value');
+			$table->addIndex(['folder_id'], 'template_repo_group');
+			$table->addIndex(['group_id'], 'template_repo_group_value');
 			$table->addUniqueIndex(['folder_id', 'group_id'], 'templates_repo_group');
 		}
 		return $schema;
