@@ -4,7 +4,6 @@
     "activity",
     "admin_audit",
     "announcementcenter",
-    "bruteforcesettings",
     "cloud_federation_api",
     "comments",
     "dav",
@@ -41,7 +40,6 @@
   ],
   "alwaysEnabled": [
     "richdocuments",
-    "bruteforcesettings",
     "files",
     "files_external",
     "cloud_federation_api",
