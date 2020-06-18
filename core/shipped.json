@@ -3,6 +3,7 @@
     "accessibility",
     "activity",
     "admin_audit",
+    "announcementcenter",
     "bruteforcesettings",
     "cloud_federation_api",
     "comments",
@@ -20,6 +21,7 @@
     "files_versions",
     "files_videoplayer",
     "gallery",
+    "groupfolders",
     "logreader",
     "lookup_server_connector",
     "notifications",
@@ -32,6 +34,7 @@
     "sharebymail",
     "systemtags",
     "theming",
+    "templaterepo",
     "twofactor_backupcodes",
     "user_ldap",
     "viewer"
@@ -48,6 +51,7 @@
     "provisioning_api",
     "oauth2",
     "theming",
+    "templaterepo",
     "twofactor_backupcodes",
     "user_ldap"
   ]
