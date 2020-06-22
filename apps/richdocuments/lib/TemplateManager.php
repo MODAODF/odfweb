@@ -154,18 +154,18 @@ class TemplateManager {
 	 *
 	 */
 	private function getTemplaterepoFoldersId() {
-		$currentUser = \OC::$server->getUserSession()->getUser();
-		if ($currentUser) {
-			$data = $this->folderManager->getFoldersForUser($currentUser);
-			foreach($data as $folder) {
-				$folderId[] = $folder['folder_id'];
-			}
-		} else {
+		// $currentUser = \OC::$server->getUserSession()->getUser();
+		// if ($currentUser) {
+		// 	$data = $this->folderManager->getFoldersForUser($currentUser);
+		// 	foreach($data as $folder) {
+		// 		$folderId[] = $folder['folder_id'];
+		// 	}
+		// } else {
 			$data = $this->folderManager->getAllFolders();
 			foreach($data as $folder) {
 				$folderId[] = $folder['id'];
 			}
-		}
+		// }
 		return $folderId;
 	}
 
