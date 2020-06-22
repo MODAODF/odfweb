@@ -217,11 +217,14 @@ class TemplateManager {
 			}
 		}
 
-		$templateDir = $this->getUserTemplateDir();
-		// finally get the template file
-		$files = $templateDir->getById($fileId);
-		if ($files !== []) {
-			return $files[0];
+		$templateDirPath = $this->config->getUserValue($this->userId, $this->appName, 'templateFolder', false);
+		if ($templateDirPath) {
+			$templateDir = $this->getUserTemplateDir();
+			// finally get the template file
+			$files = $templateDir->getById($fileId);
+			if ($files !== []) {
+				return $files[0];
+			}
 		}
 
 		$foldersId = $this->getTemplaterepoFoldersId();
