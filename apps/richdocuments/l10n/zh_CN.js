@@ -77,6 +77,8 @@ OC.L10N.register(
     "Could not create file" : "不能创建文件",
     "Create" : "创建",
     "Select template" : "选择模板",
+    "User Templates" : "个人模板",
+    "Templaterepo" : "模板中心",
     "Failed to connect to {productName}. Please try again later or contact your server administrator." : "连接到{productName}失败。请稍后重试或联系您的服务器管理员。",
     "Global templates" : "全局模板",
     "Add a new template" : "添加一个新的模板",

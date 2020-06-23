@@ -35,9 +35,11 @@
 				margin: $space;
 				position: relative;
 
-				&:hover,
+				&:hover{
+					border-color: darkgray;
+				}
 				&:focus {
-					border-color: $color-primary-element;	// 12&13 fallback
+					background-color: lightgray;
 				}
 
 				> span {
@@ -64,31 +66,45 @@
 		}
 
 		.foldersTab {
-			padding-bottom: 0.5rem;
-			margin: 35px 10px 10px 10px;
+			margin: 35px 10px 30px 10px;
 			display: flex;
     		justify-content: space-between;
 			input {
 				display: none;
 				&:checked + label {
-					color: $color-primary-element;
-					border-bottom: 1.2px solid $color-primary-element;
+					color: white;
+					background-color: darkgray;
 					pointer-events: none;
+					position: relative;
+					&:after {
+						content: ' ';
+						display: block;
+						height: 0;
+						width: 0;
+						position: absolute;
+						pointer-events: none;
+						border: 0 solid #fff;
+						border-top-color: darkgray;
+						border-width: 15px;
+						bottom: -29px;
+						left: 47%;
+					}
+
 				}
 				&:not(:checked) + label {
 					font-weight: normal;
 					color: lightgray;
-					border-bottom: 1.2px solid lightgray;
+					border: 1.2px solid lightgray;
 					&:hover {
-						color: $color-primary-element;
+						color: darkgray;
 						font-weight: bold;
-						border-bottom: 1.2px solid $color-primary-element;
+						border: 1.2px solid darkgray;
 						cursor: pointer;
 					}
 				}
 			}
 			label {
-				width: 40%;
+				width: 100%;
 				display: inline-block;
 				font-size: 15px;
 				font-weight: bold;

@@ -38,6 +38,8 @@ OC.L10N.register(
     "Could not create file" : "無法建立文件",
     "Create" : "建立",
     "Select template" : "選擇範本",
+    "User Templates" : "個人範本",
+    "Templaterepo" : "範本中心",
     "Can't create document" : "無法建立文件",
     "New Document.odt" : "新建文件.odt",
     "New Spreadsheet.ods" : "新建試算表.ods",
