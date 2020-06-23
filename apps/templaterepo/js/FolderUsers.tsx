@@ -45,11 +45,6 @@ export function FolderUsers({ users, allUsers = [], onAddUser, removeUser, edit,
 				</td>
 				<td className="permissions">
 					<input type="checkbox"
-						onChange={setPermissions.bind(null, OC.PERMISSION_SHARE, userId)}
-						checked={hasPermissions(permissions, OC.PERMISSION_SHARE)} />
-				</td>
-				<td className="permissions">
-					<input type="checkbox"
 						onChange={setPermissions.bind(null, OC.PERMISSION_DELETE, userId)}
 						checked={hasPermissions(permissions, (OC.PERMISSION_DELETE))} />
 				</td>
@@ -65,10 +60,9 @@ export function FolderUsers({ users, allUsers = [], onAddUser, removeUser, edit,
 			onClick={event => event.stopPropagation()}>
 			<thead>
 				<tr>
-				<th>{t('templaterepo', 'User')}</th>
-				<th>{t('templaterepo', 'Write')}</th>
-				<th>{t('templaterepo', 'Share')}</th>
-				<th>{t('templaterepo', 'Delete')}</th>
+					<th>{t('templaterepo', 'User')}</th>
+					<th>{t('templaterepo', 'Write')}</th>
+					<th>{t('templaterepo', 'Delete')}</th>
 					<th />
 				</tr>
 			</thead>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './FolderGroups.css';
-import {SyntheticEvent} from "react";
-import {Group} from "./Api";
+import { SyntheticEvent } from "react";
+import { Group } from "./Api";
 import Select from 'react-select'
 
 function hasPermissions(value: number, check: number): boolean {
@@ -18,7 +18,7 @@ export interface FolderGroupsProps {
 	onSetPermissions: (name: string, permissions: number) => void;
 }
 
-export function FolderGroups({groups, allGroups = [], onAddGroup, removeGroup, edit, showEdit, onSetPermissions}: FolderGroupsProps) {
+export function FolderGroups({ groups, allGroups = [], onAddGroup, removeGroup, edit, showEdit, onSetPermissions }: FolderGroupsProps) {
 	if (edit) {
 		const setPermissions = (change: number, groupId: string): void => {
 			const newPermissions = groups[groupId] ^ change;
@@ -40,54 +40,48 @@ export function FolderGroups({groups, allGroups = [], onAddGroup, removeGroup, e
 				</td>
 				<td className="permissions">
 					<input type="checkbox"
-						   onChange={setPermissions.bind(null, OC.PERMISSION_UPDATE | OC.PERMISSION_CREATE, groupId)}
-						   checked={hasPermissions(permissions, (OC.PERMISSION_UPDATE | OC.PERMISSION_CREATE))}/>
+						onChange={setPermissions.bind(null, OC.PERMISSION_UPDATE | OC.PERMISSION_CREATE, groupId)}
+						checked={hasPermissions(permissions, (OC.PERMISSION_UPDATE | OC.PERMISSION_CREATE))} />
 				</td>
 				<td className="permissions">
 					<input type="checkbox"
-						   onChange={setPermissions.bind(null, OC.PERMISSION_SHARE, groupId)}
-						   checked={hasPermissions(permissions, OC.PERMISSION_SHARE)}/>
-				</td>
-				<td className="permissions">
-					<input type="checkbox"
-						   onChange={setPermissions.bind(null, OC.PERMISSION_DELETE, groupId)}
-						   checked={hasPermissions(permissions, (OC.PERMISSION_DELETE))}/>
+						onChange={setPermissions.bind(null, OC.PERMISSION_DELETE, groupId)}
+						checked={hasPermissions(permissions, (OC.PERMISSION_DELETE))} />
 				</td>
 				<td>
 					<a onClick={removeGroup.bind(this, groupId)}>
-						<img src={OC.imagePath('core', 'actions/close')}/>
+						<img src={OC.imagePath('core', 'actions/close')} />
 					</a>
 				</td>
 			</tr>
 		});
 
 		return <table className="group-edit"
-					  onClick={event => event.stopPropagation()}>
+			onClick={event => event.stopPropagation()}>
 			<thead>
-			<tr>
-				<th>{t('templaterepo', 'Group')}</th>
-				<th>{t('templaterepo', 'Write')}</th>
-				<th>{t('templaterepo', 'Share')}</th>
-				<th>{t('templaterepo', 'Delete')}</th>
-				<th/>
-			</tr>
+				<tr>
+					<th>{t('templaterepo', 'Group')}</th>
+					<th>{t('templaterepo', 'Write')}</th>
+					<th>{t('templaterepo', 'Delete')}</th>
+					<th />
+				</tr>
 			</thead>
 			<tbody>
-			{rows}
-			<tr>
-				<td colSpan={5}>
-					<GroupSelect
-						allGroups={allGroups.filter(i => !groups[i.id])}
-						onChange={onAddGroup}/>
-				</td>
-			</tr>
+				{rows}
+				<tr>
+					<td colSpan={5}>
+						<GroupSelect
+							allGroups={allGroups.filter(i => !groups[i.id])}
+							onChange={onAddGroup} />
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	} else {
 		if (Object.keys(groups).length === 0) {
 			return <span>
 				<em>無</em>
-				<a className="icon icon-rename" onClick={showEdit}/>
+				<a className="icon icon-rename" onClick={showEdit} />
 			</span>
 		}
 		return <a className="action-rename" onClick={showEdit}>
@@ -108,7 +102,7 @@ interface GroupSelectProps {
 	onChange: (name: string) => void;
 }
 
-function GroupSelect({allGroups, onChange}: GroupSelectProps) {
+function GroupSelect({ allGroups, onChange }: GroupSelectProps) {
 	if (allGroups.length === 0) {
 		return <div>
 			<p>{t('templaterepo', 'No other groups available')}</p>
