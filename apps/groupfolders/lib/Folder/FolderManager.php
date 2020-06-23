@@ -400,7 +400,7 @@ class FolderManager {
 			->values([
 				'folder_id' => $query->createNamedParameter($folderId, IQueryBuilder::PARAM_INT),
 				'group_id' => $query->createNamedParameter($groupId),
-				'permissions' => $query->createNamedParameter(Constants::PERMISSION_ALL)
+				'permissions' => $query->createNamedParameter(Constants::PERMISSION_READ)
 			]);
 		$query->execute();
 	}
