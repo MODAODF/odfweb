@@ -187,6 +187,13 @@ class WopiController extends Controller {
 			'DownloadAsPostMessage' => $wopi->getDirect(),
 		];
 
+		$saveToOdf_extension = $this->shouldSaveToOdf($file->getMimeType());
+		if ($saveToOdf_extension) {
+			$response['UserExtraInfo'] = [
+				'SaveToOdf' => $saveToOdf_extension
+			];
+		}
+
 		if ($wopi->isTemplateToken()) {
 			$userFolder = $this->rootFolder->getUserFolder($wopi->getOwnerUid());
 			$file = $userFolder->getById($wopi->getTemplateDestination())[0];
@@ -226,6 +233,35 @@ class WopiController extends Controller {
 		}
 
 		return new JSONResponse($response);
+	}
+
+	private function shouldSaveToOdf($mimetype) {
+		$saveToOdf = $this->config->getAppValue('richdocuments', 'saveToOdf');
+		if ($saveToOdf !== 'no') {
+			$msMimes = [
+				'odt' => [
+					'application/msword',
+					'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+					'application/vnd.ms-word.document.macroEnabled.12'
+				],
+				'ods' => [
+					'application/vnd.ms-excel',
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+					'application/vnd.ms-excel.sheet.macroEnabled.12'
+				],
+				'odp' => [
+					'application/vnd.ms-powerpoint',
+					'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+					'application/vnd.ms-powerpoint.presentation.macroEnabled.12'
+				]
+			];
+			foreach ($msMimes as $key => $m) {
+				if (in_array($mimetype, $m)) {
+					$odfExtension = $key;
+				}
+			}
+			return $odfExtension;
+		}
 	}
 
 	private function setFederationFileInfo($wopi, $response) {

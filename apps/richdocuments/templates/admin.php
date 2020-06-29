@@ -70,6 +70,18 @@ script('files', 'jquery.fileupload');
 	</div>
 	</p>
 </div>
+
+<div class="section" id="richdocuments-saveToOdf">
+	<h2>轉換微軟 Office 文件</h2>
+	<p>
+		<input type="checkbox" class="checkbox" id="saveToOdf" <?php p($_['saveToOdf'] === 'no' ? '' : 'checked' )?> />
+		<label for="saveToOdf"><?php p($l->t('啟用轉換微軟 Office 文件')) ?></label>
+		<span id="saveToOdf-admin-msg" class="msg" style="margin-left:10px;"></span>
+		<br />
+		<em>啟用後使用者如需編輯微軟格式檔案，系統將為該文件轉檔且另存為 ODF 文件，並以轉檔後的 ODF 文件開啟線上編輯。</em>
+	</p>
+</div>
+
 <?php if ($_['templatesAvailable'] === true) { ?>
 <form class="section" id="richdocuments-templates" method="post" action="/template/">
 	<input class="hidden-visually" id="add-template" type="file" />
