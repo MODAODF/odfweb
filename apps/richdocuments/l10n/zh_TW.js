@@ -74,6 +74,9 @@ OC.L10N.register(
     "Failed to save settings" : "設定儲存失敗",
     "Description" : "描述",
     "No results" : "沒有符合搜尋的項目",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "此連結已失效或不存在，詳細資訊請聯繫此連結的分享者。"
+    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "此連結已失效或不存在，詳細資訊請聯繫此連結的分享者。",
+    "Automatically convert Microsoft Office files to ODF files" : "自動轉換微軟 Office 文件為開放格式文件",
+    "Enable automatically convert Microsoft Office files to ODF files" : "啟用自動轉換微軟 Office 文件為開放格式文件",
+    "After enabling, it will automatically convert the MS format to the ODF format for online editing when users try to editing MS files." : "啟用自動轉檔功能後，當使用者嘗試編輯微軟格式的文件時，系統會生成一個新的 ODF 文件，讓使用者編輯此檔案。"
 },
 "nplurals=1; plural=0;");

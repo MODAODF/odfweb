@@ -72,13 +72,13 @@ script('files', 'jquery.fileupload');
 </div>
 
 <div class="section" id="richdocuments-saveToOdf">
-	<h2>轉換微軟 Office 文件</h2>
+	<h2><?php p($l->t('Automatically convert Microsoft Office files to ODF files')) ?></h2>
 	<p>
 		<input type="checkbox" class="checkbox" id="saveToOdf" <?php p($_['saveToOdf'] === 'no' ? '' : 'checked' )?> />
-		<label for="saveToOdf"><?php p($l->t('啟用轉換微軟 Office 文件')) ?></label>
+		<label for="saveToOdf"><?php p($l->t('Enable automatically convert Microsoft Office files to ODF files')) ?></label>
 		<span id="saveToOdf-admin-msg" class="msg" style="margin-left:10px;"></span>
 		<br />
-		<em>啟用後使用者如需編輯微軟格式檔案，系統將為該文件轉檔且另存為 ODF 文件，並以轉檔後的 ODF 文件開啟線上編輯。</em>
+		<em><?php p($l->t('After enabling, it will automatically convert the MS format to the ODF format for online editing when users try to editing MS files.'))?></em>
 	</p>
 </div>
 

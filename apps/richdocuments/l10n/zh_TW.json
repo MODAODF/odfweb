@@ -90,6 +90,9 @@
     "template preview" : "範本預覽",
     "Select a template directory" : "選擇範本",
     "Remove personal template folder" : "移除個人範本目錄",
-    "Templates inside of this directory will be added to the template selector of Collabora Online." : "此目錄中的範本將被新增到ODF文件WEB應用元件的範本選擇功能。"
+    "Templates inside of this directory will be added to the template selector of Collabora Online." : "此目錄中的範本將被新增到ODF文件WEB應用元件的範本選擇功能。",
+    "Automatically convert Microsoft Office files to ODF files" : "自動轉換微軟 Office 文件為開放格式文件",
+    "Enable automatically convert Microsoft Office files to ODF files" : "啟用自動轉換微軟 Office 文件為開放格式文件",
+    "After enabling, it will automatically convert the MS format to the ODF format for online editing when users try to editing MS files." : "啟用自動轉檔功能後，當使用者嘗試編輯微軟格式的文件時，系統會生成一個新的 ODF 文件，讓使用者編輯此檔案。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

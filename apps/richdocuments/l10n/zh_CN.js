@@ -92,6 +92,9 @@ OC.L10N.register(
     "Password" : "密码",
     "OK" : "确定",
     "Guest %s" : "访客 %s",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "该链接已失效或不存在。详情请联系文件共享者。"
+    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "该链接已失效或不存在。详情请联系文件共享者。",
+    "Automatically convert Microsoft Office files to ODF files" : "自动转换微软 Office 文件为开放格式文件",
+    "Enable automatically convert Microsoft Office files to ODF files" : "啟用自动转换微软 Office 文件为开放格式文件",
+    "After enabling, it will automatically convert the MS format to the ODF format for online editing when users try to editing MS files." : "启用自动转档功能后，当使用者尝试编辑微软格式的文件时，系统会生成一个新的 ODF 文件，让使用者编辑此档案。"
 },
 "nplurals=1; plural=0;");
