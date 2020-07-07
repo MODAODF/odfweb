@@ -127,3 +127,24 @@
 		}
 	}
 }
+
+#personal-odftemplate {
+	a {
+		font-weight: bold;
+		&:hover {
+			color: $color-success;
+			text-decoration: underline;
+			span {
+				@include icon-color('external', 'actions', $color-success, 1, true);
+			}
+		}
+	}
+	span.icon-external {
+		@include icon-color('external', 'actions', $color-black, 1, true);
+		display: inline-block;
+		margin-left: 5px;
+		vertical-align: middle;
+		min-width: 13px;
+		min-height: 13px;
+	}
+}
