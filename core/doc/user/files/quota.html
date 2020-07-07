@@ -122,9 +122,14 @@ is calculated against your quota.</p>
 trash bin is set at 50% of quota. Deleted file aging is set at 30 days. When
 deleted files exceed 50% of quota then the oldest files are removed until the
 total is below 50%.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Your administrator may have configured the trash bin retention period</p>
+</div>
+<p>to override the storage space management. See <a class="reference external" href="https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/config_sample_php_parameters.html#deleted-items-trash-bin">admin documentation</a> for more details.</p>
 <p>When version control is enabled, the older file versions are not counted against
 quotas.</p>
-<p>If you create a public share via URL, and allow uploads, any uploaded files
+<p>If you create a public share via URL and allow uploads, any uploaded files
 count against your quota.</p>
 </div>
 

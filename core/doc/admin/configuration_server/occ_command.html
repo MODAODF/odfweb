@@ -323,8 +323,9 @@ shell’s profile (eg. <code class="docutils literal notranslate"><span class="p
  <span class="n">app</span><span class="p">:</span><span class="n">check</span><span class="o">-</span><span class="n">code</span>   <span class="n">check</span> <span class="n">code</span> <span class="n">to</span> <span class="n">be</span> <span class="n">compliant</span>
  <span class="n">app</span><span class="p">:</span><span class="n">disable</span>      <span class="n">disable</span> <span class="n">an</span> <span class="n">app</span>
  <span class="n">app</span><span class="p">:</span><span class="n">enable</span>       <span class="n">enable</span> <span class="n">an</span> <span class="n">app</span>
- <span class="n">app</span><span class="p">:</span><span class="n">getpath</span>      <span class="n">Get</span> <span class="n">an</span> <span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">app</span> <span class="n">directory</span>
- <span class="n">app</span><span class="p">:</span><span class="nb">list</span>         <span class="n">List</span> <span class="nb">all</span> <span class="n">available</span> <span class="n">apps</span>
+ <span class="n">app</span><span class="p">:</span><span class="n">getpath</span>      <span class="n">get</span> <span class="n">an</span> <span class="n">absolute</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">app</span> <span class="n">directory</span>
+ <span class="n">app</span><span class="p">:</span><span class="nb">list</span>         <span class="nb">list</span> <span class="nb">all</span> <span class="n">available</span> <span class="n">apps</span>
+ <span class="n">app</span><span class="p">:</span><span class="n">update</span>       <span class="n">update</span> <span class="n">an</span> <span class="n">app</span> <span class="ow">or</span> <span class="nb">all</span> <span class="n">apps</span>
 </pre></div>
 </div>
 <p>List all of your installed apps, and show whether they are
@@ -366,6 +367,14 @@ App is compliant - awesome job!
 <p>You can get the full filepath to an app:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">php</span> <span class="n">occ</span> <span class="n">app</span><span class="p">:</span><span class="n">getpath</span> <span class="n">notifications</span>
 <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/</span><span class="n">apps</span><span class="o">/</span><span class="n">notifications</span>
+</pre></div>
+</div>
+<p>To update an app, for instance Contacts:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">php</span> <span class="n">occ</span> <span class="n">app</span><span class="p">:</span><span class="n">update</span> <span class="n">contacts</span>
+</pre></div>
+</div>
+<p>To update all apps:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="o">-</span><span class="n">u</span> <span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="n">php</span> <span class="n">occ</span> <span class="n">app</span><span class="p">:</span><span class="n">update</span> <span class="o">--</span><span class="nb">all</span>
 </pre></div>
 </div>
 </div>
@@ -834,7 +843,7 @@ and to copy external mount configurations to another Nextcloud server.</p>
 </div>
 <div class="section" id="integrity-check">
 <span id="integrity-check-label"></span><h2>Integrity check<a class="headerlink" href="#integrity-check" title="Permalink to this headline">¶</a></h2>
-<p>Apps which have an official tag MUST be code signed with Nextcloud. Unsigned official apps won’t be installable anymore. Code signing is optional for all third-party applications:</p>
+<p>Apps which have a <code class="docutils literal notranslate"><span class="pre">Featured</span></code> tag MUST be code signed with Nextcloud. Unsigned featured apps won’t be installable anymore. Code signing is optional for all third-party applications:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">integrity</span>
  <span class="n">integrity</span><span class="p">:</span><span class="n">check</span><span class="o">-</span><span class="n">app</span>                 <span class="n">Check</span> <span class="n">app</span> <span class="n">integrity</span> <span class="n">using</span> <span class="n">a</span> <span class="n">signature</span><span class="o">.</span>
  <span class="n">integrity</span><span class="p">:</span><span class="n">check</span><span class="o">-</span><span class="n">core</span>                <span class="n">Check</span> <span class="n">core</span> <span class="n">integrity</span> <span class="n">using</span> <span class="n">a</span> <span class="n">signature</span><span class="o">.</span>

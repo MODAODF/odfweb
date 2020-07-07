@@ -139,12 +139,12 @@ the objectstore backend and any backend specific configuration.</p>
 make all existing files on the instance inaccessible.</p>
 </div>
 <p>The configuration has the following structure:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Object</span><span class="se">\\</span><span class="s1">Storage</span><span class="se">\\</span><span class="s1">Backend</span><span class="se">\\</span><span class="s1">Class&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
                 <span class="o">...</span>
-        <span class="p">),</span>
-<span class="p">),</span>
+        <span class="p">],</span>
+<span class="p">],</span>
 </pre></div>
 </div>
 <div class="section" id="openstack-swift">
@@ -152,9 +152,11 @@ make all existing files on the instance inaccessible.</p>
 <p>The OpenStack Swift backend mounts a container on an OpenStack Object Storage
 server into the virtual filesystem.</p>
 <p>The class to be used is <code class="code docutils literal notranslate"><span class="pre">\\OC\\Files\\ObjectStore\\Swift</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+<p>Both openstack v2 and v3 authentication are supported,</p>
+<p>V2 Authentication:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">OC</span><span class="se">\\</span><span class="s1">Files</span><span class="se">\\</span><span class="s1">ObjectStore</span><span class="se">\\</span><span class="s1">Swift&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
                 <span class="s1">&#39;username&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Secr3tPaSSWoRdt7&#39;</span><span class="p">,</span>
                 <span class="o">//</span> <span class="n">the</span> <span class="n">container</span> <span class="n">to</span> <span class="n">store</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">in</span>
@@ -168,8 +170,36 @@ server into the virtual filesystem.</p>
                 <span class="s1">&#39;serviceName&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;swift&#39;</span><span class="p">,</span>
                 <span class="o">//</span> <span class="n">The</span> <span class="n">Interface</span> <span class="o">/</span> <span class="n">url</span> <span class="n">Type</span><span class="p">,</span> <span class="n">optional</span>
                 <span class="s1">&#39;urlType&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;internal&#39;</span>
-        <span class="p">),</span>
-<span class="p">),</span>
+        <span class="p">],</span>
+<span class="p">],</span>
+</pre></div>
+</div>
+<p>V3 Authentication:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;OC</span><span class="se">\\</span><span class="s1">Files</span><span class="se">\\</span><span class="s1">ObjectStore</span><span class="se">\\</span><span class="s1">Swift&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">&#39;autocreate&#39;</span> <span class="o">=&gt;</span> <span class="n">true</span><span class="p">,</span>
+                <span class="s1">&#39;user&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;UserName&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;password&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Secr3tPaSSWoRdt7&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;domain&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span>
+                        <span class="p">],</span>
+                <span class="p">],</span>
+                <span class="s1">&#39;scope&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                        <span class="s1">&#39;project&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;TenantName&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;domain&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Default&#39;</span><span class="p">,</span>
+                                <span class="p">],</span>
+                        <span class="p">],</span>
+                <span class="p">],</span>
+                <span class="s1">&#39;serviceName&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;swift&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;region&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;regionOne&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;url&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;http://example.com/v3&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;bucket&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;nextcloud&#39;</span><span class="p">,</span>
+        <span class="p">],</span>
+<span class="p">],</span>
 </pre></div>
 </div>
 </div>
@@ -179,9 +209,9 @@ server into the virtual filesystem.</p>
 storage or compatible implementation (e.g. Minio or Ceph Object Gateway) into the
 virtual filesystem.</p>
 <p>The class to be used is <code class="code docutils literal notranslate"><span class="pre">\\OC\\Files\\ObjectStore\\S3</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;objectstore&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
         <span class="s1">&#39;class&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">OC</span><span class="se">\\</span><span class="s1">Files</span><span class="se">\\</span><span class="s1">ObjectStore</span><span class="se">\\</span><span class="s1">S3&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="n">array</span><span class="p">(</span>
+        <span class="s1">&#39;arguments&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
                 <span class="s1">&#39;bucket&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;nextcloud&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;autocreate&#39;</span> <span class="o">=&gt;</span> <span class="n">true</span><span class="p">,</span>
                 <span class="s1">&#39;key&#39;</span>    <span class="o">=&gt;</span> <span class="s1">&#39;EJ39ITYZEUH5BGWDRUFY&#39;</span><span class="p">,</span>
@@ -192,8 +222,8 @@ virtual filesystem.</p>
                 <span class="s1">&#39;region&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;optional&#39;</span><span class="p">,</span>
                 <span class="o">//</span> <span class="n">required</span> <span class="k">for</span> <span class="n">some</span> <span class="n">non</span> <span class="n">Amazon</span> <span class="n">S3</span> <span class="n">implementations</span>
                 <span class="s1">&#39;use_path_style&#39;</span><span class="o">=&gt;</span><span class="n">true</span>
-        <span class="p">),</span>
-<span class="p">),</span>
+        <span class="p">],</span>
+<span class="p">],</span>
 </pre></div>
 </div>
 <div class="admonition note">

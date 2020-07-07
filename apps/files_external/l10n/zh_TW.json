@@ -22,7 +22,7 @@
     "Admin defined" : "管理者定義",
     "Delete storage?" : "刪除空間",
     "Saved" : "已儲存",
-    "Saving..." : "儲存中...",
+    "Saving …" : "儲存中 ...",
     "Save" : "儲存",
     "Empty response from the server" : "服務器没有回應",
     "Couldn't access. Please log out and in again to activate this mount point" : "無法存取，請登出後重新登入來啟用這個掛載點。",
@@ -65,7 +65,10 @@
     "Domain" : "網域名稱",
     "Rackspace" : "Rackspace",
     "API key" : "API金鑰",
+    "Log-in credentials, save in database" : "登入憑證，儲存於資料庫",
     "Username and password" : "使用者帳號和密碼",
+    "Log-in credentials, save in session" : "登入憑證，儲存於工作階段",
+    "User entered, store in database" : "使用者登入，儲存於資料庫",
     "RSA public key" : "RSA 公開金鑰",
     "Public key" : "公開金鑰",
     "Amazon S3" : "Amazon S3",
@@ -108,6 +111,6 @@
     "Add storage" : "增加儲存區",
     "Advanced settings" : "進階設定",
     "Allow users to mount external storage" : "允許使用者能自行掛載外部儲存",
-    "No external storage configured or you don't have the permission to configure them" : "未設置外部儲存或沒有權限"
+    "Saving..." : "儲存中..."
 },"pluralForm" :"nplurals=1; plural=0;"
 }

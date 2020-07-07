@@ -128,6 +128,13 @@
 </div>
 <div class="section" id="log-type">
 <h2>Log type<a class="headerlink" href="#log-type" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="errorlog">
+<h3>errorlog<a class="headerlink" href="#errorlog" title="Permalink to this headline">¶</a></h3>
+<p>All log information will be sent to PHP <code class="docutils literal notranslate"><span class="pre">error_log()</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;log_type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;errorlog&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="file">
 <h3>file<a class="headerlink" href="#file" title="Permalink to this headline">¶</a></h3>
 <p>All log information will be written to a separate log file which can be
@@ -141,7 +148,7 @@ date format in the example below, the date/time format will be written in the fo
 <code class="docutils literal notranslate"><span class="pre">January</span> <span class="pre">10,</span> <span class="pre">2013</span> <span class="pre">15:20:25</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;log_type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
 <span class="s2">&quot;logfile&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;nextcloud.log&quot;</span><span class="p">,</span>
-<span class="s2">&quot;loglevel&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+<span class="s2">&quot;loglevel&quot;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
 <span class="s2">&quot;logdateformat&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;F d, Y H:i:s&quot;</span><span class="p">,</span>
 </pre></div>
 </div>
@@ -151,13 +158,26 @@ date format in the example below, the date/time format will be written in the fo
 <p>All log information will be sent to your default syslog daemon.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;log_type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;syslog&quot;</span><span class="p">,</span>
 <span class="s2">&quot;logfile&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-<span class="s2">&quot;loglevel&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span>
+<span class="s2">&quot;loglevel&quot;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="systemd">
+<h3>systemd<a class="headerlink" href="#systemd" title="Permalink to this headline">¶</a></h3>
+<p>All log information will be sent to Systemd journal. Requires <a class="reference external" href="https://github.com/systemd/php-systemd">php-systemd</a> extension.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;log_type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;systemd&quot;</span><span class="p">,</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="admin-audit-log">
 <h2>Admin audit log<a class="headerlink" href="#admin-audit-log" title="Permalink to this headline">¶</a></h2>
+<p>If <code class="docutils literal notranslate"><span class="pre">loglevel</span></code> in <code class="docutils literal notranslate"><span class="pre">config.php</span></code> is set to <code class="docutils literal notranslate"><span class="pre">2</span></code> or higher, audit logging needs to be triggered explicitly by adding the follwing setting to to <code class="docutils literal notranslate"><span class="pre">config.php</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;log.condition&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+        <span class="s1">&#39;apps&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;admin_audit&#39;</span><span class="p">],</span>
+<span class="p">],</span>
+</pre></div>
+</div>
 <p>If required, the name and path of the audit log file can be customized by using the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">occ</span> <span class="n">config</span><span class="p">:</span><span class="n">app</span><span class="p">:</span><span class="nb">set</span> <span class="n">admin_audit</span> <span class="n">logfile</span> <span class="o">--</span><span class="n">value</span><span class="o">=/</span><span class="n">var</span><span class="o">/</span><span class="n">log</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/</span><span class="n">audit</span><span class="o">.</span><span class="n">log</span>
 </pre></div>

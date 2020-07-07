@@ -73,14 +73,13 @@
     "More options …" : "更多选项",
     "More options at %s" : "在%s的更多选项",
     "Contacts" : "联系人",
+    "System in maintenance mode." : "系统处于维护模式。",
+    "Upgrade needed" : "需要升级",
     "Your %s needs to be configured to use HTTPS in order to use CalDAV and CardDAV with iOS/macOS." : "您的%s 需要配置使用HTTPS以在iOS/macOS中使用CalDAV和CardDAV。",
     "Configures a CalDAV account" : "配置一个 CalDAV 账号",
     "Configures a CardDAV account" : "配置一个 CardDAV 账号",
     "WebDAV" : "WebDAV",
     "WebDAV endpoint" : "WebDAV端点",
-    "Technical details" : "技术细节",
-    "Remote Address: %s" : "远程地址：%s",
-    "Request ID: %s" : "请求 ID：%s",
     "There was an error updating your attendance status." : "更新您的出席状态时出错。",
     "Please contact the organizer directly." : "请直接联系组织者。",
     "Are you accepting the invitation?" : "您是否接受邀请？",
@@ -97,7 +96,9 @@
     "Send notifications for events" : "发送事件通知",
     "Notifications are sent via background jobs, so these must occur often enough." : "通知将通过后台任务发送，所以任务的频率要足够高。",
     "Enable notifications for events via push" : "启用推送事件通知",
-    "Please make sure to properly set up the email settings above." : "请确保正确设置上面的电子邮件设置。",
+    "Technical details" : "技术细节",
+    "Remote Address: %s" : "远程地址：%s",
+    "Request ID: %s" : "请求 ID：%s",
     "Notifications will be send through background jobs, so these need to happen often enough." : "通知将通过后台任务发送，所以任务的频率有足够高。"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

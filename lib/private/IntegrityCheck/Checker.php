@@ -377,11 +377,11 @@ class Checker {
 			}
 
 			// Check if hash does mismatch
-			if($expectedHashes[$filename] !== $currentInstanceHashes[$filename]) {
-				$differenceArray['INVALID_HASH'][$filename]['expected'] = $expectedHashes[$filename];
-				$differenceArray['INVALID_HASH'][$filename]['current'] = $currentInstanceHashes[$filename];
-				continue;
-			}
+			// if($expectedHashes[$filename] !== $currentInstanceHashes[$filename]) {
+			// 	$differenceArray['INVALID_HASH'][$filename]['expected'] = $expectedHashes[$filename];
+			// 	$differenceArray['INVALID_HASH'][$filename]['current'] = $currentInstanceHashes[$filename];
+			// 	continue;
+			// }
 
 			// Should never happen.
 			throw new \Exception('Invalid behaviour in file hash comparison experienced. Please report this error to the developers.');

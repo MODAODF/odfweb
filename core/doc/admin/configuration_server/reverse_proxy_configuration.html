@@ -122,11 +122,14 @@ server or load balance between multiple servers.</p>
 trust. Connections from trusted proxies will be specially treated to get the
 real client information, for use in access control and logging. Parameters are
 configured in <code class="file docutils literal notranslate"><span class="pre">config/config.php</span></code></p>
-<p>Set the <strong>trusted_proxies</strong> parameter as an array of IPv4 addresses,
-IPv4 ranges in CIDR notation or IPv6 addresses to define the
-servers Nextcloud should trust as proxies. This parameter provides protection
-against client spoofing, and you should secure those servers as you would your
-Nextcloud server.</p>
+<p>Set the <code class="file docutils literal notranslate"><span class="pre">trusted_proxies</span></code> parameter as an array of:
+* IPv4 addresses,
+* IPv4 ranges in CIDR notation
+* IPv6 addresses
+* host to resolve
+to define the servers Nextcloud should trust as proxies. This parameter
+provides protection against client spoofing, and you should secure those
+servers as you would your Nextcloud server.</p>
 <p>A reverse proxy can define HTTP headers with the original client IP address,
 and Nextcloud can use those headers to retrieve that IP address. Nextcloud uses
 the de-facto standard header ‘X-Forwarded-For’ by default, but this can be
