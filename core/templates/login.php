@@ -1,7 +1,7 @@
 <?php /** @var $l \OCP\IL10N */ ?>
 <?php
 script('core', 'merged-login');
-
+style('core', 'fixInlineCss/login');
 use OC\Core\Controller\LoginController;
 ?>
 
@@ -33,7 +33,7 @@ use OC\Core\Controller\LoginController;
 				src="<?php p(image_path('core', 'loading-dark.gif'));?>">
 			<span id="messageText"></span>
 			<!-- the following div ensures that the spinner is always inside the #message div -->
-			<div style="clear: both;"></div>
+			<div class="fixInline-clear"></div>
 		</div>
 		<p class="grouptop<?php if (!empty($_[LoginController::LOGIN_MSG_INVALIDPASSWORD])) { ?> shake<?php } ?>">
 			<input type="text" name="user" id="user"
@@ -93,7 +93,7 @@ use OC\Core\Controller\LoginController;
 		<?php } ?>
 
 		<?php if (!empty($_['canResetPassword'])) { ?>
-		<div id="reset-password-wrapper" style="display: none;">
+		<div id="reset-password-wrapper">
 			<input type="submit" id="reset-password-submit" class="login primary" title="" value="<?php p($l->t('Reset password')); ?>" disabled="disabled" />
 			<div class="submit-icon icon-confirm-white"></div>
 		</div>
@@ -105,7 +105,7 @@ use OC\Core\Controller\LoginController;
 				<a id="lost-password" href="<?php p($_['resetPasswordLink']); ?>">
 					<?php p($l->t('Forgot password?')); ?>
 				</a>
-				<a id="lost-password-back" href="" style="display:none;">
+				<a id="lost-password-back" href="">
 					<?php p($l->t('Back to login')); ?>
 				</a>
 			</div>

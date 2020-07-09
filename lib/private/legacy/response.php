@@ -85,12 +85,13 @@ class OC_Response {
 		 */
 		$policy = 'default-src \'self\'; '
 			. 'script-src \'self\' \'nonce-'.\OC::$server->getContentSecurityPolicyNonceManager()->getNonce().'\'; '
-			. 'style-src \'self\' \'unsafe-inline\'; '
-			. 'frame-src *; '
-			. 'img-src * data: blob:; '
+			. 'style-src \'self\'; '
+			. 'frame-src \'self\'; '
+			. 'frame-ancestors \'self\'; '
+			. 'img-src \'self\'; '
 			. 'font-src \'self\' data:; '
-			. 'media-src *; ' 
-			. 'connect-src *; '
+			. 'media-src  \'self\'; '
+			. 'connect-src \'self\'; '
 			. 'object-src \'none\'; '
 			. 'base-uri \'self\'; ';
 		header('Content-Security-Policy:' . $policy);
