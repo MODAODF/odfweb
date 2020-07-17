@@ -126,11 +126,14 @@ class MySQL extends AbstractDatabase {
 			// we need to create 2 accounts, one for global use and one for local user. if we don't specify the local one,
 			// the anonymous user would take precedence when there is one.
 
-			// $query = "CREATE USER '$name'@'localhost' IDENTIFIED BY '$password'";
-			$query = "CREATE USER '$name'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password'";
+			$query = "CREATE USER '$name'@'localhost' IDENTIFIED BY '$password'";
+			// nc11 update: $query = "CREATE USER '$name'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password'";
+
 			$connection->executeUpdate($query);
-			// $query = "CREATE USER '$name'@'%' IDENTIFIED BY '$password'";
-			$query = "CREATE USER '$name'@'%' IDENTIFIED WITH mysql_native_password BY '$password'";
+
+			// nc11 update: $query = "CREATE USER '$name'@'%' IDENTIFIED WITH mysql_native_password BY '$password'";
+			$query = "CREATE USER '$name'@'%' IDENTIFIED BY '$password'";
+
 			$connection->executeUpdate($query);
 		}
 		catch (\Exception $ex){

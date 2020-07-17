@@ -343,9 +343,12 @@ class Setup {
 
 		$this->config->setValues($newConfigValues);
 
-		$dbSetup->initialize($options);
+		// $dbSetup->initialize($options);
 		try {
+			$dbSetup->initialize($options);
 			$dbSetup->setupDatabase($username);
+			// apply necessary migrations
+			$dbSetup->runMigrations();
 		} catch (\OC\DatabaseSetupException $e) {
 			$error[] = [
 				'error' => $e->getMessage(),
