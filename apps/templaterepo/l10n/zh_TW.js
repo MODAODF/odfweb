@@ -5,7 +5,7 @@ OC.L10N.register(
         "Are you sure you want to sync \"{folderName}\" and all files inside?": "您確定要同步 \"{folderName}\" 和裡面所有的檔案嗎？",
         "Delete \"{folderName}\"?": "刪除 \"{folderName}\" ？",
         "Sync \"{folderName}\"?": "同步 \"{folderName}\" ？",
-        "Users/groups that can manage": "管理權限的用戶/群組",
+        "Users/groups that can manage": "可瀏覽的用戶/群組",
         "No other users available": "無其他使用者",
         "No other groups available": "無其他群組",
         "Add user":"新增用戶",
