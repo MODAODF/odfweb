@@ -60,5 +60,10 @@ return ['routes' => [
 		'name' => 'Folder#getFolderList',
 		'url' => '/folderlist',
 		'verb' => 'GET'
-	]
+	],
+	[
+		'name' => 'Folder#renameFolder',
+		'url' => '/folders/{id}/mountpoint',
+		'verb' => 'POST'
+	],
 ]];
