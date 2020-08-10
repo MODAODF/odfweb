@@ -110,7 +110,13 @@
 
 		updateCountdown: function (i, total) {
 			setTimeout(function(){
-				 $("#redirect-countdown").text(n('core', 'The update was successful. Redirecting you to Nextcloud in %n second.', 'The update was successful. Redirecting you to Nextcloud in %n seconds.', i));
+				$("#redirect-countdown").text(
+					n('core',
+						'The update was successful. Redirecting you to {name} in %n second.',
+						'The update was successful. Redirecting you to {name} in %n seconds.',
+						i, {name:$('.update').attr('data-productname')}
+					)
+				);
 			}, (total - i) * 1000);
 		},
 

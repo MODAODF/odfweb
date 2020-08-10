@@ -118,7 +118,7 @@ OC.L10N.register(
     "The update was unsuccessful. For more information <a href=\"{url}\">check our forum post</a> covering this issue." : "更新失敗，檢視<a href=\"{url}\">論壇上的文章</a>來瞭解更多",
     "The update was unsuccessful. Please report this issue to the <a href=\"https://github.com/nextcloud/server/issues\" target=\"_blank\">Nextcloud community</a>." : "更新不成功。請在<a href=\"https://github.com/nextcloud/server/issues\" target=\"_blank\">Nextcloud社群</a>回報此問題。",
     "Continue to Nextcloud" : "繼續前往 Nextcloud",
-    "_The update was successful. Redirecting you to Nextcloud in %n second._::_The update was successful. Redirecting you to Nextcloud in %n seconds._" : ["更新成功，將在 %n 秒後重導向至 Nextcloud"],
+    "_The update was successful. Redirecting you to {name} in %n second._::_The update was successful. Redirecting you to {name} in %n seconds._" : ["更新成功，將在 %n 秒後重導向至 {name}"],
     "Searching other places" : "搜尋其他位置",
     "No search results in other folders for {tag}{filter}{endtag}" : "{tag}{filter}{endtag} 在其他資料夾中沒有比對結果",
     "_{count} search result in another folder_::_{count} search results in other folders_" : ["在其他資料夾中有 {count} 比結果"],
