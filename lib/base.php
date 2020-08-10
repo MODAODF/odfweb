@@ -307,7 +307,8 @@ class OC {
 	/**
 	 * Prints the upgrade page
 	 */
-	private static function printUpgradePage(\OC\SystemConfig $systemConfig): void {
+	private static function printUpgradePage(\OC\SystemConfig $systemConfig) {
+		$odfwebProductName = '政府 ODF Web 文件應用元件';
 		$disableWebUpdater = $systemConfig->getValue('upgrade.disable-web', false);
 		$tooBig = false;
 		if (!$disableWebUpdater) {
@@ -351,7 +352,7 @@ class OC {
 
 			// render error page
 			$template = new OC_Template('', 'update.use-cli', 'guest');
-			$template->assign('productName', 'nextcloud'); // for now
+			$template->assign('productName', $odfwebProductName);
 			$template->assign('version', OC_Util::getVersionString());
 			$template->assign('tooBig', $tooBig);
 
@@ -403,7 +404,7 @@ class OC {
 			$defaults = new \OC_Defaults();
 			$tmpl->assign('productName', $defaults->getName());
 		} catch (Throwable $error) {
-			$tmpl->assign('productName', 'Nextcloud');
+			$tmpl->assign('productName', $odfwebProductName);
 		}
 		$tmpl->assign('oldTheme', $oldTheme);
 		$tmpl->printPage();
