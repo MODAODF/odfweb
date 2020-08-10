@@ -82,7 +82,7 @@ script('files', 'jquery.fileupload');
 	</p>
 </div>
 
-<?php if ($_['templatesAvailable'] === true) { ?>
+<?php if (false) { ?>
 <form class="section" id="richdocuments-templates" method="post" action="/template/">
 	<input class="hidden-visually" id="add-template" type="file" />
 	<h2>
