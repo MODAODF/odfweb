@@ -199,28 +199,27 @@ class Application extends App
 			}
 		});
 
-
 		/** 註冊檔案 upload 同步 */
-		$rootfolder->listen('\OC\Files', 'postCreate', function ($k) {
-			$fileInfo = $k->getFileInfo();
-			if (
-				$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
-				$fileInfo->getData()->getData()['type'] == "file"
-			) {
-				$this->uploadFile($fileInfo);
-			}
-		});
+		#$rootfolder->listen('\OC\Files', 'postCreate', function ($k) {
+		#	$fileInfo = $k->getFileInfo();
+		#	if (
+		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
+		#		$fileInfo->getData()->getData()['type'] == "file"
+		#	) {
+		#		$this->uploadFile($fileInfo);
+		#	}
+		#});
 
 		/** 註冊檔案 delete 同步 */
-		$rootfolder->listen('\OC\Files', 'postDelete', function ($k) {
-			$fileInfo = $k->getFileInfo();
-			if (
-				$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
-				$fileInfo->getData()->getData()['type'] == "file"
-			) {
-				$this->deleteFile($fileInfo);
-			}
-		});
+		#$rootfolder->listen('\OC\Files', 'postDelete', function ($k) {
+		#	$fileInfo = $k->getFileInfo();
+		#	if (
+		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
+		#		$fileInfo->getData()->getData()['type'] == "file"
+		#	) {
+		#		$this->deleteFile($fileInfo);
+		#	}
+		#});
 
 		/*	Update 可以註冊的 Hook (非官方提供的 Hook, 必須自己接)
 				OC_Filesystem:
@@ -236,27 +235,26 @@ class Application extends App
 
 			**這裡採用 post_update**
 		*/
-		Util::connectHook('OC_Filesystem', 'post_update', $this, 'postUpdate');
-
-		/** 註冊檔案 update 同步 */
-		$rootfolder->listen('\OC\Files', 'postUpdate', function ($k) {
-			$fileInfo = $k;
-			if (
-				$fileInfo->getMountPoint()->getMountType() == "templaterepo"
-			) {
-				$this->updateFile($fileInfo);
-			}
-		});
+		#Util::connectHook('OC_Filesystem', 'post_update', $this, 'postUpdate');
+		#/** 註冊檔案 update 同步 */
+		#$rootfolder->listen('\OC\Files', 'postUpdate', function ($k) {
+		#	$fileInfo = $k;
+		#	if (
+		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo"
+		#	) {
+		#		$this->updateFile($fileInfo);
+		#	}
+		#});
 
 		// 註冊檔案上傳提醒
-		$this->getContainer()->getServer()->getNotificationManager()->registerNotifier(
-			function () {
-				return $this->getContainer()->query(Notifier::class);
-			},
-			function () {
-				return ['id' => 'templaterepo', 'name' => "templaterepo"];
-			}
-		);
+		#$this->getContainer()->getServer()->getNotificationManager()->registerNotifier(
+		#	function () {
+		#		return $this->getContainer()->query(Notifier::class);
+		#	},
+		#	function () {
+		#		return ['id' => 'templaterepo', 'name' => "templaterepo"];
+		#	}
+		#);
 	}
 
 	/**
