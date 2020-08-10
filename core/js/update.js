@@ -34,12 +34,7 @@
 				return t('core', 'The update is in progress, leaving this page might interrupt the process in some environments.');
 			});
 
-			$('#update-progress-title').html(t(
-				'core',
-				'Update to {version}', {
-					version: options.version
-				})
-			);
+			$('#update-progress-title').html(t('core','Update to the latest version'));
 
 			var updateEventSource = new OC.EventSource(OC.getRootPath()+'/core/ajax/update.php');
 			updateEventSource.listen('success', function(message) {
