@@ -20,6 +20,7 @@ script('files', 'jquery.fileupload');
 		<br />
 		<em><?php p($l->t('Collabora Online requires a seperate server acting as a WOPI-like Client to provide editing capabilities.')) ?></em>
 	</p>
+	<p id="link_online_admin"><?php p($l->t('Open'))?> <a href="<?php p($_['wopi_url'].$_['online_admin_path'])?>" online_path="<?php p($_['online_admin_path'])?>" target="_blank"><?php p($l->t('【NDCODFWEB】')) ?> <?php p($l->t('config console'))?><span class="icon-external"></span></a></p>
 	<p>
 		<input type="checkbox" class="checkbox" id="disable_certificate_verification" <?php p($_['disable_certificate_verification'] === 'yes' ? 'checked' : '') ?> />
 		<label for="disable_certificate_verification"><?php p($l->t('Disable certificate verification (insecure)')) ?></label><br />

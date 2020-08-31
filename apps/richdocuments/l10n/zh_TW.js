@@ -1,6 +1,9 @@
 OC.L10N.register(
     "richdocuments",
     {
+    "Open" : "前往",
+    "【NDCODFWEB】" : "【ODF文件WEB應用元件】",
+    "config console" : "管理後台",
     "Saving…" : "儲存中...",
     "All" : "全部",
     "Error" : "錯誤",
