@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<info>
+	<id>grouprepos</id>
+	<name>Group repos</name>
+	<summary>Admin configured folders shared by everyone in a group</summary>
+	<description><![CDATA[Admin configured folders shared by everyone in a group.
+
+Folders can be configured from *Group repos* in the admin settings.
+
+After a folder is created, the admin can give access to the folder to one or more groups, control their write/sharing permissions and assign a quota for the folder.
+
+Note: encrypting the contents of group folders is currently not supported.]]></description>
+	<version>1.0.6</version>
+	<licence>agpl</licence>
+	<author>Tommy Wu</author>
+	<namespace>GroupRepos</namespace>
+	<types>
+		<filesystem/>
+		<dav/>
+	</types>
+
+	<category>files</category>
+
+	<dependencies>
+		<nextcloud min-version="16" max-version="16" />
+	</dependencies>
+
+	<background-jobs>
+		<job>OCA\GroupRepos\BackgroundJob\ExpireGroupVersions</job>
+	</background-jobs>
+
+	<commands>
+		<command>OCA\GroupRepos\Command\ExpireGroupVersions</command>
+		<command>OCA\GroupRepos\Command\ListCommand</command>
+		<command>OCA\GroupRepos\Command\ACL</command>
+		<command>OCA\GroupRepos\Command\Quota</command>
+		<command>OCA\GroupRepos\Command\Group</command>
+		<command>OCA\GroupRepos\Command\Create</command>
+		<command>OCA\GroupRepos\Command\Rename</command>
+		<command>OCA\GroupRepos\Command\Delete</command>
+		<command>OCA\GroupRepos\Command\Scan</command>
+	</commands>
+
+	<settings>
+		<admin>OCA\GroupRepos\Settings\Admin</admin>
+		<admin-section>OCA\GroupRepos\Settings\Section</admin-section>
+	</settings>
+
+	<sabre>
+		<plugins>
+			<plugin>OCA\GroupRepos\DAV\ACLPlugin</plugin>
+		</plugins>
+	</sabre>
+
+	<trash>
+		<backend for="OCA\GroupRepos\Mount\GroupReposStorage">OCA\GroupRepos\Trash\TrashBackend</backend>
+	</trash>
+
+	<versions>
+		<backend for="OCA\GroupRepos\Mount\GroupReposStorage">OCA\GroupRepos\Versions\VersionsBackend</backend>
+	</versions>
+</info>
