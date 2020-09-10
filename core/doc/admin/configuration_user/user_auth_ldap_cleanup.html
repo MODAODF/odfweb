@@ -133,6 +133,9 @@ configured with <code class="docutils literal notranslate"><span class="pre">lda
 users and your <code class="docutils literal notranslate"><span class="pre">ldapUserCleanupInterval</span></code> is 20 minutes, the process will
 examine the first 50 users, then 20 minutes later the next 50 users, and 20
 minutes later the next 50, and so on.</p>
+<p>The amount of users to check can be set to a custom value via occ command. The
+following example sets it to 300:</p>
+<p><code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">config:app:set</span> <span class="pre">--value=300</span> <span class="pre">user_ldap</span> <span class="pre">cleanUpJobChunkSize</span></code></p>
 <p>There are two <code class="docutils literal notranslate"><span class="pre">occ</span></code> commands to use for examining a table of users marked as
 deleted, and then manually deleting them.  The <code class="docutils literal notranslate"><span class="pre">occ</span></code> command is in your
 Nextcloud directory, for example <code class="docutils literal notranslate"><span class="pre">/var/www/nextcloud/occ</span></code>, and it must be run as
@@ -157,6 +160,9 @@ Nextcloud data directory.</li>
 +-----------------+-----------------+------------------+--------------------------------------+
 </pre></div>
 </div>
+<p>Following flags can be specified additionally:</p>
+<p><em>–short-date</em>: formats the dates for <code class="docutils literal notranslate"><span class="pre">Last</span> <span class="pre">login</span></code> and <code class="docutils literal notranslate"><span class="pre">Detected</span> <span class="pre">on</span></code> in a short Y-m-d format (e.g. 2019-01-14)</p>
+<p><em>–json–</em>: instead of a table, the output is json-encoded. This makes it easy to process the data programmatically.</p>
 <p>Then you can run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-u</span> <span class="pre">www-data</span> <span class="pre">php</span> <span class="pre">occ</span> <span class="pre">user:delete</span> <span class="pre">aaliyah_brown</span></code> to delete
 user aaliyah_brown. You must use the user’s Nextcloud name.</p>
 <div class="section" id="deleting-local-nextcloud-users">

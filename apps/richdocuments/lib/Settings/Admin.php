@@ -69,11 +69,13 @@ class Admin implements ISettings {
 			'admin',
 			[
 				'wopi_url'           => $this->config->getAppValue('richdocuments', 'wopi_url'),
+				'online_admin_path'  => '/loleaflet/dist/admin/admin.html',
 				'edit_groups'        => $this->config->getAppValue('richdocuments', 'edit_groups'),
 				'use_groups'         => $this->config->getAppValue('richdocuments', 'use_groups'),
 				'doc_format'         => $this->config->getAppValue('richdocuments', 'doc_format'),
 				'external_apps'      => $this->config->getAppValue('richdocuments', 'external_apps'),
 				'canonical_webroot'  => $this->config->getAppValue('richdocuments', 'canonical_webroot'),
+				'saveToOdf'          => $this->config->getAppValue('richdocuments', 'saveToOdf'),
 				'disable_certificate_verification' => $this->config->getAppValue('richdocuments', 'disable_certificate_verification'),
 				'templates'          => $this->manager->getSystemFormatted(),
 				'templatesAvailable' => array_key_exists('templates', $this->capabilities) && $this->capabilities['templates'],

@@ -1,0 +1,7 @@
+form[name="login"] .fixInline-clear {
+    clear: both;
+}
+form[name="login"] #reset-password-wrapper,
+form[name="login"] #lost-password-back {
+    display: none;
+}

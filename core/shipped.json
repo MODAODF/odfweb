@@ -3,7 +3,7 @@
     "accessibility",
     "activity",
     "admin_audit",
-    "bruteforcesettings",
+    "announcementcenter",
     "cloud_federation_api",
     "comments",
     "dav",
@@ -20,6 +20,7 @@
     "files_versions",
     "files_videoplayer",
     "gallery",
+    "groupfolders",
     "logreader",
     "lookup_server_connector",
     "notifications",
@@ -32,13 +33,13 @@
     "sharebymail",
     "systemtags",
     "theming",
+    "templaterepo",
     "twofactor_backupcodes",
     "user_ldap",
     "viewer"
   ],
   "alwaysEnabled": [
     "richdocuments",
-    "bruteforcesettings",
     "files",
     "files_external",
     "cloud_federation_api",
@@ -48,6 +49,7 @@
     "provisioning_api",
     "oauth2",
     "theming",
+    "templaterepo",
     "twofactor_backupcodes",
     "user_ldap"
   ]

@@ -49,6 +49,8 @@ use OCP\AppFramework\Db\Entity;
  * @method string getGuestDisplayname()
  * @method void setTemplateDestination(int $fileId)
  * @method int getTemplateDestination()
+ * @method void setTemplateId(int $fileId)
+ * @method int getTemplateId()
  */
 class Wopi extends Entity {
 	/** @var string */
@@ -81,6 +83,9 @@ class Wopi extends Entity {
 	/** @var int */
 	protected $templateDestination;
 
+	/** @var int */
+	protected $templateId;
+
 	/** @var bool */
 	protected $hideDownload;
 
@@ -96,6 +101,9 @@ class Wopi extends Entity {
 	/** @var string */
 	protected $remoteServerToken;
 
+	/** @var string */
+	protected $share;
+
 	public function __construct() {
 		$this->addType('owner_uid', 'string');
 		$this->addType('editor_uid', 'string');
@@ -107,13 +115,28 @@ class Wopi extends Entity {
 		$this->addType('expiry', 'int');
 		$this->addType('guest_displayname', 'string');
 		$this->addType('templateDestination', 'int');
+		$this->addType('templateId', 'int');
 		$this->addType('hide_download', 'bool');
 		$this->addType('direct', 'bool');
-
 	}
 
 	public function isTemplateToken() {
 		return $this->getTemplateDestination() !== 0 && $this->getTemplateDestination() !== null;
+	}
+
+	public function hasTemplateId() {
+		return $this->getTemplateId() !== 0 && $this->getTemplateId() !== null;
+	}
+
+	public function isGuest() {
+		return $this->getGuestDisplayname() !== null;
+	}
+
+	public function getUserForFileAccess() {
+		if ($this->share !== null) {
+			return $this->getOwnerUid();
+		}
+		return $this->isGuest() ? $this->getOwnerUid() : $this->getEditorUid();
 	}
 
 }

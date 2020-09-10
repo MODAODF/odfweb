@@ -3,8 +3,8 @@
 	<id>richdocuments</id>
 	<name>Collabora Online</name>
 	<summary>Edit office documents directly in your browser.</summary>
-	<description>This application can connect to a Collabora Online server (WOPI Client). Nextcloud is the WOPI Host. Please read the documentation to learn more about that.</description>
-	<version>3.4.2</version>
+	<description>This application can connect to a Collabora Online (or other) server (WOPI-like Client). Nextcloud is the WOPI Host. Please read the documentation to learn more about that.</description>
+	<version>3.5.3</version>
 	<licence>agpl</licence>
 	<author>Collabora Productivity based on work of Frank Karlitschek, Victor Dubiniuk</author>
 	<types>
@@ -14,7 +14,7 @@
 	</types>
 	<documentation>
 		<user>https://nextcloud.com/collaboraonline/</user>
-		<admin>https://nextcloud.com/collaboraonline/</admin>
+		<admin>https://github.com/nextcloud/richdocuments/wiki</admin>
 	</documentation>
 	<category>office</category>
 	<category>integration</category>
@@ -25,16 +25,14 @@
 	<screenshot>https://nextcloud.com/wp-content/themes/next/assets/img/features/collabora-presentation.png</screenshot>
 	<screenshot>https://nextcloud.com/wp-content/themes/next/assets/img/features/collabora-spreadsheet.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="15" max-version="17" />
+		<nextcloud min-version="15" max-version="19" />
 	</dependencies>
 	<background-jobs>
 		<job>OCA\Richdocuments\Backgroundjobs\ObtainCapabilities</job>
 	</background-jobs>
-	<repair-steps>
-		<post-migration>
-			<step>OCA\Richdocuments\Migration\UpdateEmptyTemplates</step>
-		</post-migration>
-	</repair-steps>
+	<commands>
+		<command>OCA\Richdocuments\Command\UpdateEmptyTemplates</command>
+	</commands>
 	<settings>
 		<admin>OCA\Richdocuments\Settings\Admin</admin>
 		<admin-section>OCA\Richdocuments\Settings\Section</admin-section>

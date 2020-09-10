@@ -125,6 +125,14 @@
 		dirInfo: null,
 
 		/**
+		 * Whether to prevent or to execute the default file actions when the
+		 * file name is clicked.
+		 *
+		 * @type boolean
+		 */
+		_defaultFileActionsDisabled: false,
+
+		/**
 		 * File actions handler, defaults to OCA.Files.FileActions
 		 * @type OCA.Files.FileActions
 		 */
@@ -282,6 +290,10 @@
 			if (_.isUndefined(options.detailsViewEnabled) || options.detailsViewEnabled) {
 				this._detailsView = new OCA.Files.DetailsView();
 				this._detailsView.$el.addClass('disappear');
+			}
+
+			if (options && options.defaultFileActionsDisabled) {
+				this._defaultFileActionsDisabled = options.defaultFileActionsDisabled
 			}
 
 			this._initFileActions(options.fileActions);
@@ -673,7 +685,7 @@
 			this.$showGridView.next('#view-toggle')
 				.removeClass('icon-toggle-filelist icon-toggle-pictures')
 				.addClass(show ? 'icon-toggle-filelist' : 'icon-toggle-pictures')
-				
+
 			$('.list-container').toggleClass('view-grid', show);
 			if (show) {
 				// If switching into grid view from list view, too few files might be displayed
@@ -834,7 +846,9 @@
 				if (!this._detailsView || $(event.target).is('.nametext, .name, .thumbnail') || $(event.target).closest('.nametext').length) {
 					var filename = $tr.attr('data-file');
 					var renaming = $tr.data('renaming');
-					if (!renaming) {
+					if (this._defaultFileActionsDisabled) {
+						event.preventDefault();
+					} else if (!renaming) {
 						this.fileActions.currentFile = $tr.find('td');
 						var mime = this.fileActions.getCurrentMimeType();
 						var type = this.fileActions.getCurrentType();
@@ -1025,7 +1039,7 @@
 				if (type === OC.dialogs.FILEPICKER_TYPE_MOVE) {
 					self.move(files, targetPath, disableLoadingState);
 				}
-				self.dirInfo.dirLastCopiedTo = targetPath; 
+				self.dirInfo.dirLastCopiedTo = targetPath;
 			}, false, "httpd/unix-directory", true, actions, dialogDir);
 			event.preventDefault();
 		},
@@ -1479,6 +1493,11 @@
 				"class": "name",
 				"href": linkUrl
 			});
+			if (this._defaultFileActionsDisabled) {
+				linkElem = $('<p></p>').attr({
+					"class": "name"
+				})
+			}
 
 			linkElem.append('<div class="thumbnail-wrapper"><div class="thumbnail" style="background-image:url(' + icon + ');"></div></div>');
 
@@ -2154,8 +2173,8 @@
 
 			// get mime icon url
 			var iconURL = OC.MimeType.getIconUrl(mime);
-			var previewURL,
-				urlSpec = {};
+			// var previewURL,
+			var urlSpec = {};
 			ready(iconURL); // set mimeicon URL
 
 			urlSpec.fileId = fileId;
@@ -2178,24 +2197,27 @@
 				urlSpec.c = etag;
 			}
 
-			previewURL = self.generatePreviewUrl(urlSpec);
-			previewURL = previewURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
+			// previewURL = self.generatePreviewUrl(urlSpec);
+			// previewURL = previewURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
 
 			// preload image to prevent delay
 			// this will make the browser cache the image
 			var img = new Image();
-			img.onload = function(){
-				// if loading the preview image failed (no preview for the mimetype) then img.width will < 5
-				if (img.width > 5) {
-					ready(previewURL, img);
-				} else if (options.error) {
-					options.error();
-				}
-			};
-			if (options.error) {
-				img.onerror = options.error;
-			}
-			img.src = previewURL;
+
+			// img.onload = function(){
+			// 	// if loading the preview image failed (no preview for the mimetype) then img.width will < 5
+			// 	if (img.width > 5) {
+			// 		ready(previewURL, img);
+			// 	} else if (options.error) {
+			// 		options.error();
+			// 	}
+			// };
+			// if (options.error) {
+			// 	img.onerror = options.error;
+			// }
+
+			iconURL = iconURL.replace(/\(/g, '%28').replace(/\)/g, '%29');
+			img.src = iconURL; // previewURL;
 		},
 
 		_updateDirectoryPermissions: function() {
@@ -3276,7 +3298,7 @@
 
 		/**
 		 * Are all files selected?
-		 * 
+		 *
 		 * @returns {Boolean} all files are selected
 		 */
 		isAllSelected: function() {

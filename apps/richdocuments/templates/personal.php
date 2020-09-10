@@ -13,5 +13,6 @@ script('richdocuments', 'personal');
 		<button id="templateResetButton"><span  class="icon-delete" title="<?php p($l->t('Remove personal template folder')); ?>" data-toggle="tooltip"></span></button>
 	</p>
 	<p><em><?php p($l->t('Templates inside of this directory will be added to the template selector of Collabora Online.')); ?></em></p>
+	<p id="personal-odftemplate">前往 <a href="https://odf.nat.gov.tw/QA/web/odftemplate.html" target="_blank">共用範本專區<span class="icon-external"></span></a></p>
 	</div>
 </div>

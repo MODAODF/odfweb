@@ -158,6 +158,10 @@
 <div class="section" id="key-type-user-key">
 <h2>Key type: user key<a class="headerlink" href="#key-type-user-key" title="Permalink to this headline">¶</a></h2>
 <p>While the user key encryption has been enabled by default in older versions of Nextcloud it now has to be enabled explicitly in newer versions including Nextcloud 16 by calling <code class="docutils literal notranslate"><span class="pre">./occ</span> <span class="pre">encryption:disable-master-key</span></code>. With user key encryption enabled all users have their own user keys that are used to secure the files handled by Nextcloud. The user keys are protected by the user passwords. The advantage is that the server administrator is not able to decrypt user files without knowing any user password - unless the file is publicly shared or a recovery key is defined - but has the disadvantage that files are permanently lost if the users forget their user passwords - unless the files are (publicly) shared or a recovery key is defined.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This method cannot be used with SAML authentication, because Nextcloud does not get a hold of any credentials whatsoever and therefore cannot use any users’ passwords for encryption.</p>
+</div>
 </div>
 <div class="section" id="file-type-public-key-file">
 <span id="file-type-public-key-file-label"></span><h2>File type: public key file<a class="headerlink" href="#file-type-public-key-file" title="Permalink to this headline">¶</a></h2>

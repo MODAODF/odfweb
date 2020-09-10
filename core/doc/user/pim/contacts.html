@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Using the contacts app &#8212; Nextcloud latest User Manual latest documentation</title>
+    <title>Using the Contacts app &#8212; Nextcloud latest User Manual latest documentation</title>
     <link rel="stylesheet" href="../_static/" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/main.min.css" />
@@ -58,9 +58,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../webinterface.html">The Nextcloud Web interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../files/index.html">Files &amp; synchronization</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Groupware</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Using the contacts app</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#adding-contacts">Adding contacts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#adding-and-managing-address-books">Adding and managing address books</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using the Contacts app</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#adding-contacts">Adding Contacts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-and-managing-address-books">Adding and Managing Address Books</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="calendar.html">Using the calendar app</a></li>
@@ -99,53 +99,58 @@
 </ul>
 						
   <div class="section" id="using-the-contacts-app">
-<h1>Using the contacts app<a class="headerlink" href="#using-the-contacts-app" title="Permalink to this headline">¶</a></h1>
+<h1>Using the Contacts app<a class="headerlink" href="#using-the-contacts-app" title="Permalink to this headline">¶</a></h1>
 <p>The Contacts app is not enabled by default in Nextcloud latest and needs to
 be installed separately from our App Store.</p>
 <p>The Nextcloud Contacts app is similar to other mobile contact applications, but
-with more functionality. When you first access the Contacts app, a default
-address book becomes available.</p>
+with more functionality.
+Let’s run through basic features that will help you maintain your address book
+in the application.</p>
+<p>Below, you will learn how to add contacts, edit or remove contacts, upload a
+contact picture and manage your Contact app address books.</p>
+<div class="section" id="adding-contacts">
+<h2>Adding Contacts<a class="headerlink" href="#adding-contacts" title="Permalink to this headline">¶</a></h2>
+<p>When you first access the Contacts app, an empty default address book becomes available.</p>
 <div class="figure" id="id1">
 <img alt="../_images/contacts_empty.png" src="../_images/contacts_empty.png" />
-<p class="caption"><span class="caption-text"><strong>Contacts app (empty)</strong></span></p>
+<p class="caption"><span class="caption-text"><em>Default Address Book (empty)</em></span></p>
 </div>
-<div class="section" id="adding-contacts">
-<h2>Adding contacts<a class="headerlink" href="#adding-contacts" title="Permalink to this headline">¶</a></h2>
-<p>You can add contacts using one of the following methods:</p>
+<p>To add contacts into your address book, you can use one of the following methods:</p>
 <ul class="simple">
 <li>Import contacts using a Virtual Contact File (VCF/Vcard) file</li>
 <li>Add contacts manually</li>
 </ul>
-<div class="section" id="importing-contacts">
-<h3>Importing Contacts<a class="headerlink" href="#importing-contacts" title="Permalink to this headline">¶</a></h3>
-<p>The fastest way to add contacts is through the use of a Virtual Contact File
+<p>The fastest way to add a contact is to use a Virtual Contact File
 (VCF/Vcard) file.</p>
-<p>To import contacts using a VCF/Vcard file:</p>
+<div class="section" id="importing-virtual-contacts">
+<h3>Importing Virtual Contacts<a class="headerlink" href="#importing-virtual-contacts" title="Permalink to this headline">¶</a></h3>
+<p>To Import Contacts Using a VCF/Vcard File:</p>
 <ol class="arabic simple">
-<li>At the bottom of the Contacts app information field, locate the gear button.</li>
+<li>Find “Settings” at the bottom of the left sidebar, next to the gear button.</li>
 </ol>
 <blockquote>
-<div><div class="figure">
+<div><div class="figure" id="id2">
 <img alt="../_images/contact_bottombar.png" src="../_images/contact_bottombar.png" />
+<p class="caption"><span class="caption-text"><em>Contact settings gear button</em></span></p>
 </div>
-<p><strong>Contact settings gear button</strong></p>
 </div></blockquote>
-<ol class="arabic simple" start="2">
-<li>Click the gear button. The Contacts app upload field opens.</li>
-</ol>
-<div class="figure">
-<img alt="../_images/contact_uploadbutton.png" src="../_images/contact_uploadbutton.png" />
-</div>
-<p><strong>Contacts app upload field</strong></p>
+<p>2. Click the gear button. The Contacts app “Import” button will appear.
+.. figure:: ../images/contact_uploadbutton.png</p>
+<blockquote>
+<div><em>Contacts Upload Field</em></div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The Contacts app only supports import of vCards version 3.0 and 4.0.</p>
 </div>
+<ol class="arabic simple" start="3">
+<li>Click the “Import” button and upload your VCF/Vcard file.</li>
+</ol>
+<p>After the import is complete, you will see your new contact in your address book.</p>
 </div>
-<div class="section" id="creating-contacts-manually">
-<h3>Creating Contacts Manually<a class="headerlink" href="#creating-contacts-manually" title="Permalink to this headline">¶</a></h3>
-<p>The Contacts app enables you to create contacts manually.</p>
-<p>To create a new contact:</p>
+<div class="section" id="adding-contacts-manually">
+<h3>Adding Contacts Manually<a class="headerlink" href="#adding-contacts-manually" title="Permalink to this headline">¶</a></h3>
+<p>If you can’t import virtual contacts, the Contacts app enables you to <strong>add contacts</strong> manually.</p>
+<p>To Create a New Contact:</p>
 <ol class="arabic">
 <li><p class="first">Click the <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">New</span> <span class="pre">contact</span></code> button.</p>
 <p>An empty new contact configuration opens in the Application View field.</p>
@@ -173,36 +178,36 @@ address book becomes available.</p>
 </div>
 <div class="section" id="contact-picture">
 <h3>Contact Picture<a class="headerlink" href="#contact-picture" title="Permalink to this headline">¶</a></h3>
-<p>To define a contact picture, click on the upload button:</p>
-<div class="figure" id="id2">
-<img alt="../_images/contact_picture.png" src="../_images/contact_picture.png" />
-<p class="caption"><span class="caption-text"><strong>Contact picture (upload button)</strong></span></p>
-</div>
-<p>After you have set a contact picture, it will look like that:</p>
+<p>To add a picture for your new contacts, click on the upload button:</p>
 <div class="figure" id="id3">
-<img alt="../_images/contact_picture_set.png" src="../_images/contact_picture_set.png" />
-<p class="caption"><span class="caption-text"><strong>Contact picture (set)</strong></span></p>
+<img alt="../_images/contact_picture.png" src="../_images/contact_picture.png" />
+<p class="caption"><span class="caption-text"><em>Contact picture (upload button)</em></span></p>
 </div>
-<p>If you want to upload a new one, remove it, view it in full size or download it
-click on the contacts picture.</p>
+<p>After you have set a contact picture, it will look like this:</p>
+<div class="figure" id="id4">
+<img alt="../_images/contact_picture_set.png" src="../_images/contact_picture_set.png" />
+<p class="caption"><span class="caption-text"><em>Contact picture (set)</em></span></p>
+</div>
+<p>If you want to upload a new one, remove it, view it in full size or download it,
+click on the contacts picture for the following options to appear:</p>
 <div class="figure">
 <img alt="../_images/contact_picture_options.png" src="../_images/contact_picture_options.png" />
 </div>
 </div>
 </div>
 <div class="section" id="adding-and-managing-address-books">
-<h2>Adding and managing address books<a class="headerlink" href="#adding-and-managing-address-books" title="Permalink to this headline">¶</a></h2>
-<p>Clicking on the settings (gear) button at the bottom of the Apps Information
-field provides access to the Contact app settings. This field shows all
+<h2>Adding and Managing Address Books<a class="headerlink" href="#adding-and-managing-address-books" title="Permalink to this headline">¶</a></h2>
+<p>Clicking on the “Settings” (gear) button at the bottom of the left sidebar
+provides access to Contact app settings. This field shows all
 available address books, certain options for each address book, and enables you
 to create new address books, simply by specifying an address books name.</p>
-<div class="figure" id="id4">
+<div class="figure" id="id5">
 <img alt="../_images/contact_manageaddressbook.png" src="../_images/contact_manageaddressbook.png" />
-<p class="caption"><span class="caption-text"><strong>Add address book in the contacts settings</strong></span></p>
+<p class="caption"><span class="caption-text"><em>Add address book in the contacts settings</em></span></p>
 </div>
-<p>The Contacts settings also enables you to share, export and delete address
-books. You will also find the CardDAV URLs there.
-See <a class="reference internal" href="index.html"><span class="doc">Groupware</span></a> for more details about syncing your adress books
+<p>The Contacts settings is also where you can share, export and delete address
+books. You will find the CardDAV URLs there.</p>
+<p>See <a class="reference internal" href="index.html"><span class="doc">Groupware</span></a> for more details about syncing your address books
 with iOS, macOS, Thunderbird and other CardDAV clients.</p>
 </div>
 </div>

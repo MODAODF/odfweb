@@ -154,8 +154,12 @@ the configuration is correct. Hover your cursor over the fields to see some
 pop-up tooltips.</p>
 <div class="section" id="server-tab">
 <h3>Server tab<a class="headerlink" href="#server-tab" title="Permalink to this headline">¶</a></h3>
-<p>Start with the Server tab. You may configure multiple servers if you have them.
-At a minimum you must supply the LDAP server’s hostname. If your server requires
+<p>Start with the Server tab. You may configure multiple servers if you have them.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Do not configure any failover LDAP hosts here. See <a class="reference internal" href="#advanced-settings-label"><span class="std std-ref">Advanced settings</span></a> for instructions instead.</p>
+</div>
+<p>At a minimum you must supply the LDAP server’s hostname. If your server requires
 authentication, enter your credentials on this tab. Nextcloud will then attempt
 to auto-detect the server’s port and base DN. The base DN and port are
 mandatory, so if Nextcloud cannot detect them you must enter them manually.</p>
@@ -330,7 +334,7 @@ The number updates automatically after any change.</dd>
 </div>
 </div>
 <div class="section" id="advanced-settings">
-<h2>Advanced settings<a class="headerlink" href="#advanced-settings" title="Permalink to this headline">¶</a></h2>
+<span id="advanced-settings-label"></span><h2>Advanced settings<a class="headerlink" href="#advanced-settings" title="Permalink to this headline">¶</a></h2>
 <p>The LDAP Advanced Setting section contains options that are not needed for a
 working connection. This provides controls to disable the current
 configuration,
@@ -609,6 +613,10 @@ Nextcloud. It is also a part of remote URLs, for instance for all *DAV
 services.</p>
 <p>You can override all of this with the Internal Username setting. Leave it
 empty for default behavior. Changes will affect only newly mapped LDAP users.</p>
+<p>When configuring this, be aware that the username in Nextcloud is considered
+immutable and cannot be changed afterwards. This can cause issues when using
+an attribute that might change, e.g. the email address of a user that will
+get changed during name change.</p>
 <ul class="last simple">
 <li>Example: <em>uid</em></li>
 </ul>

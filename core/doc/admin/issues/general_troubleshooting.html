@@ -72,6 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-web-server-and-php-problems">Troubleshooting Web server and PHP problems</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-webdav">Troubleshooting WebDAV</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#service-discovery">Service discovery</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting-sharing">Troubleshooting sharing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-contacts-calendar">Troubleshooting contacts &amp; calendar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#troubleshooting-data-directory">Troubleshooting data-directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#other-issues">Other issues</a></li>
@@ -362,6 +363,25 @@ document root of your Web server and add the following lines:</p>
 <p><code class="docutils literal notranslate"><span class="pre">https://example.com/nextcloud/remote.php/dav/principals/username</span></code>.</p>
 <p>There are also several techniques to remedy this, which are described extensively at
 the <a class="reference external" href="http://sabre.io/dav/service-discovery/">Sabre DAV website</a>.</p>
+</div>
+<div class="section" id="troubleshooting-sharing">
+<h2>Troubleshooting sharing<a class="headerlink" href="#troubleshooting-sharing" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="users-federated-cloud-ids-not-updated-after-a-domain-name-change">
+<h3>Users’ Federated Cloud IDs not updated after a domain name change<a class="headerlink" href="#users-federated-cloud-ids-not-updated-after-a-domain-name-change" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li>run Database query</li>
+</ol>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">DELETE</span> <span class="pre">FROM</span> <span class="pre">oc_cards_properties</span> <span class="pre">WHERE</span> <span class="pre">name</span> <span class="pre">=</span> <span class="pre">'CLOUD'</span> <span class="pre">AND</span> <span class="pre">addressbookid</span> <span class="pre">=</span> <span class="pre">(select</span> <span class="pre">id</span> <span class="pre">from</span> <span class="pre">oc_addressbooks</span> <span class="pre">where</span> <span class="pre">principaluri</span> <span class="pre">=</span> <span class="pre">'principals/system/system'</span> <span class="pre">AND</span> <span class="pre">uri</span> <span class="pre">=</span> <span class="pre">'system');</span></code></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>run occ commands</li>
+</ol>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">dav:sync-system-addressbook</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">federation:sync-addressbooks</span></code></div>
+</div>
+</div>
 </div>
 <div class="section" id="troubleshooting-contacts-calendar">
 <h2>Troubleshooting contacts &amp; calendar<a class="headerlink" href="#troubleshooting-contacts-calendar" title="Permalink to this headline">¶</a></h2>

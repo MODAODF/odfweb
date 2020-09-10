@@ -18,8 +18,9 @@ script('files', 'jquery.fileupload');
 		<input type="text" name="wopi_url" id="wopi_url" placeholder="https://office.example.org:9980" value="<?php p($_['wopi_url'])?>"><button type="button" id="wopi_apply"><?php p($l->t('Apply')) ?></button>
 		<span id="documents-admin-msg" class="msg"></span>
 		<br />
-		<em><?php p($l->t('Collabora Online requires a seperate server acting as a WOPI-Client to provide editing capabilities.')) ?></em>
+		<em><?php p($l->t('Collabora Online requires a seperate server acting as a WOPI-like Client to provide editing capabilities.')) ?></em>
 	</p>
+	<p id="link_online_admin"><?php p($l->t('Open'))?> <a href="<?php p($_['wopi_url'].$_['online_admin_path'])?>" online_path="<?php p($_['online_admin_path'])?>" target="_blank"><?php p($l->t('【NDCODFWEB】')) ?> <?php p($l->t('config console'))?><span class="icon-external"></span></a></p>
 	<p>
 		<input type="checkbox" class="checkbox" id="disable_certificate_verification" <?php p($_['disable_certificate_verification'] === 'yes' ? 'checked' : '') ?> />
 		<label for="disable_certificate_verification"><?php p($l->t('Disable certificate verification (insecure)')) ?></label><br />
@@ -70,7 +71,19 @@ script('files', 'jquery.fileupload');
 	</div>
 	</p>
 </div>
-<?php if ($_['templatesAvailable'] === true) { ?>
+
+<div class="section" id="richdocuments-saveToOdf">
+	<h2><?php p($l->t('Automatically convert Microsoft Office files to ODF files')) ?></h2>
+	<p>
+		<input type="checkbox" class="checkbox" id="saveToOdf" <?php p($_['saveToOdf'] === 'no' ? '' : 'checked' )?> />
+		<label for="saveToOdf"><?php p($l->t('Enable automatically convert Microsoft Office files to ODF files')) ?></label>
+		<span id="saveToOdf-admin-msg" class="msg" style="margin-left:10px;"></span>
+		<br />
+		<em><?php p($l->t('After enabling, it will automatically convert the MS format to the ODF format for online editing when users try to editing MS files.'))?></em>
+	</p>
+</div>
+
+<?php if (false) { ?>
 <form class="section" id="richdocuments-templates" method="post" action="/template/">
 	<input class="hidden-visually" id="add-template" type="file" />
 	<h2>

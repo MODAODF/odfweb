@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>announcementcenter</id>
+	<name>Announcement center</name>
+	<summary><![CDATA[This app allows admins to post announcements.]]></summary>
+	<description><![CDATA[This app allows admins to post announcements. Also supports the following features:
+
+⚡ Activities (Requires the activity app to be enabled)
+
+📑 Comments
+
+👪 Group permissions
+
+🔔 Notifications (Requires the notifications app to be enabled)]]></description>
+	<version>3.5.1</version>
+	<licence>agpl</licence>
+	<author>Joas Schilling</author>
+	<namespace>AnnouncementCenter</namespace>
+
+	<types>
+		<logging/>
+	</types>
+
+	<category>tools</category>
+
+	<website>https://github.com/nextcloud/announcementcenter</website>
+	<bugs>https://github.com/nextcloud/announcementcenter/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/announcementcenter.git</repository>
+
+	<screenshot>https://github.com/nextcloud/announcementcenter/raw/master/docs/AnnouncementCenterFrontpage.png</screenshot>
+
+	<dependencies>
+		<nextcloud min-version="16" max-version="16" />
+	</dependencies>
+
+	<repair-steps>
+		<post-migration>
+			<step>OCA\AnnouncementCenter\Migration\AnnouncementsGroupsLinks</step>
+		</post-migration>
+	</repair-steps>
+
+	<settings>
+		<admin>OCA\AnnouncementCenter\Settings\Admin</admin>
+	</settings>
+
+	<activity>
+		<settings>
+			<setting>OCA\AnnouncementCenter\Activity\Setting</setting>
+		</settings>
+
+		<providers>
+			<provider>OCA\AnnouncementCenter\Activity\Provider</provider>
+		</providers>
+	</activity>
+
+	<navigations>
+		<navigation>
+			<name>Announcements</name>
+			<route>announcementcenter.page.index</route>
+			<order>10</order>
+		</navigation>
+	</navigations>
+</info>

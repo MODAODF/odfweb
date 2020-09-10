@@ -473,4 +473,79 @@ class User implements IUser {
 			$this->emitter->emit('\OC\User', 'changeUser', array($this, $feature, $value, $oldValue));
 		}
 	}
+
+	/**
+	 * RegisterFromCsv
+	 * set the displayname for the user without triggerChange
+	 *
+	 * @param string $displayName
+	 * @return bool
+	 */
+	public function setDisplayNameWOTrigger($displayName) {
+		$displayName = trim($displayName);
+		$oldDisplayName = $this->getDisplayName();
+		if ($this->backend->implementsActions(Backend::SET_DISPLAYNAME) && !empty($displayName)
+			&& $displayName !== $oldDisplayName
+			) {
+			$result = $this->backend->setDisplayName($this->uid, $displayName);
+			if ($result) {
+				$this->displayName = $displayName;
+			}
+			return $result !== false;
+		}
+		return false;
+	}
+
+	/**
+	 * RegisterFromCsv
+	 * set the email address of the user without triggerChange
+	 *
+	 * @param string|null $mailAddress
+	 * @return void
+	 * @since 9.0.0
+	 */
+	public function setEMailAddressWOTrigger($mailAddress) {
+		 $oldMailAddress = $this->getEMailAddress();
+		 if($oldMailAddress !== $mailAddress) {
+			if($mailAddress === '') {
+				$this->config->deleteUserValue($this->uid, 'settings', 'email');
+			} else {
+				$this->config->setUserValue($this->uid, 'settings', 'email', $mailAddress);
+			}
+		}
+	}
+
+	/**
+	 * RegisterFromCsv
+	 * set the users' quota without triggerChange
+	 *
+	 * @param string $quota
+	 * @return void
+	 * @since 9.0.0
+	 */
+	public function setQuotaWOTrigger($quota) {
+		$oldQuota = $this->config->getUserValue($this->uid, 'files', 'quota', '');
+		if($quota !== 'none' and $quota !== 'default') {
+			$quota = OC_Helper::computerFileSize($quota);
+			$quota = OC_Helper::humanFileSize($quota);
+		}
+		if($quota !== $oldQuota) {
+		$this->config->setUserValue($this->uid, 'files', 'quota', $quota);
+		}
+	}
+
+	/**
+	 * RegisterFromCsv
+	 * set the enabled status for the user without triggerChange
+	 *
+	 * @param bool $enabled
+	 */
+	public function setEnabledWOTrigger(bool $enabled = true) {
+		$oldStatus = $this->isEnabled();
+		$this->enabled = $enabled;
+		if ($oldStatus !== $this->enabled) {
+			$this->config->setUserValue($this->uid, 'core', 'enabled', $enabled ? 'true' : 'false');
+		}
+	}
+
 }

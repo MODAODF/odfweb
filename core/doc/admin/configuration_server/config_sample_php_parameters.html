@@ -85,6 +85,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#using-object-store-with-nextcloud">Using Object Store with Nextcloud</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#sharing">Sharing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#all-other-configuration-options">All other configuration options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hashing">Hashing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#app-config-options">App config options</a></li>
 </ul>
 </li>
@@ -653,7 +654,7 @@ automatically, delete other files anytime if space needed</dd>
 <li><dl class="first docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">D1,</span> <span class="pre">D2</span></code></dt>
 <dd>keep files and folders in the trash bin for at least D1 days and
-delete when exceeds D2 days</dd>
+delete when exceeds D2 days (note: files will not be deleted automatically if space is needed)</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
@@ -1440,6 +1441,33 @@ the system temporary directory is on a limited space ramdisk or is otherwise
 restricted, or if external storages which do not support streaming are in
 use.</p>
 <p>The Web server user must have write access to this directory.</p>
+</div>
+<div class="section" id="hashing">
+<h2>Hashing<a class="headerlink" href="#hashing" title="Permalink to this headline">¶</a></h2>
+<p>Nextcloud uses the Argon2 algorithm (available with PHP &gt;= 7.2 if compiled
+with it) to create hashes by its own and exposes its configuration options as
+following. The default depends on the PHP build. More information can be
+found at: <a class="reference external" href="https://www.php.net/manual/en/function.password-hash.php">https://www.php.net/manual/en/function.password-hash.php</a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;hashingMemoryCost&#39;</span> <span class="o">=&gt;</span> <span class="mi">65536</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>The allowed maximum memory in KiB to be used by the algorithm for computing a
+hash. The smallest possible value is 8. Values that undershoot the minimum
+will be ignored in favor of the default.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;hashingTimeCost&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>The allowed maximum time in seconds that can be used by the algorithm for
+computing a hash. The value must be an integer, and the minimum value is 1.</p>
+<p>Values that undershoot the minimum will be ignored in favor of the default.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;hashingThreads&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>The allowed number of CPU threads that can be used by the algorithm for
+computing a hash. The value must be an integer, and the minimum value is 1.</p>
+<p>Rationally it does not help to provide a number higher than the available
+threads on the machine. Values that undershoot the minimum will be ignored
+in favor of the default.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;hashingCost&#39;</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">,</span>
 </pre></div>
 </div>

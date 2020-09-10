@@ -22,7 +22,7 @@ class AppConfig {
 		'watermark_allGroupsList' => [],
 		'watermark_allTagsList' => [],
 		'watermark_linkTagsList' => [],
-
+		'saveToOdf' => 'yes'
 	];
 
 	const WATERMARK_APP_NAMESPACE = 'files';
@@ -66,7 +66,7 @@ class AppConfig {
 	 */
 	public function getAppValueArray($key) {
 		$value = $this->config->getAppValue($this->getAppNamespace($key), $key, []);
-		if (self::APP_SETTING_TYPES[$key] === 'array') {
+		if (array_key_exists($key, self::APP_SETTING_TYPES) && self::APP_SETTING_TYPES[$key] === 'array') {
 			$value = $value !== '' ? explode(',', $value) : [];
 		}
 		return $value;

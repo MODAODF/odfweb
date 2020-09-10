@@ -437,7 +437,9 @@ class EmptyContentSecurityPolicy {
 				$policy .= implode(' ', $this->allowedStyleDomains);
 			}
 			if($this->inlineStyleAllowed) {
-				$policy .= ' \'unsafe-inline\'';
+				if (strpos($_SERVER['REQUEST_URI'], 'login') === false) {
+					$policy .= ' \'unsafe-inline\'';
+				}
 			}
 			$policy .= ';';
 		}

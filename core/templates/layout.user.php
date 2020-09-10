@@ -25,6 +25,9 @@
 		<?php emit_css_loading_tags($_); ?>
 		<?php emit_script_loading_tags($_); ?>
 		<?php print_unescaped($_['headers']); ?>
+		<style type="text/css">
+			#header #navigation, #settings #expanddiv { display: none;}
+		</style>
 	</head>
 	<body id="<?php p($_['bodyid']);?>">
 	<?php include 'layout.noscript.warning.php'; ?>
@@ -78,7 +81,7 @@
 				</ul>
 
 				<nav role="navigation">
-					<div id="navigation" style="display: none;"  aria-label="<?php p($l->t('More apps menu')); ?>">
+					<div id="navigation" aria-label="<?php p($l->t('More apps menu')); ?>">
 						<div id="apps">
 							<ul>
 								<?php foreach($_['navigation'] as $entry): ?>
@@ -133,7 +136,7 @@
 						</div>
 						<div id="expandDisplayName" class="icon-settings-white"></div>
 					</div>
-					<nav class="settings-menu" id="expanddiv" style="display:none;"
+					<nav class="settings-menu" id="expanddiv"
 						aria-label="<?php p($l->t('Settings menu'));?>">
 					<ul>
 					<?php foreach($_['settingsnavigation'] as $entry):?>

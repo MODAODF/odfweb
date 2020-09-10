@@ -190,15 +190,17 @@ Change <code class="docutils literal notranslate"><span class="pre">&quot;mainte
 <p>Some operation can be quite time consuming. Therefore we decided not to add them
 to the normal upgrade process. We recommend to run them manually after the upgrade
 was completed. Below you find a list of this commands.</p>
-<div class="section" id="upgrading-to-nextcloud-13">
-<h3>Upgrading to Nextcloud 13<a class="headerlink" href="#upgrading-to-nextcloud-13" title="Permalink to this headline">¶</a></h3>
-<p>With Nextcloud 13 we added a new index to the share table which should result in
-significant performance improvements:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sudo -u www-data php occ db:add-missing-indice
-</pre></div>
-</div>
-<p>With Nextcloud 13 we switched to bigint for the file ID’s in the file cache table:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sudo -u www-data php occ db:convert-filecache-bigint
+<div class="section" id="long-running-migration-steps">
+<h3>Long running migration steps<a class="headerlink" href="#long-running-migration-steps" title="Permalink to this headline">¶</a></h3>
+<p>From time to time we do some changes to the database layout that take a lot of time,
+but can be executed while Nextcloud stays online. Thus we moved them into a separate
+command that an administrator can execute on the CLI without the need to lock the
+instance into maintenance mode (at least for some of them). The instance will also
+work without those changes applied, but performance is improved significantly by them.
+There is also always an hint in the setup checks of the admin settings web interface.</p>
+<p>Those include for example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ sudo -u www-data php occ db:add-missing-columns
+$ sudo -u www-data php occ db:add-missing-indices
 </pre></div>
 </div>
 </div>

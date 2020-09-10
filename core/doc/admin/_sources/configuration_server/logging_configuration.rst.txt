@@ -22,6 +22,15 @@ Logging level parameters are set in the :file:`config/config.php` file.
 Log type
 --------
 
+errorlog
+~~~~~~~~
+
+All log information will be sent to PHP ``error_log()``.
+
+::
+
+    "log_type" => "errorlog",
+
 file
 ~~~~
 
@@ -40,7 +49,7 @@ date format in the example below, the date/time format will be written in the fo
 
     "log_type" => "file",
     "logfile" => "nextcloud.log",
-    "loglevel" => "3",
+    "loglevel" => 3,
     "logdateformat" => "F d, Y H:i:s",
 
 syslog
@@ -52,10 +61,28 @@ All log information will be sent to your default syslog daemon.
 
     "log_type" => "syslog",
     "logfile" => "",
-    "loglevel" => "3",
+    "loglevel" => 3,
+
+systemd
+~~~~~~~
+
+All log information will be sent to Systemd journal. Requires `php-systemd <https://github.com/systemd/php-systemd>`_ extension.
+
+::
+
+    "log_type" => "systemd",
 
 Admin audit log
 ---------------
+
+If ``loglevel`` in ``config.php`` is set to ``2`` or higher, audit logging needs to be triggered explicitly by adding the follwing setting to to ``config.php``:
+
+::
+
+	'log.condition' => [
+		'apps' => ['admin_audit'],
+	],
+
 
 If required, the name and path of the audit log file can be customized by using the following command:
 
@@ -63,7 +90,6 @@ If required, the name and path of the audit log file can be customized by using 
 
     occ config:app:set admin_audit logfile --value=/var/log/nextcloud/audit.log
 
+Find detailed documentation on auditable events for enterprises in our `customer portal <https://portal.nextcloud.com/article/using-the-audit-log-44.html>`_.
 
 .. _PHP date function: http://www.php.net/manual/en/function.date.php
-
-Find detailed documentation on auditable events for enterprises in our `customer portal <https://portal.nextcloud.com/article/using-the-audit-log-44.html>`_.
