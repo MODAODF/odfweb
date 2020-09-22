@@ -50,7 +50,11 @@ class BackgroundCleanupUpdaterBackupsJob extends QueuedJob {
 			return;
 		}
 
-		$updaterFolderPath = $dataDir . '/updater-' . $instanceId;
+		$updaterFolderPath = $dataDir . '/updaterOdfweb-' . $instanceId;
+		if (!file_exists($updaterFolderPath)) {
+			$updaterFolderPath = $dataDir . '/updater-' . $instanceId;
+		}
+
 		$backupFolderPath = $updaterFolderPath . '/backups';
 		if(file_exists($backupFolderPath)) {
 			$this->log->info("$backupFolderPath exists - start to clean it up");
