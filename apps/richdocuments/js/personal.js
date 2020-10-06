@@ -1,2 +1,162 @@
-!function(t){var e={};function n(o){if(e[o])return e[o].exports;var i=e[o]={i:o,l:!1,exports:{}};return t[o].call(i.exports,i,i.exports,n),i.l=!0,i.exports}n.m=t,n.c=e,n.d=function(t,e,o){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:o})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var i in t)n.d(o,i,function(e){return t[e]}.bind(null,i));return o},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="/js/",n(n.s=112)}({112:function(e,n){$((function(){$('[data-toggle="tooltip"]').tooltip();var e=function(){this.templateInput=document.getElementById("templateInputField"),this.templateSelectButton=document.getElementById("templateSelectButton"),this.templateResetButton=document.getElementById("templateResetButton");var e=this;this.templateSelectButton.addEventListener("click",(function(){OC.dialogs.filepicker(t("richdocuments","Select a personal template folder"),(function(t,n){e.updateSetting(t)}),!1,"httpd/unix-directory",!0,OC.dialogs.FILEPICKER_TYPE_CHOOSE)})),this.templateResetButton.addEventListener("click",this.resetSettings.bind(this))};return e.prototype.updateSetting=function(t){var e=this;this._updateSetting({templateFolder:t},(function(){e.templateInput.value=t}),(function(){}))},e.prototype.resetSettings=function(){var t=this;this._updateSetting({templateFolder:""},(function(){t.templateInput.value=""}),(function(){}))},e.prototype._updateSetting=function(e,n,o){OC.msg.startAction("#documents-admin-msg",t("richdocuments","Saving…"));var i=new XMLHttpRequest;i.open("POST",OC.filePath("richdocuments","ajax","personal.php"),!0),i.setRequestHeader("Content-Type","application/json"),i.setRequestHeader("requesttoken",OC.requestToken),i.onload=function(){if(i.status>=200&&i.status<400){var t=JSON.parse(i.response);OC.msg.finishedAction("#documents-admin-msg",t),n(t)}else o(this.response)},i.onerror=function(){o(this.response)},i.send(JSON.stringify(e))},new e}))}});
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/js/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/personal.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./src/personal.js":
+/*!*************************!*\
+  !*** ./src/personal.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+
+  var PersonalSettings = function PersonalSettings() {
+    this.templateInput = document.getElementById('templateInputField');
+    this.templateSelectButton = document.getElementById('templateSelectButton');
+    this.templateResetButton = document.getElementById('templateResetButton');
+    var self = this;
+    this.templateSelectButton.addEventListener('click', function () {
+      OC.dialogs.filepicker(t('richdocuments', 'Select a personal template folder'), function (datapath, returntype) {
+        self.updateSetting(datapath);
+      }, false, 'httpd/unix-directory', true, OC.dialogs.FILEPICKER_TYPE_CHOOSE);
+    });
+    this.templateResetButton.addEventListener('click', this.resetSettings.bind(this));
+  };
+
+  PersonalSettings.prototype.updateSetting = function (path) {
+    var self = this;
+
+    this._updateSetting({
+      templateFolder: path
+    }, function () {
+      self.templateInput.value = path;
+    }, function () {});
+  };
+
+  PersonalSettings.prototype.resetSettings = function () {
+    var self = this;
+
+    this._updateSetting({
+      templateFolder: ''
+    }, function () {
+      self.templateInput.value = '';
+    }, function () {});
+  };
+
+  PersonalSettings.prototype._updateSetting = function (data, successCallback, errorCallback) {
+    OC.msg.startAction('#documents-admin-msg', t('richdocuments', 'Saving…'));
+    var request = new XMLHttpRequest();
+    request.open('POST', OC.filePath('richdocuments', 'ajax', 'personal.php'), true);
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.setRequestHeader('requesttoken', OC.requestToken);
+
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        var response = JSON.parse(request.response);
+        OC.msg.finishedAction('#documents-admin-msg', response);
+        successCallback(response);
+      } else {
+        errorCallback(this.response);
+      }
+    };
+
+    request.onerror = function () {
+      errorCallback(this.response);
+    };
+
+    request.send(JSON.stringify(data));
+  };
+
+  return new PersonalSettings();
+});
+
+/***/ })
+
+/******/ });
 //# sourceMappingURL=personal.js.map
