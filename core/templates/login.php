@@ -54,7 +54,7 @@ use OC\Core\Controller\LoginController;
 			<label for="password" class="infield"><?php p($l->t('Password')); ?></label>
 		</p>
 
-		<?php if ($_['showCaptcha']) : ?>
+		<?php if (isset($_['showCaptcha'])) : ?>
 			<p class="captcha-wrapper">
 				<input type="text" name="captcha" id="captcha" value=""
 					placeholder="<?php p($l->t('Captcha')); ?>"
