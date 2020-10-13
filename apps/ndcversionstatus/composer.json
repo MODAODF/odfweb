@@ -1,0 +1,15 @@
+{
+    "name": "Ndc Version Status",
+    "description": "Check ndcodfweb &amp; odfweb version status",
+    "type": "project",
+    "license": "AGPL",
+    "authors": [
+        {
+            "name": "sharon wu"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5.4"
+    }
+}

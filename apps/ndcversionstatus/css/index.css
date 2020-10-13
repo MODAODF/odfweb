@@ -1,0 +1,20 @@
+#ndcversionstatus {
+    padding: 25px;
+}
+#ndcversionstatus h2 {
+    display:inline-block;
+}
+#ndcversionstatus ul {
+    list-style: disc;
+    padding-left: 20px;
+    font-size:15px;
+}
+
+/* result.php */
+#ndcversionstatus .msg {
+    color: #fff;
+    padding: 3px;
+    border-radius: var(--border-radius);
+}
+#ndcversionstatus .msg.success { background-color: #47a447; }
+#ndcversionstatus .msg.error { background-color: #d2322d; }

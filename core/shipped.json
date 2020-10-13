@@ -24,6 +24,7 @@
     "logreader",
     "lookup_server_connector",
     "notifications",
+    "ndcversionstatus",
     "oauth2",
     "password_policy",
     "provisioning_api",
