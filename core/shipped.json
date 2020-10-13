@@ -26,6 +26,7 @@
     "notifications",
     "ndcversionstatus",
     "oauth2",
+    "odfwebupgrade",
     "password_policy",
     "provisioning_api",
     "recommendations",

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>odfwebupgrade</id>
+    <name>Odfweb Upgrade</name>
+    <summary>upgrade odfweb</summary>
+    <description><![CDATA[Update odfweb using a tar.gz file.]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="sharon.wu@ossii.com.tw" homepage="http://www.ossii.com.tw">sharon wu</author>
+    <namespace>OdfwebUpgrade</namespace>
+    <category>tools</category>
+    <bugs>http://www.ossii.com.tw</bugs>
+    <dependencies>
+        <nextcloud min-version="15" max-version="16"/>
+    </dependencies>
+
+	<settings>
+		<admin>OCA\OdfwebUpgrade\Settings\Admin</admin>
+	</settings>
+</info>
