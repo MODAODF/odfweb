@@ -7,17 +7,20 @@ use OCP\IDBConnection;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
-class Version103000Date20180806161724 extends SimpleMigrationStep {
+class Version103000Date20180806161724 extends SimpleMigrationStep
+{
 	/** @var IDBConnection */
 	private $connection;
 
 	private $applicableData = [];
 
-	public function __construct(IDBConnection $connection) {
+	public function __construct(IDBConnection $connection)
+	{
 		$this->connection = $connection;
 	}
 
-	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
+	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
@@ -31,7 +34,8 @@ class Version103000Date20180806161724 extends SimpleMigrationStep {
 		}
 	}
 
-	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options)
+	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
@@ -55,9 +59,15 @@ class Version103000Date20180806161724 extends SimpleMigrationStep {
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'groups_folder');
-			$table->addIndex(['group_id'], 'groups_folder_value');
-			$table->addUniqueIndex(['folder_id', 'group_id'], 'groups_folder_group');
+			if (!$table->hasIndex('groups_repo')) {
+				$table->addIndex(['folder_id'], 'groups_repo');
+			}
+			if (!$table->hasIndex('groups_repo_value')) {
+				$table->addIndex(['group_id'], 'groups_repo_value');
+			}
+			if (!$table->hasIndex('groups_repo_group')) {
+				$table->addUniqueIndex(['folder_id', 'group_id'], 'groups_repo_group');
+			}
 		}
 
 		if ($schema->hasTable('group_repos_applicable')) {
@@ -67,7 +77,8 @@ class Version103000Date20180806161724 extends SimpleMigrationStep {
 		return $schema;
 	}
 
-	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options)
+	{
 		if (count($this->applicableData)) {
 			$query = $this->connection->getQueryBuilder();
 			$query->insert('group_repos_groups')

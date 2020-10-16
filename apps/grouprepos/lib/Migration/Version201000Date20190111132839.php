@@ -12,16 +12,20 @@ use OCP\Migration\IOutput;
 /**
  * Auto-generated migration step: Please modify to your needs!
  */
-class Version201000Date20190111132839 extends SimpleMigrationStep {
-	public function name(): string {
+class Version201000Date20190111132839 extends SimpleMigrationStep
+{
+	public function name(): string
+	{
 		return 'Add grouprepos_acl table';
 	}
 
-	public function description(): string {
+	public function description(): string
+	{
 		return 'Adds table to store ACL information for group folders';
 	}
 
-	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
+	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
@@ -50,9 +54,15 @@ class Version201000Date20190111132839 extends SimpleMigrationStep {
 				'notnull' => true,
 			]);
 			$table->setPrimaryKey(['acl_id']);
-			$table->addIndex(['fileid'], 'groups_folder_acl_file');
-			$table->addIndex(['mapping_type', 'mapping_id'], 'groups_folder_acl_mapping');
-			$table->addUniqueIndex(['fileid', 'mapping_type', 'mapping_id'], 'groups_folder_acl_unique');
+			if (!$table->hasIndex('groups_repo_acl_file')) {
+				$table->addIndex(['fileid'], 'groups_repo_acl_file');
+			}
+			if (!$table->hasIndex('groups_repo_acl_mapping')) {
+				$table->addIndex(['mapping_type', 'mapping_id'], 'groups_repo_acl_mapping');
+			}
+			if (!$table->hasIndex('groups_repo_acl_unique')) {
+				$table->addUniqueIndex(['fileid', 'mapping_type', 'mapping_id'], 'groups_repo_acl_unique');
+			}
 		}
 
 		return $schema;

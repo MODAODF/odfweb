@@ -1,11 +1,13 @@
 <?php
+
 namespace OCA\GroupRepos\Migration;
 
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
 
-class Version102020Date20180806161449 extends SimpleMigrationStep {
+class Version102020Date20180806161449 extends SimpleMigrationStep
+{
 	/**
 	 * @param IOutput $output
 	 * @param \Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
@@ -13,7 +15,8 @@ class Version102020Date20180806161449 extends SimpleMigrationStep {
 	 * @return null|ISchemaWrapper
 	 * @since 13.0.0
 	 */
-	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options)
+	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
@@ -56,9 +59,15 @@ class Version102020Date20180806161449 extends SimpleMigrationStep {
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'group_folder');
-			$table->addIndex(['group_id'], 'group_folder_value');
-			$table->addUniqueIndex(['folder_id', 'group_id'], 'groups_folder_group');
+			if (!$table->hasIndex('group_repo')) {
+				$table->addIndex(['folder_id'], 'group_repo');
+			}
+			if (!$table->hasIndex('groups_repo_group')) {
+				$table->addUniqueIndex(['folder_id', 'group_id'], 'groups_repo_group');
+			}
+			if (!$table->hasIndex('group_repo_value')) {
+				$table->addIndex(['group_id'], 'group_repo_value');
+			}
 		}
 		return $schema;
 	}
