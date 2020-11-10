@@ -30,6 +30,7 @@ style('ndcversionstatus', 'index');
 
 	<?php if($_['showButton']){ ?>
 	<button url="<?php p($_['redirect_url']) ?>" id="checkBtn"><?php p($l->t('Check')) ?></button>
+	<span class="msg"></span>
 	<?php }?>
 
 </div>
