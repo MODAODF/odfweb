@@ -285,6 +285,12 @@ class Updater extends BasicEmitter {
 		// only set the final version if everything went well
 		$this->config->setSystemValue('version', implode('.', Util::getVersion()));
 		$this->config->setAppValue('core', 'vendor', $this->getVendor());
+
+		/* 把 odfweb 新版號寫入 config.php */
+		$txtContent = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
+		$odfwebVersion = $txtContent ? trim($txtContent) : '0.1';
+		\OC::$server->getSystemConfig()->setValue('versionOdfweb', $odfwebVersion);
+		/* */
 	}
 
 	protected function doCoreUpgrade() {

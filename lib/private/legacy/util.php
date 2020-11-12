@@ -1418,10 +1418,20 @@ class OC_Util {
 	 */
 	public static function needUpgrade(\OC\SystemConfig $config) {
 		if ($config->getValue('installed', false)) {
+
+			// diff nextcloud version
 			$installedVersion = $config->getValue('version', '0.0.0');
 			$currentVersion = implode('.', \OCP\Util::getVersion());
 			$versionDiff = version_compare($currentVersion, $installedVersion);
-			if ($versionDiff > 0) {
+
+			// diff odfweb version
+			$txtContent = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
+
+			$currentVersion_odfweb = $txtContent ? trim($txtContent) : '0.1';
+			$installedVersion_odfweb =  $config->getValue('versionOdfweb', $currentVersion_odfweb);
+			$versionDiff_odfweb = version_compare($currentVersion_odfweb, $installedVersion_odfweb);
+
+			if ($versionDiff > 0 || $versionDiff_odfweb > 0 ) {
 				return true;
 			} else if ($config->getValue('debug', false) && $versionDiff < 0) {
 				// downgrade with debug

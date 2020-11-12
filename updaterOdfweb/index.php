@@ -209,14 +209,8 @@ class Updater {
 		$this->currentVersion = implode('.', $splittedVersion);
 		$this->buildTime = $buildTime;
 
-		// Get odfweb version
-		$versionFileNameOdfweb = $this->baseDir . '/../version-odfweb.txt';
-		if (file_exists($versionFileNameOdfweb)) {
-			$txtContent = file_get_contents($versionFileNameOdfweb, true);
-			$this->currentVersionOdfweb = trim($txtContent);
-		} else {
-			$this->currentVersionOdfweb = '0.1';
-		}
+		// Get current odfweb version
+		$this->currentVersionOdfweb = $this->getConfigOption('versionOdfweb');
 	}
 
 	/**
@@ -681,10 +675,18 @@ class Updater {
 			throw new \Exception("Can't handle ZIP file. Error code is: ".$zipState);
 		}
 
-		// Ensure that the downloaded version is not lower
+		// Ensure that the downloaded nextcloud version is not lower
 		$downloadedVersion = $this->getVersionByVersionFile(dirname($downloadedFilePath) . '/odfweb/version.php');
 		$currentVersion = $this->getVersionByVersionFile($this->baseDir . '/../version.php');
-		if(version_compare($downloadedVersion, $currentVersion, '<')) {
+
+		// Ensure that the downloaded odfweb version is not lower
+		$txtInDownload = file_get_contents(dirname($downloadedFilePath) . '/odfweb/version-odfweb.txt');
+		$downloadedVersion_odfweb = $txtInDownload ? trim($txtInDownload) : '0.1';
+		$txtInRootDir = file_get_contents('../version-odfweb.txt');
+		$currentVersion_odfweb = $txtInRootDir ? trim($txtInRootDir) : '0.1';
+		$isLowerOdfweb = $downloadedVersion_odfweb < $currentVersion_odfweb;
+
+		if(version_compare($downloadedVersion, $currentVersion, '<') || $isLowerOdfweb) {
 			throw new \Exception('Downloaded version is lower than installed version');
 		}
 
