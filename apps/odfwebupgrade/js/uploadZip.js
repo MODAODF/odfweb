@@ -12,7 +12,7 @@ $(document).ready(function() {
 		beforeSend: function () {
 			$('#uploadZip').attr('disabled', true);
 			$('.openUpdater').attr('disabled', true);
-			OC.msg.startAction(msgEl, t(appName, 'Uploading...'));
+			OC.msg.startAction(msgEl, t(appName, 'Verifying the update file...'));
 		},
 		done: function (e, response) {
 			var resp = response.result;
@@ -28,9 +28,11 @@ $(document).ready(function() {
 			}
 			msgResponse.data.message = resp.data.message;
 		},
-		fail: function (e) {
-			msgResponse.data.message = t(appName, 'Failed to upload.') + resp.data.message;
-			console.error(e);
+		fail: function (jqXHR, textStatus, errorThrown) {
+			msgResponse.data.message = t(appName, 'Failed to upload.');
+			console.debug(jqXHR);
+			console.debug(textStatus);
+			console.debug(errorThrown);
 			$('#uploadZip').attr('disabled', false);
 		},
 		always: function() {
@@ -39,6 +41,7 @@ $(document).ready(function() {
 	});
 
 	function canOpenUpdater(zipname) {
+		$('button.openUpdater').css('background-color', '#ffe19680');
 		$('#odfwebupgrade').on('click', 'button', function() {
 			$.ajax({
 				url: OC.generateUrl("/apps/odfwebupgrade/credentials"),
