@@ -168,7 +168,7 @@ class Updater {
 			$configFileName = $this->baseDir . '/../config/config.php';
 		}
 		if (!file_exists($configFileName)) {
-			throw new \Exception('Could not find config.php. Is this file in the "updater" subfolder of Nextcloud?');
+			throw new \Exception('找不到 config.php，該文件是否位於 odfweb 的 config 子資料夾中？');
 		}
 
 		/** @var array $CONFIG */
@@ -177,7 +177,7 @@ class Updater {
 
 		$dataDir = $this->getDataDirectoryLocation();
 		if(empty($dataDir) || !is_string($dataDir)) {
-			throw new \Exception('Could not read data directory from config.php.');
+			throw new \Exception('無法讀取 config.php 中所設定的 data 目錄。');
 		}
 
 		$versionFileName = $this->baseDir . '/../version.php';
@@ -244,12 +244,12 @@ class Updater {
 		$tmpZipLocation = $tmpFolderLocation . $_POST['zipname'];
 		if(file_exists($tmpZipLocation)) {
 			$this->silentLog('[info] tmp zip exists');
-			$checkReslt = 'Will Update by ' . $_POST['zipname'];
+			$checkReslt = '將以 ' . $_POST['zipname'] . ' 更新';
 			$this->updateAvailable = true;
 		} else {
 			$this->silentLog('[info] tmp zip not exists');
-			$checkReslt = 'Could not find tmp zip file, please go back and upload again.';
-			throw new \Exception('Could not find tmp zip file.');
+			$checkReslt = '找不到暫存的 Zip 更新檔，請返回並重新上傳。';
+			throw new \Exception('找不到暫存的 Zip 更新檔，請返回並重新上傳。');
 		}
 
 		$this->silentLog('[info] end of checkForUpdate() ' . $checkReslt);
@@ -439,7 +439,7 @@ class Updater {
 
 		// usually is already tested in the constructor but just to be on the safe side
 		if (!file_exists($configFileName)) {
-			throw new \Exception('Could not find config.php.');
+			throw new \Exception('找不到config.php檔。');
 		}
 		/** @var array $CONFIG */
 		require $configFileName;
@@ -450,7 +450,7 @@ class Updater {
 		$content .= ";\n";
 		$state = file_put_contents($configFileName, $content);
 		if ($state === false) {
-			throw new \Exception('Could not write to config.php');
+			throw new \Exception('無法寫入 config.php');
 		}
 		$this->silentLog('[info] end of setMaintenanceMode()');
 	}
@@ -478,7 +478,7 @@ class Updater {
 		}
 		$state = mkdir($backupFolderLocation, 0750, true);
 		if($state === false) {
-			throw new \Exception('Could not create backup folder location');
+			throw new \Exception('無法建立備份資料夾');
 		}
 
 		// Copy the backup files
@@ -507,7 +507,7 @@ class Updater {
 			if(!file_exists($backupFolderLocation . '/' . dirname($fileName))) {
 				$state = mkdir($backupFolderLocation . '/' . dirname($fileName), 0750, true);
 				if($state === false) {
-					throw new \Exception('Could not create folder: '.$backupFolderLocation.'/'.dirname($fileName));
+					throw new \Exception('無法建立資料夾: '.$backupFolderLocation.'/'.dirname($fileName));
 				}
 			}
 
@@ -560,7 +560,8 @@ class Updater {
 		}
 		$state = mkdir($storageLocation, 0750, true);
 		if($state === false) {
-			throw new \Exception('Could not mkdir storage location');
+			// throw new \Exception('Could not mkdir storage location');
+			throw new \Exception('無法建立更新資料夾');
 		}
 
 		$tmpZip = $this->getTmpFilePathAndName();
@@ -571,7 +572,8 @@ class Updater {
 		if(rename($zipOldPath, $zipNewPath)) {
 			$this->removeTmpFile();
 		} else {
-			throw new \Exception('Could not move zip from updateTmp- to updaterOdfweb-');
+			// throw new \Exception('Could not move zip from updateTmp- to updaterOdfweb-');
+			throw new \Exception('無法將 zip 從 updateTmp- 移至 updaterOdfweb-');
 		}
 
 		$this->silentLog('[info] end of moveTmpFile()');
@@ -588,7 +590,8 @@ class Updater {
 		$files = scandir($storageLocation);
 		// ., .. and zip archive
 		if(count($files) !== 3) {
-			throw new \Exception('Not exact 3 files existent in folder');
+			// throw new \Exception('Not exact 3 files existent in folder');
+			throw new \Exception('資料夾中不存在明確的三個檔案');
 		}
 
 		$data['name'] = $files[2];
@@ -618,7 +621,8 @@ class Updater {
 		$files = scandir($storageLocation);
 		// ., .. and downloaded zip archive
 		if(count($files) !== 3) {
-			throw new \Exception('Not exact 3 files existent in folder');
+			// throw new \Exception('Not exact 3 files existent in folder');
+			throw new \Exception('資料夾中不存在明確的三個檔案');
 		}
 		return $storageLocation . '/' . $files[2];
 	}
@@ -647,7 +651,7 @@ class Updater {
 			return implode('.', $OC_Version);
 		}
 
-		throw new \Exception("OC_Version not found in $versionFile");
+		throw new \Exception(" $versionFile 中找不到 OC_Version");
 	}
 
 	/**
@@ -664,22 +668,21 @@ class Updater {
 		if ($zipState === true) {
 			$extraction = $zip->extractTo(dirname($downloadedFilePath));
 			if($extraction === false) {
-				throw new \Exception('Error during unpacking zipfile: '.($zip->getStatusString()));
+				throw new \Exception('解壓縮 zip 時出錯: '.($zip->getStatusString()));
 			}
 			$zip->close();
 			$state = unlink($downloadedFilePath);
 			if($state === false) {
-				throw new \Exception("Can't unlink ". $downloadedFilePath);
+				throw new \Exception("無法刪除檔案: ". $downloadedFilePath);
 			}
 		} else {
-			throw new \Exception("Can't handle ZIP file. Error code is: ".$zipState);
+			throw new \Exception("無法處理 zip 檔，錯誤代碼為：".$zipState);
 		}
 
-		// Ensure that the downloaded nextcloud version is not lower
+		// Ensure that the downloaded version is not lower
 		$downloadedVersion = $this->getVersionByVersionFile(dirname($downloadedFilePath) . '/odfweb/version.php');
 		$currentVersion = $this->getVersionByVersionFile($this->baseDir . '/../version.php');
 
-		// Ensure that the downloaded odfweb version is not lower
 		$txtInDownload = file_get_contents(dirname($downloadedFilePath) . '/odfweb/version-odfweb.txt');
 		$downloadedVersion_odfweb = $txtInDownload ? trim($txtInDownload) : '0.1';
 		$txtInRootDir = file_get_contents('../version-odfweb.txt');
@@ -687,7 +690,7 @@ class Updater {
 		$isLowerOdfweb = $downloadedVersion_odfweb < $currentVersion_odfweb;
 
 		if(version_compare($downloadedVersion, $currentVersion, '<') || $isLowerOdfweb) {
-			throw new \Exception('Downloaded version is lower than installed version');
+			throw new \Exception('更新版本低於安裝版本');
 		}
 
 		$this->silentLog('[info] end of extractDownload()');
@@ -717,12 +720,12 @@ class Updater {
 			if(!file_exists($parentDir)) {
 				$r = mkdir($parentDir);
 				if($r !== true) {
-					throw new \Exception('Can\'t create parent directory for entry point: ' . $file);
+					throw new \Exception('無法為 entry point 建立父目錄 ' . $file);
 				}
 			}
 			$state = file_put_contents($this->baseDir  . '/../' . $file, $content);
 			if($state === false) {
-				throw new \Exception('Can\'t replace entry point: '.$file);
+				throw new \Exception('無法更換 entry point: '.$file);
 			}
 		}
 
@@ -767,7 +770,7 @@ class Updater {
 
 		$state = rmdir($folder);
 		if($state === false) {
-			throw new \Exception('Could not rmdir ' . $folder);
+			throw new \Exception('無法移除資料夾 ' . $folder);
 		}
 	}
 
@@ -781,7 +784,7 @@ class Updater {
 
 		$shippedAppsFile = $this->baseDir . '/../core/shipped.json';
 		if(!file_exists($shippedAppsFile)) {
-			throw new \Exception('core/shipped.json is not available');
+			throw new \Exception('core/shipped.json 無法使用');
 		}
 		// Delete shipped apps
 		$shippedApps = json_decode(file_get_contents($shippedAppsFile), true);
@@ -796,7 +799,7 @@ class Updater {
 			// Delete example config
 			$state = unlink($configSampleFile);
 			if ($state === false) {
-				throw new \Exception('Could not unlink sample config');
+				throw new \Exception('無法刪除 config.sample.php');
 			}
 		}
 
@@ -807,7 +810,7 @@ class Updater {
 			// Delete themes
 			$state = unlink($themesReadme);
 			if ($state === false) {
-				throw new \Exception('Could not delete themes README');
+				throw new \Exception('無法刪除 themes README');
 			}
 		}
 		$this->recursiveDelete($this->baseDir . '/../themes/example/');
@@ -850,12 +853,12 @@ class Updater {
 			if($fileInfo->isFile() || $fileInfo->isLink()) {
 				$state = unlink($path);
 				if($state === false) {
-					throw new \Exception('Could not unlink: '.$path);
+					throw new \Exception('無法刪除: '.$path);
 				}
 			} elseif($fileInfo->isDir()) {
 				$state = rmdir($path);
 				if($state === false) {
-					throw new \Exception('Could not rmdir: '.$path);
+					throw new \Exception('無法移除資料夾: '.$path);
 				}
 			}
 		}
@@ -910,7 +913,7 @@ class Updater {
 			if($fileInfo->isDir()) {
 				$state = rmdir($path);
 				if($state === false) {
-					throw new \Exception('Could not rmdir ' . $path);
+					throw new \Exception('無法移除資料夾 ' . $path);
 				}
 			}
 		}
@@ -956,11 +959,11 @@ class Updater {
 		$this->moveWithExclusions($storageLocation, []);
 		$state = rmdir($storageLocation);
 		if($state === false) {
-			throw new \Exception('Could not rmdir $storagelocation');
+			throw new \Exception('無法移除資料夾' . $storageLocation);
 		}
 		$state = unlink($this->getDataDirectoryLocation() . '/updaterOdfweb-'.$this->getConfigOption('instanceid') . '/.step');
 		if($state === false) {
-			throw new \Exception('Could not rmdir .step');
+			throw new \Exception('無法刪除 .step');
 		}
 
 		if (function_exists('opcache_reset')) {
@@ -982,18 +985,18 @@ class Updater {
 			if(!file_exists($updaterDir)) {
 				$result = mkdir($updaterDir);
 				if ($result === false) {
-					throw new \Exception('Could not create $updaterDir');
+					throw new \Exception('無法建立 ' . $updaterDir);
 				}
 			}
 			$result = touch($updaterDir . '/.step');
 			if($result === false) {
-				throw new \Exception('Could not create .step');
+				throw new \Exception('無法建立 .step');
 			}
 		}
 
 		$result = file_put_contents($updaterDir . '/.step', json_encode(['state' => $state, 'step' => $step]));
 		if($result === false) {
-			throw new \Exception('Could not write to .step');
+			throw new \Exception('無法寫入 .step');
 		}
 	}
 
@@ -1027,12 +1030,12 @@ class Updater {
 		if(file_exists($updaterDir. '/.step')) {
 			$state = file_get_contents($updaterDir . '/.step');
 			if ($state === false) {
-				throw new \Exception('Could not read from .step');
+				throw new \Exception('無法讀取 .step');
 			}
 
 			$jsonData = json_decode($state, true);
 			if (!is_array($jsonData)) {
-				throw new \Exception('Can\'t decode .step JSON data');
+				throw new \Exception('無法解碼 .step 中的 JSON 資料');
 			}
 		}
 		return $jsonData;
@@ -1052,7 +1055,7 @@ class Updater {
 			$this->silentLog('[info] unlink .step');
 			$state = unlink($updaterDir . '/.step');
 			if ($state === false) {
-				throw new \Exception('Could not delete .step');
+				throw new \Exception('無法刪除 .step');
 			}
 		}
 
@@ -1095,7 +1098,7 @@ class Updater {
 
 		$fh = fopen($updaterLogPath, 'a');
 		if($fh === false) {
-			throw new LogException('Could not open updaterOdfweb.log');
+			throw new LogException('無法開啟 updaterOdfweb.log');
 		}
 
 		if($this->requestID === null) {
@@ -1112,7 +1115,7 @@ class Updater {
 
 		$result = fwrite($fh, $logLine);
 		if($result === false) {
-			throw new LogException('Could not write to updaterOdfweb.log');
+			throw new LogException('無法寫入 updaterOdfweb.log');
 		}
 
 		fclose($fh);
@@ -1194,12 +1197,12 @@ if(isset($_POST['step'])) {
 	set_time_limit(0);
 	try {
 		if(!$auth->isAuthenticated()) {
-			throw new \Exception('Not authenticated');
+			throw new \Exception('未認證');
 		}
 
 		$step = (int)$_POST['step'];
 		if($step > 12 || $step < 1) {
-			throw new \Exception('Invalid step');
+			throw new \Exception('無效的步驟');
 		}
 
 		$updater->startStep($step);
@@ -1563,7 +1566,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 <body>
 <div id="header">
 	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve" height="34" width="62" enable-background="new 0 0 196.6 72" y="0px" x="0px" viewBox="0 0 62.000002 34"><path style="color-rendering:auto;text-decoration-color:#000000;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;block-progression:tb;text-decoration-line:none;image-rendering:auto;white-space:normal;text-indent:0;enable-background:accumulate;text-transform:none;text-decoration-style:solid" fill="#fff" d="m31.6 4.0001c-5.95 0.0006-10.947 4.0745-12.473 9.5549-1.333-2.931-4.266-5.0088-7.674-5.0092-4.6384 0.0005-8.4524 3.8142-8.453 8.4532-0.0008321 4.6397 3.8137 8.4544 8.4534 8.455 3.4081-0.000409 6.3392-2.0792 7.6716-5.011 1.5261 5.4817 6.5242 9.5569 12.475 9.5569 5.918 0.000457 10.89-4.0302 12.448-9.4649 1.3541 2.8776 4.242 4.9184 7.6106 4.9188 4.6406 0.000828 8.4558-3.8144 8.4551-8.455-0.000457-4.6397-3.8154-8.454-8.4551-8.4533-3.3687 0.0008566-6.2587 2.0412-7.6123 4.9188-1.559-5.4338-6.528-9.4644-12.446-9.464zm0 4.9623c4.4687-0.000297 8.0384 3.5683 8.0389 8.0371 0.000228 4.4693-3.5696 8.0391-8.0389 8.0388-4.4687-0.000438-8.0375-3.5701-8.0372-8.0388 0.000457-4.4682 3.5689-8.0366 8.0372-8.0371zm-20.147 4.5456c1.9576 0.000226 3.4908 1.5334 3.4911 3.491 0.000343 1.958-1.533 3.4925-3.4911 3.4927-1.958-0.000228-3.4913-1.5347-3.4911-3.4927 0.0002284-1.9575 1.5334-3.4907 3.4911-3.491zm40.205 0c1.9579-0.000343 3.4925 1.533 3.4927 3.491 0.000457 1.9584-1.5343 3.493-3.4927 3.4927-1.958-0.000228-3.4914-1.5347-3.4911-3.4927 0.000221-1.9575 1.5335-3.4907 3.4911-3.491z"/></svg>
-	<h1 class="header-appname">Updater</h1>
+	<h1 class="header-appname">更新</h1>
 </div>
 <input type="hidden" id="updater-access-key" value="<?php echo htmlentities($password) ?>"/>
 <input type="hidden" id="updater-endpoint" value="<?php echo htmlentities($updaterUrl) ?>"/>
@@ -1575,41 +1578,41 @@ if(strpos($updaterUrl, 'index.php') === false) {
 		<?php if($auth->isAuthenticated()): ?>
 			<ul id="progress" class="section">
 				<li id="step-init" class="step icon-loading passed-step">
-					<h2>Initializing</h2>
+					<h2>初始化</h2>
 					<div class="output">
-						Current ODFWEB version is <?php echo($updater->getCurrentVersion_odfweb()); ?>
-						(Base on Nextcloud <?php echo($updater->getCurrentVersion()); ?>)<br>
+						目前的 ODFWEB 版本是 <?php echo($updater->getCurrentVersion_odfweb()); ?>
+						(基於 <?php echo($updater->getCurrentVersion()); ?>)<br>
 
 						<?php echo($updater->checkForUpdate()); ?><br>
 
 						<?php
 						if ($updater->updateAvailable() || $stepNumber > 0) {
-							$buttonText = 'Start update';
+							$buttonText = '開始更新';
 							if($stepNumber > 0) {
-								$buttonText = 'Continue update';
+								$buttonText = '繼續更新';
 							}
 							?>
 							<button id="startUpdateButton"><?php echo $buttonText ?></button>
 							<?php
 						}
 						?>
-						<button id="retryUpdateButton" class="hidden">Retry update</button>
+						<button id="retryUpdateButton" class="hidden">重新更新</button>
 					</div>
 				</li>
 				<li id="step-check-files" class="step <?php if($stepNumber >= 1) { echo 'passed-step'; }?>">
-					<h2>Check for expected files</h2>
+					<h2>檢查所需檔案</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-check-permissions" class="step <?php if($stepNumber >= 2) { echo 'passed-step'; }?>">
-					<h2>Check for write permissions</h2>
+					<h2>檢查存取權限</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-backup" class="step <?php if($stepNumber >= 3) { echo 'passed-step'; }?>">
-					<h2>Create backup</h2>
+					<h2>建立備份</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-tmpfile" class="step <?php if($stepNumber >= 4) { echo 'passed-step'; }?>">
-					<h2>Check Update File</h2>
+					<h2>檢查更新檔案</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-verify-integrity" class="hidden step <?php if($stepNumber >= 5) { echo 'passed-step'; }?> ">
@@ -1617,36 +1620,38 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-extract" class="step <?php if($stepNumber >= 6) { echo 'passed-step'; }?>">
-					<h2>Extracting</h2>
+					<h2>解壓更新檔</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-enable-maintenance" class="step <?php if($stepNumber >= 7) { echo 'passed-step'; }?>">
-					<h2>Enable maintenance mode</h2>
+					<h2>開啟維護模式</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-entrypoints" class="step <?php if($stepNumber >= 8) { echo 'passed-step'; }?>">
-					<h2>Replace entry points</h2>
+					<h2>更新 entry points</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-delete" class="step <?php if($stepNumber >= 9) { echo 'passed-step'; }?>">
-					<h2>Delete old files</h2>
+					<h2>刪除舊檔案</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-move" class="step <?php if($stepNumber >= 10) { echo 'passed-step'; }?>">
-					<h2>Move new files in place</h2>
+					<h2>移動更新檔</h2>
 					<div class="output hidden"></div>
 				</li>
 				<li id="step-maintenance-mode" class="step <?php if($stepNumber >= 11) { echo 'passed-step'; }?>">
-					<h2>Keep maintenance mode active?</h2>
+					<!-- <h2>Keep maintenance mode active?</h2> -->
+					<h2>關閉維護模式</h2>
 					<div class="output hidden">
-						<button id="maintenance-enable">Yes (for usage with command line tool)</button>
-						<button id="maintenance-disable">No (for usage of the web based updater)</button>
+						<!-- <button id="maintenance-enable">Yes (for usage with command line tool)</button> -->
+						<!-- <button id="maintenance-disable">No (for usage of the web based updater)</button> -->
+						<button id="maintenance-disable">確認</button>
 					</div>
 				</li>
 				<li id="step-done" class="step <?php if($stepNumber >= 12) { echo 'passed-step'; }?>">
-					<h2>Done</h2>
+					<h2>完成</h2>
 					<div class="output hidden">
-						<a class="button" href="<?php echo htmlspecialchars(str_replace('/index.php', '/../', $updaterUrl), ENT_QUOTES); ?>">Go back to your Odfweb instance to finish the update</a>
+						<a class="button" href="<?php echo htmlspecialchars(str_replace('/index.php', '/../', $updaterUrl), ENT_QUOTES); ?>">返回 Odfweb 完成更新流程</a>
 					</div>
 				</li>
 			</ul>
@@ -1790,7 +1795,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					if (typeof response['response'] === 'string') {
 						text = escapeHTML(response['response']);
 					} else {
-						text = 'The following extra files have been found:<ul>';
+						text = '找到以下額外的檔案：<ul>';
 						response['response'].forEach(function(file) {
 							text += '<li>' + escapeHTML(file) + '</li>';
 						});
@@ -1811,7 +1816,8 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					if (typeof response['response'] === 'string') {
 						text = escapeHTML(response['response']);
 					} else {
-						text = 'The following places can not be written to:<ul>';
+						// text = 'The following places can not be written to:<ul>';
+						text = '下列位置無寫入權限:<ul>';
 						response['response'].forEach(function(file) {
 							text += '<li>' + escapeHTML(file) + '</li>';
 						});
@@ -1992,7 +1998,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 				currentStep('step-done');
 				performStep(12, performStepCallbacks[12]);
 			} else {
-				el.innerHTML = 'Maintenance mode will get disabled.<br>';
+				el.innerHTML = '已關閉維護模式。<br>';
 				currentStep('step-maintenance-mode');
 				performStep(11, performStepCallbacks[11]);
 			}
@@ -2028,7 +2034,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 		window.onbeforeunload = confirmExit;
 		function confirmExit() {
 			if (done === false && started === true) {
-				return 'Update is in progress. Are you sure, you want to close?';
+				return '正在進行更新，確定要關閉嗎？';
 			}
 		}
 	</script>
