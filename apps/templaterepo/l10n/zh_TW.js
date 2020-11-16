@@ -220,6 +220,7 @@ OC.L10N.register(
         "Missing permissions to edit from here.": "您沒有在此編輯的權限",
         "Cancel upload": "取消上傳",
         "%s of %s used": "在 %s 中使用了%s ",
-        "%1$s%% of %2$s used": "在%2$s使用了%1$s%%"
+        "%1$s%% of %2$s used": "在%2$s使用了%1$s%%",
+        "No Template Repo":"無範本資料夾"
     },
     "nplurals=1; plural=0;");

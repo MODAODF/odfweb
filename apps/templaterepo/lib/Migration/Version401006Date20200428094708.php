@@ -51,9 +51,15 @@ class Version401006Date20200428094708 extends SimpleMigrationStep {
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'template_repo');
-			$table->addIndex(['user_id'], 'template_repo_user_value');
-			$table->addUniqueIndex(['folder_id', 'user_id'], 'templates_repo_user');
+			if (!$table->hasIndex('template_repo')) {
+				$table->addIndex(['folder_id'], 'template_repo');
+			}
+			if (!$table->hasIndex('template_repo_user_value')) {
+				$table->addIndex(['user_id'], 'template_repo_user_value');
+			}
+			if (!$table->hasIndex('templates_repo_user')) {
+				$table->addUniqueIndex(['folder_id', 'user_id'], 'templates_repo_user');
+			}
 		}
 		return $schema;
 	}

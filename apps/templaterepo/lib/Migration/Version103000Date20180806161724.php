@@ -34,32 +34,7 @@ class Version103000Date20180806161724 extends SimpleMigrationStep {
 	public function changeSchema(IOutput $output, \Closure $schemaClosure, array $options) {
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
-
-		if (!$schema->hasTable('template_repo_groups')) {
-			$table = $schema->createTable('template_repo_groups');
-			$table->addColumn('applicable_id', 'bigint', [
-				'autoincrement' => true,
-				'notnull' => true,
-				'length' => 6,
-			]);
-			$table->addColumn('folder_id', 'bigint', [
-				'notnull' => true,
-				'length' => 6,
-			]);
-			$table->addColumn('permissions', 'integer', [
-				'notnull' => true,
-				'length' => 4,
-			]);
-			$table->addColumn('group_id', 'string', [
-				'notnull' => false,
-				'length' => 64,
-			]);
-			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'templates_repo');
-			$table->addIndex(['group_id'], 'templates_repo_value');
-			$table->addUniqueIndex(['folder_id', 'group_id'], 'templates_repo_group');
-		}
-
+		
 		if ($schema->hasTable('template_repo_applicable')) {
 			$schema->dropTable('template_repo_applicable');
 		}

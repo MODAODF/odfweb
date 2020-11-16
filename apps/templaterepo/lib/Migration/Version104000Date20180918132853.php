@@ -49,9 +49,15 @@ class Version104000Date20180918132853 extends SimpleMigrationStep {
 				'length' => 6,
 			]);
 			$table->setPrimaryKey(['trash_id']);
-			$table->addIndex(['folder_id'], 'templates_repo_trash_folder');
-			$table->addIndex(['folder_id', 'name'], 'templates_repo_name');
-			$table->addUniqueIndex(['folder_id', 'name', 'deleted_time'], 'templates_repo_trash_unique');
+			if (!$table->hasIndex('templates_repo_trash_folder')) {
+				$table->addIndex(['folder_id'], 'templates_repo_trash_folder');
+			}
+			if (!$table->hasIndex('templates_repo_name')) {
+				$table->addIndex(['folder_id', 'name'], 'templates_repo_name');
+			}
+			if (!$table->hasIndex('templates_repo_trash_unique')) {
+				$table->addUniqueIndex(['folder_id', 'name', 'deleted_time'], 'templates_repo_trash_unique');
+			}
 		}
 
 		return $schema;
