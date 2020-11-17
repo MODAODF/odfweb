@@ -1,0 +1,33 @@
+#body-login #email, #body-login, #username, #body-login, #password, #confpassword {
+	width: calc(100% - 56px);
+	padding-left: 36px;
+}
+#email-icon, #username-icon, #password-icon {
+	position: absolute;
+	left: 16px;
+	top: 22px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+	filter: alpha(opacity=30);
+	opacity: .3;
+}
+#username-icon {
+	top: 17px;
+}
+
+input[type="submit"] {
+	width: calc(100% - 10px) !important;
+}
+
+.msg {
+	color: blue;
+	margin: 5px;
+}
+
+.msg a {
+	color: blue;
+	text-decoration: underline;
+}
+
+.groupofone {
+	position: relative;
+}

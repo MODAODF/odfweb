@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>ndcregistration</id>
+	<name>NDC Registration</name>
+	<namespace>NdcRegistration</namespace>
+	<summary>This app allows users to self-register a new account using their e-mail address.</summary>
+	<description><![CDATA[使用者註冊
+
+本程序允許使用者申請註冊
+
+流程如下：
+
+一、申請者輸入 E-Mail 帳號及圖形驗證碼。
+二、驗證連結會傳送到所申請的 E-Mail 信箱。
+三、點擊該連結。
+四、進入設定帳號及密碼頁面。
+五、完成新帳號並自動登入(如果管理者設定不審查的話)。
+
+
+特點：
+- 管理這可以指定新註冊者預設的群組
+- 管理者可以限制電子郵件域名
+- 會以電子郵件通知管理者有新使用者註冊
+- 可設定新申請者是否需管理者審核
+- 可大量匯入帳號
+
+		]]></description>
+	<version>0.0.1</version>
+	<licence>agpl</licence>
+	<author mail="develop@ossii.com.tw" homepage="https://ossii.com.tw">Develop</author>
+	<category>security</category>
+	<category>tools</category>
+	<website>https://ossii.com.tw</website>
+	<dependencies>
+		<database>sqlite</database>
+		<database>pgsql</database>
+		<database min-version="5.5">mysql</database>
+		<owncloud min-version="9.0" max-version="11"/>
+		<nextcloud min-version="16" max-version="19" />
+	</dependencies>
+	<settings>
+		<admin>OCA\NdcRegistration\Settings\RegistrationSettings</admin>
+		<admin-section>OCA\NdcRegistration\Settings\Section</admin-section>
+	</settings>
+</info>
