@@ -93,7 +93,7 @@ class BackgroundJob extends QueuedJob {
 	 * @param Announcement $announcement
 	 * @param array $publicity
 	 */
-	protected function createPublicity(Announcement $announcement, array $publicity): void {
+	public function createPublicity(Announcement $announcement, array $publicity): void {
 		$event = $this->activityManager->generateEvent();
 		$event->setApp('announcementcenter')
 			->setType('announcementcenter')
@@ -127,7 +127,7 @@ class BackgroundJob extends QueuedJob {
 	 * @param array $publicity
 	 */
 	protected function createPublicityEveryone(string $authorId, IEvent $event, INotification $notification, array $publicity) {
-		$this->userManager->callForSeenUsers(function(IUser $user) use ($authorId, $event, $notification, $publicity) {
+		$this->userManager->callForAllUsers(function(IUser $user) use ($authorId, $event, $notification, $publicity) {
 			if (!empty($publicity['activities'])) {
 				$event->setAffectedUser($user->getUID());
 				$this->activityManager->publish($event);

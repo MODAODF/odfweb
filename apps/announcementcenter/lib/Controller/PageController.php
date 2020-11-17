@@ -72,6 +72,9 @@ class PageController extends Controller {
 	/** @var IUserSession */
 	protected $userSession;
 
+	/** @var BackgroundJob */
+	protected $backgroundJob;
+
 	public function __construct(string $AppName,
 								IRequest $request,
 								IDBConnection $connection,
@@ -82,7 +85,8 @@ class PageController extends Controller {
 								Manager $manager,
 								IConfig $config,
 								ITimeFactory $timeFactory,
-								IUserSession $userSession) {
+								IUserSession $userSession,
+								BackgroundJob $backgroundJob) {
 		parent::__construct($AppName, $request);
 
 		$this->connection = $connection;
@@ -94,6 +98,7 @@ class PageController extends Controller {
 		$this->config = $config;
 		$this->timeFactory = $timeFactory;
 		$this->userSession = $userSession;
+		$this->backgroundJob = $backgroundJob;
 	}
 
 	/**
@@ -140,11 +145,20 @@ class PageController extends Controller {
 		}
 
 		if ($activities || $notifications) {
-			$this->jobList->add(BackgroundJob::class, [
+			// 不要走 BackgroundJob
+			// $this->jobList->add(BackgroundJob::class, [
+			// 	'id' => $announcement->getId(),
+			// 	'activities' => $activities,
+			// 	'notifications' => $notifications,
+			// ]);
+
+			// 直接新增 notification
+			$arg = [
 				'id' => $announcement->getId(),
 				'activities' => $activities,
 				'notifications' => $notifications,
-			]);
+			];
+			$this->backgroundJob->createPublicity($announcement, $arg);
 		}
 
 		return new JSONResponse($this->renderAnnouncement($announcement));
