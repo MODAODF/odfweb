@@ -33,6 +33,12 @@ if($currentUser !== null) {
 	}
 }
 
+$txtContent = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
+$odfwebVersion = preg_replace('/\r|\n|\./', '', $txtContent);
+if( (int)$odfwebVersion > 15 && file_exists('apps/richdocuments/appinfo/database.xml')) {
+        unlink('apps/richdocuments/appinfo/database.xml');
+}
+
 $eventDispatcher = \OC::$server->getEventDispatcher();
 $eventDispatcher->addListener(
 	'OCA\Files::loadAdditionalScripts',
