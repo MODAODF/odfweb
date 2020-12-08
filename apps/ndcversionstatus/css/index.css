@@ -1,0 +1,39 @@
+#ndcversionstatus {
+    padding: 25px;
+}
+#ndcversionstatus h2 {
+    display:inline-block;
+}
+#ndcversionstatus ul {
+    list-style: disc;
+    padding-left: 20px;
+    font-size:15px;
+}
+
+#ndcversionstatus .msg {
+    color: #000;
+    padding: 3px;
+    border-radius: var(--border-radius);
+}
+#ndcversionstatus .msg.success {
+    color: #fff;
+    background-color: #47a447;
+}
+#ndcversionstatus .msg.error {
+    color: #fff;
+    background-color: #d2322d;
+}
+
+#ndcversionstatus .mailResult {
+    display: none;
+    border-radius: 10px;
+    background-color: #f3f3f3;
+    padding: 15px;
+    margin-top: 20px;
+    color: gray;
+}
+
+#ndcversionstatus .mailResult li {
+    margin-top: 10px;
+    margin-left: 20px;
+}

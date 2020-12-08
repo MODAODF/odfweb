@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>ndcversionstatus</id>
+    <name>Ndc Version Status</name>
+    <summary>Check ndcodfweb &amp; odfweb version status</summary>
+    <description><![CDATA[Check ndcodfweb &amp; odfweb version status]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="sharon.wu@ossii.com.tw" homepage="http://www.ossii.com.tw">sharon wu</author>
+    <namespace>NdcVersionStatus</namespace>
+    <category>tools</category>
+    <bugs>http://www.ossii.com.tw</bugs>
+    <dependencies>
+        <nextcloud min-version="15" max-version="16"/>
+    </dependencies>
+    <navigations>
+        <navigation role="admin">
+            <name>Ndc Version Status</name>
+            <route>ndcversionstatus.page.index</route>
+        </navigation>
+    </navigations>
+</info>

@@ -12,14 +12,16 @@ use OCP\Migration\IOutput;
 /**
  * Auto-generated migration step: Please modify to your needs!
  */
-class Version401006Date20200428094708 extends SimpleMigrationStep {
+class Version401006Date20200428094708 extends SimpleMigrationStep
+{
 
 	/**
 	 * @param IOutput $output
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
-	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function preSchemaChange(IOutput $output, Closure $schemaClosure, array $options)
+	{
 	}
 
 	/**
@@ -28,9 +30,10 @@ class Version401006Date20200428094708 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
-	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
+	{
 		$schema = $schemaClosure();
-		
+
 		if (!$schema->hasTable('group_repos_users')) {
 			$table = $schema->createTable('group_repos_users');
 			$table->addColumn('applicable_id', 'bigint', [
@@ -51,9 +54,15 @@ class Version401006Date20200428094708 extends SimpleMigrationStep {
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			$table->addIndex(['folder_id'], 'group_folder_user_id');
-			$table->addIndex(['user_id'], 'group_folder_user_value');
-			$table->addUniqueIndex(['folder_id', 'user_id'], 'groups_folder_user');
+			if (!$table->hasIndex('group_repo_user_id')) {
+				$table->addIndex(['folder_id'], 'group_repo_user_id');
+			}
+			if (!$table->hasIndex('group_repo_user_value')) {
+				$table->addIndex(['user_id'], 'group_repo_user_value');
+			}
+			if (!$table->hasIndex('groups_repo_user')) {
+				$table->addUniqueIndex(['folder_id', 'user_id'], 'groups_repo_user');
+			}
 		}
 		return $schema;
 	}
@@ -63,6 +72,7 @@ class Version401006Date20200428094708 extends SimpleMigrationStep {
 	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
 	 * @param array $options
 	 */
-	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options) {
+	public function postSchemaChange(IOutput $output, Closure $schemaClosure, array $options)
+	{
 	}
 }

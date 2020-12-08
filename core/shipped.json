@@ -24,7 +24,9 @@
     "logreader",
     "lookup_server_connector",
     "notifications",
+    "ndcversionstatus",
     "oauth2",
+    "odfwebupgrade",
     "password_policy",
     "provisioning_api",
     "recommendations",
@@ -39,6 +41,7 @@
     "viewer"
   ],
   "alwaysEnabled": [
+    "announcementcenter",
     "richdocuments",
     "files",
     "files_external",
@@ -47,7 +50,9 @@
     "federatedfilesharing",
     "lookup_server_connector",
     "provisioning_api",
+    "ndcversionstatus",
     "oauth2",
+    "odfwebupgrade",
     "theming",
     "templaterepo",
     "twofactor_backupcodes",

@@ -51,7 +51,11 @@ class MoveUpdaterStepFile implements IRepairStep {
 			return;
 		}
 
-		$updaterFolderPath = $dataDir . '/updater-' . $instanceId;
+		$updaterFolderPath = $dataDir . '/updaterOdfweb-' . $instanceId;
+		if (!file_exists($updaterFolderPath)) {
+			$updaterFolderPath = $dataDir . '/updater-' . $instanceId;
+		}
+
 		$stepFile = $updaterFolderPath . '/.step';
 		if(file_exists($stepFile)) {
 			$output->info('.step file exists');
@@ -77,4 +81,3 @@ class MoveUpdaterStepFile implements IRepairStep {
 		}
 	}
 }
-

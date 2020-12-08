@@ -1,0 +1,57 @@
+.icon-upload {
+    margin-bottom: 25px;
+    padding: 9px 20px;
+    background-size: 13px;
+    background-position-x: 20px;
+    &::after {
+        content: "上傳 CSV 檔";
+        margin-left: 20px;
+    }
+}
+
+#errorMessages {
+    margin-top: 12px;
+    font-size: 12px;
+    padding: 10px;
+    border: #808080 solid 1px;
+    border-radius: 20px;
+    background-color: lightgray;
+}
+
+.msg {
+    margin-top: 30px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 5px 10px;
+}
+
+.logData {
+    background-color: #e3e3e3;
+    margin: 5px;
+    padding: 10px 16px;
+    line-height: 25px;
+    color: gray;
+}
+
+.registerResult {
+    display: none;
+    max-width: 500px;
+    .title {
+        color: gray;
+        font-weight: 700;
+        margin-top: 25px;
+        padding: 8px 2px;
+        border-bottom: 1.2px solid gray;
+    }
+    li {
+        padding: 8px 2px;
+        border-bottom: 1px solid lightgray;
+        &:hover {
+            background-color: lightgray;
+        }
+    }
+    i {
+        color: lightgray;
+    }
+}
