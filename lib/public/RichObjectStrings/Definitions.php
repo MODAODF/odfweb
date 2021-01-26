@@ -3,8 +3,10 @@
  * @copyright Copyright (c) 2016 Joas Schilling <coding@schilljs.com>
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Maxence Lange <maxence@nextcloud.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,17 +21,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCP\RichObjectStrings;
 
-
 /**
  * Class Definitions
  *
- * @package OCP\RichObjectStrings
  * @since 11.0.0
  */
 class Definitions {
@@ -154,6 +154,12 @@ class Definitions {
 					'description' => 'The display name of the event which should be used in the visual representation',
 					'example' => 'Workout',
 				],
+				'link' => [
+					'since' => '19.0.0',
+					'required' => false,
+					'description' => 'A link to the page displaying the calendar',
+					'example' => 'http://localhost/index.php/apps/calendar/dayGridMonth/2020-01-20/edit/sidebar/base64string/1579046400'
+				]
 			],
 		],
 		'call' => [
@@ -178,6 +184,12 @@ class Definitions {
 					'required' => true,
 					'description' => 'The type of the call: one2one, group or public',
 					'example' => 'one2one',
+				],
+				'link' => [
+					'since' => '19.0.0',
+					'required' => false,
+					'description' => 'The link to the conversation',
+					'example' => 'https://localhost/index.php/call/R4nd0mToken',
 				],
 			],
 		],
@@ -265,6 +277,25 @@ class Definitions {
 					'required' => false,
 					'description' => 'Whether or not a preview is available. If `no` the mimetype icon should be used',
 					'example' => 'yes',
+				],
+			],
+		],
+		'guest' => [
+			'author' => 'Nextcloud',
+			'app' => 'spreed',
+			'since' => '17.0.0',
+			'parameters' => [
+				'id' => [
+					'since' => '17.0.0',
+					'required' => true,
+					'description' => 'The id used to identify the guest user',
+					'example' => '42',
+				],
+				'name' => [
+					'since' => '17.0.0',
+					'required' => true,
+					'description' => 'Potential displayname of the guest user',
+					'example' => 'Foobar Cats',
 				],
 			],
 		],
@@ -383,6 +414,43 @@ class Definitions {
 					'required' => true,
 					'description' => 'If the user can assign the systemtag',
 					'example' => '0',
+				],
+			],
+		],
+		'talk-attachment' => [
+			'author' => 'Nextcloud',
+			'app' => 'talk',
+			'since' => '18.0.0',
+			'parameters' => [
+				'id' => [
+					'since' => '18.0.0',
+					'required' => true,
+					'description' => 'The id used to identify the attachment on the instance',
+					'example' => '12345',
+				],
+				'name' => [
+					'since' => '18.0.0',
+					'required' => true,
+					'description' => 'The name of the attachment',
+					'example' => 'John Doe',
+				],
+				'conversation' => [
+					'since' => '18.0.0',
+					'required' => true,
+					'description' => 'The token of the conversation',
+					'example' => 'a1b2c3d4',
+				],
+				'mimetype' => [
+					'since' => '18.0.0',
+					'required' => false,
+					'description' => 'The mimetype of the file/folder to allow clients to show a placeholder',
+					'example' => 'text/plain',
+				],
+				'preview-available' => [
+					'since' => '18.0.0',
+					'required' => false,
+					'description' => 'Whether or not a preview is available. If `no` the mimetype icon should be used',
+					'example' => 'yes',
 				],
 			],
 		],

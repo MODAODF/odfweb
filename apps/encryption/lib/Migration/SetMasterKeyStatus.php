@@ -17,13 +17,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-
 namespace OCA\Encryption\Migration;
-
 
 use OCP\IConfig;
 use OCP\Migration\IOutput;
@@ -75,5 +73,4 @@ class SetMasterKeyStatus implements IRepairStep {
 		$appVersion = $this->config->getAppValue('encryption', 'installed_version', '0.0.0');
 		return version_compare($appVersion, '2.0.0', '<');
 	}
-
 }

@@ -4,6 +4,7 @@
  *
  * @author Andreas Fischer <bantu@owncloud.com>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -21,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -51,19 +52,27 @@ class HomeCache extends Cache {
 		}
 		if ($entry && $entry['mimetype'] === 'httpd/unix-directory') {
 			$id = $entry['fileid'];
-			$sql = 'SELECT SUM(`size`) AS f1 ' .
-			   'FROM `*PREFIX*filecache` ' .
-				'WHERE `parent` = ? AND `storage` = ? AND `size` >= 0';
-			$result = \OC_DB::executeAudited($sql, array($id, $this->getNumericStorageId()));
-			if ($row = $result->fetchRow()) {
-				$result->closeCursor();
+
+			$query = $this->connection->getQueryBuilder();
+			$query->selectAlias($query->func()->sum('size'), 'f1')
+				->from('filecache')
+				->where($query->expr()->eq('parent', $query->createNamedParameter($id)))
+				->andWhere($query->expr()->eq('storage', $query->createNamedParameter($this->getNumericStorageId())))
+				->andWhere($query->expr()->gte('size', $query->createNamedParameter(0)));
+
+			$result = $query->execute();
+			$row = $result->fetch();
+			$result->closeCursor();
+
+			if ($row) {
 				list($sum) = array_values($row);
 				$totalSize = 0 + $sum;
 				$entry['size'] += 0;
 				if ($entry['size'] !== $totalSize) {
-					$this->update($id, array('size' => $totalSize));
+					$this->update($id, ['size' => $totalSize]);
 				}
 			}
+			$result->closeCursor();
 		}
 		return $totalSize;
 	}

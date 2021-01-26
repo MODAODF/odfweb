@@ -3,7 +3,11 @@
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  * @copyright Copyright (c) 2017, ownCloud GmbH
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,6 +34,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Types;
 use OC\App\InfoParser;
 use OC\IntegrityCheck\Helpers\AppLocator;
 use OC\Migration\SimpleOutput;
@@ -38,7 +43,6 @@ use OCP\AppFramework\QueryException;
 use OCP\IDBConnection;
 use OCP\Migration\IMigrationStep;
 use OCP\Migration\IOutput;
-use Doctrine\DBAL\Types\Type;
 
 class MigrationService {
 
@@ -94,7 +98,7 @@ class MigrationService {
 				foreach ($info['dependencies']['database'] as $database) {
 					if (\is_string($database) && $database === 'oci') {
 						$this->checkOracle = true;
-					} else if (\is_array($database) && isset($database['@value']) && $database['@value'] === 'oci') {
+					} elseif (\is_array($database) && isset($database['@value']) && $database['@value'] === 'oci') {
 						$this->checkOracle = true;
 					}
 				}
@@ -117,6 +121,11 @@ class MigrationService {
 	 */
 	private function createMigrationTable() {
 		if ($this->migrationTableCreated) {
+			return false;
+		}
+
+		if ($this->connection->tableExists('migrations') && \OC::$server->getConfig()->getAppValue('core', 'vendor', '') !== 'owncloud') {
+			$this->migrationTableCreated = true;
 			return false;
 		}
 
@@ -156,14 +165,13 @@ class MigrationService {
 
 			// Recreate the schema after the table was dropped.
 			$schema = new SchemaWrapper($this->connection);
-
 		} catch (SchemaException $e) {
 			// Table not found, no need to panic, we will create it.
 		}
 
 		$table = $schema->createTable('migrations');
-		$table->addColumn('app', Type::STRING, ['length' => 255]);
-		$table->addColumn('version', Type::STRING, ['length' => 255]);
+		$table->addColumn('app', Types::STRING, ['length' => 255]);
+		$table->addColumn('version', Types::STRING, ['length' => 255]);
 		$table->setPrimaryKey(['app', 'version']);
 
 		$this->connection->migrateToSchema($schema->getWrappedSchema());
@@ -326,7 +334,7 @@ class MigrationService {
 	 * @return mixed|null|string
 	 */
 	public function getMigration($alias) {
-		switch($alias) {
+		switch ($alias) {
 			case 'current':
 				return $this->getCurrentVersion();
 			case 'next':
@@ -465,12 +473,12 @@ class MigrationService {
 		$instance = $this->createInstance($version);
 
 		if (!$schemaOnly) {
-			$instance->preSchemaChange($this->output, function() {
+			$instance->preSchemaChange($this->output, function () {
 				return new SchemaWrapper($this->connection);
 			}, ['tablePrefix' => $this->connection->getPrefix()]);
 		}
 
-		$toSchema = $instance->changeSchema($this->output, function() {
+		$toSchema = $instance->changeSchema($this->output, function () {
 			return new SchemaWrapper($this->connection);
 		}, ['tablePrefix' => $this->connection->getPrefix()]);
 
@@ -485,7 +493,7 @@ class MigrationService {
 		}
 
 		if (!$schemaOnly) {
-			$instance->postSchemaChange($this->output, function() {
+			$instance->postSchemaChange($this->output, function () {
 				return new SchemaWrapper($this->connection);
 			}, ['tablePrefix' => $this->connection->getPrefix()]);
 		}
@@ -509,6 +517,11 @@ class MigrationService {
 			foreach ($table->getColumns() as $thing) {
 				if ((!$sourceTable instanceof Table || !$sourceTable->hasColumn($thing->getName())) && \strlen($thing->getName()) > 30) {
 					throw new \InvalidArgumentException('Column name "'  . $table->getName() . '"."' . $thing->getName() . '" is too long.');
+				}
+
+				if ($thing->getNotnull() && $thing->getDefault() === ''
+					&& $sourceTable instanceof Table && !$sourceTable->hasColumn($thing->getName())) {
+					throw new \InvalidArgumentException('Column name "'  . $table->getName() . '"."' . $thing->getName() . '" is NotNull, but has empty string or null as default.');
 				}
 			}
 
@@ -535,11 +548,11 @@ class MigrationService {
 
 					if ($isUsingDefaultName) {
 						$sequenceName = $table->getName() . '_' . implode('_', $primaryKey->getColumns()) . '_seq';
-						$sequences = array_filter($sequences, function(Sequence $sequence) use ($sequenceName) {
+						$sequences = array_filter($sequences, function (Sequence $sequence) use ($sequenceName) {
 							return $sequence->getName() !== $sequenceName;
 						});
 					}
-				} else if ($this->connection->getDatabasePlatform() instanceof OraclePlatform) {
+				} elseif ($this->connection->getDatabasePlatform() instanceof OraclePlatform) {
 					$defaultName = $table->getName() . '_seq';
 					$isUsingDefaultName = strtolower($defaultName) === $indexName;
 				}
@@ -547,7 +560,7 @@ class MigrationService {
 				if (!$isUsingDefaultName && \strlen($indexName) > 30) {
 					throw new \InvalidArgumentException('Primary index name  on "'  . $table->getName() . '" is too long.');
 				}
-				if ($isUsingDefaultName && \strlen($table->getName()) - $prefixLength > 23) {
+				if ($isUsingDefaultName && \strlen($table->getName()) - $prefixLength >= 23) {
 					throw new \InvalidArgumentException('Primary index name  on "'  . $table->getName() . '" is too long.');
 				}
 			}

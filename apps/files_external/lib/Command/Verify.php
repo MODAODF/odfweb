@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
@@ -17,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -42,7 +44,7 @@ class Verify extends Base {
 	 */
 	protected $globalService;
 
-	function __construct(GlobalStoragesService $globalService) {
+	public function __construct(GlobalStoragesService $globalService) {
 		parent::__construct();
 		$this->globalService = $globalService;
 	}
@@ -64,7 +66,7 @@ class Verify extends Base {
 		parent::configure();
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$mountId = $input->getArgument('mount_id');
 		$configInput = $input->getOption('config');
 
@@ -82,6 +84,7 @@ class Verify extends Base {
 			'code' => $mount->getStatus(),
 			'message' => $mount->getStatusMessage()
 		]);
+		return 0;
 	}
 
 	private function manipulateStorageConfig(StorageConfig $storage) {
@@ -116,7 +119,7 @@ class Verify extends Base {
 			$backend = $storage->getBackend();
 			// update status (can be time-consuming)
 			$storage->setStatus(
-				\OC_Mount_Config::getBackendStatus(
+				\OCA\Files_External\MountConfig::getBackendStatus(
 					$backend->getStorageClass(),
 					$storage->getBackendOptions(),
 					false

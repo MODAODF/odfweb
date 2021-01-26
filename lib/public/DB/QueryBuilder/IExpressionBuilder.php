@@ -2,8 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -18,12 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCP\DB\QueryBuilder;
-
 
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 
@@ -35,27 +36,27 @@ interface IExpressionBuilder {
 	/**
 	 * @since 9.0.0
 	 */
-	const EQ  = ExpressionBuilder::EQ;
+	public const EQ  = ExpressionBuilder::EQ;
 	/**
 	 * @since 9.0.0
 	 */
-	const NEQ = ExpressionBuilder::NEQ;
+	public const NEQ = ExpressionBuilder::NEQ;
 	/**
 	 * @since 9.0.0
 	 */
-	const LT  = ExpressionBuilder::LT;
+	public const LT  = ExpressionBuilder::LT;
 	/**
 	 * @since 9.0.0
 	 */
-	const LTE = ExpressionBuilder::LTE;
+	public const LTE = ExpressionBuilder::LTE;
 	/**
 	 * @since 9.0.0
 	 */
-	const GT  = ExpressionBuilder::GT;
+	public const GT  = ExpressionBuilder::GT;
 	/**
 	 * @since 9.0.0
 	 */
-	const GTE = ExpressionBuilder::GTE;
+	public const GTE = ExpressionBuilder::GTE;
 
 	/**
 	 * Creates a conjunction of the given boolean expressions.

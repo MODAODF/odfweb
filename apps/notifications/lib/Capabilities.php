@@ -45,10 +45,13 @@ class Capabilities implements ICapability {
 					'delete-all',
 					'icons',
 					'rich-strings',
+					'action-web',
+					'user-status',
 				],
 				'push' => [
 					'devices',
 					'object-data',
+					'delete',
 				],
 				'admin-notifications' => [
 					'ocs',

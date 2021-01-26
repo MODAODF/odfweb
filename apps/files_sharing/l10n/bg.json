@@ -14,8 +14,10 @@
     "Shares" : "Споделени",
     "No shares" : "Няма споделяния",
     "Shares will show up here" : "Споделените елементи ще се показват тук",
+    "Restore" : "Възстановяне",
     "Restore share" : "Възстанови споделянето",
     "Something happened. Unable to restore the share." : "Споделянето не може да бъде възстановено.",
+    "error" : "грешка",
     "This will stop your current uploads." : "Това ще прекрати всички ваши текущи процеси по качване на файлове.",
     "Move or copy" : "Премести или копирай",
     "Download" : "Изтегли",
@@ -45,6 +47,7 @@
     "{actor} shared {file} with you" : "{actor} сподели {file} с вас",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "<strong>Сваляне</strong>на файл, споделен чрез имейл или публична връзка",
     "A file or folder was shared from <strong>another server</strong>" : "Споделяне на файл / папка с <strong>друг сървър</strong>",
+    "Files" : "Файлове",
     "A file or folder has been <strong>shared</strong>" : "<strong>Споделяне</strong> на файл / папка",
     "Please specify a file or folder path" : "Моля въведете път до файл или папка",
     "Could not create share" : "Не е възможно създаването на споделянето",
@@ -78,7 +81,6 @@
     "remote" : "отдалечен",
     "remote group" : "отдалечена група",
     "guest" : "гост",
-    "Via folder" : "С папка",
     "Link copied" : "Връзката е копирана",
     "Copy to clipboard" : "Копирай",
     "Password protection" : "Password protection",
@@ -92,7 +94,6 @@
     "Add another link" : "Добави още една връзка",
     "Share link" : "Връзка за споделяне",
     "Resharing is not allowed" : "Повторното споделяне е забранено",
-    "Name …" : "Име ...",
     "Searching …" : "Търсене ...",
     "on {server}" : "на {server}",
     "Link to a file" : "Линк към файл",
@@ -118,7 +119,7 @@
     "Upload files to %s" : "Качване на файлове към %s",
     "Note" : "Бележка",
     "Select or drop files" : "Изберете файл или преместете с мишката",
-    "Uploading files…" : "Качване на файлове…",
-    "Uploaded files:" : "Качени файлове:"
+    "Uploaded files:" : "Качени файлове:",
+    "Uploading files…" : "Качване на файлове…"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

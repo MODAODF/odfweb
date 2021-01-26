@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
  *
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -30,7 +31,7 @@ use OCP\IDBConnection;
 use OCP\IUser;
 
 class MountProvider implements IMountProvider {
-	const STORAGE = '\OCA\Files_Sharing\External\Storage';
+	public const STORAGE = '\OCA\Files_Sharing\External\Storage';
 
 	/**
 	 * @var \OCP\IDBConnection

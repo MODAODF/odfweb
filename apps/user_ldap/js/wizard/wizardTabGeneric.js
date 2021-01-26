@@ -392,9 +392,9 @@ OCA = OCA || {};
 
 		/**
 		 * @typedef {object} viewSaveInfo
-		 * @property {function} val
-		 * @property {function} attr
-		 * @property {function} is
+		 * @property {Function} val
+		 * @property {Function} attr
+		 * @property {Function} is
 		 */
 
 		/**
@@ -553,7 +553,7 @@ OCA = OCA || {};
 			) {
 				toggleFnc(true);
 			} else {
-				OCdialogs.confirm(
+				OC.dialogs.confirm(
 					t('user_ldap', 'Switching the mode will enable automatic LDAP queries. Depending on your LDAP size they may take a while. Do you still want to switch the mode?'),
 					t('user_ldap', 'Mode switch'),
 					toggleFnc

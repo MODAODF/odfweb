@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
  * @license AGPL-3.0
@@ -17,15 +19,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Files\Storage\Wrapper;
 
+use OC\Cache\CappedMemoryCache;
 use OCP\Files\Storage\IStorage;
 use OCP\ICache;
-use OC\Cache\CappedMemoryCache;
 
 /**
  * Encoding wrapper that deals with file names that use unsupported encodings like NFD.
@@ -532,5 +534,9 @@ class Encoding extends Wrapper {
 	 */
 	public function getMetaData($path) {
 		return $this->storage->getMetaData($this->findPathToUse($path));
+	}
+
+	public function getDirectoryContent($directory): \Traversable {
+		return $this->storage->getDirectoryContent($this->findPathToUse($directory));
 	}
 }

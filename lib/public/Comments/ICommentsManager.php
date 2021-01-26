@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Robin Appelman <robin@icewind.nl>
@@ -21,9 +22,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCP\Comments;
 
 use OCP\IUser;
@@ -33,7 +35,6 @@ use OCP\IUser;
  *
  * This class manages the access to comments
  *
- * @package OCP\Comments
  * @since 9.0.0
  */
 interface ICommentsManager {
@@ -47,7 +48,7 @@ interface ICommentsManager {
 	 *
 	 * User interfaces shall show "Deleted user" as display name, if needed.
 	 */
-	const DELETED_USER = 'deleted_users';
+	public const DELETED_USER = 'deleted_users';
 
 	/**
 	 * returns a comment instance
@@ -321,5 +322,4 @@ interface ICommentsManager {
 	 * provided ID is unknown. It must be ensured that a string is returned.
 	 */
 	public function resolveDisplayName($type, $id);
-
 }

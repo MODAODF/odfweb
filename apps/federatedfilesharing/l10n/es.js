@@ -24,7 +24,7 @@ OC.L10N.register(
     "Sharing %1$s failed, could not find %2$s, maybe the server is currently unreachable or uses a self-signed certificate." : "Compartir %1$s ha fallado, no se ha podido encontrar %2$s, quizás el servidor no se puede alcanzar ahora mismo o usa un certificado autofirmado.",
     "Could not find share" : "No se ha podido encontrar el compartido",
     "Federated sharing" : "Compartido federado",
-    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Has recibido \"%3$s\" como recurso remoto comparitdo de %4$s (%1$s) (en nombre de %5$s (%2$s))",
+    "You received \"%3$s\" as a remote share from %4$s (%1$s) (on behalf of %5$s (%2$s))" : "Has recibido \"%3$s\" como recurso remoto compartido de %4$s (%1$s) (en nombre de %5$s (%2$s))",
     "You received {share} as a remote share from {user} (on behalf of {behalf})" : "Has recibido {share} como un recurso compartido remoto de {user} (en nombre de {behalf})",
     "You received \"%3$s\" as a remote share from %4$s (%1$s)" : "Has recibido \"%3$s\" como un recurso compartido remoto de %4$s (%1$s)",
     "You received {share} as a remote share from {user}" : "Has recibido {share} como un compartido remoto de {user}",
@@ -38,7 +38,7 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Compartido en Cloud Federado",
     "Open documentation" : "Abrir documentación",
     "Adjust how people can share between servers." : "Ajusta cómo la gente puede compartir entre servidores.",
-    "Allow users on this server to send shares to other servers" : "Permitir a los usuarios de este servidor compartir con usuarios de otros servidores",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Permitir a los usuarios de este servidor compartir con usuarios de otros servidores (esta opción también permite acceso de WebDAV a los elementos públicos compartidos)",
     "Allow users on this server to receive shares from other servers" : "Permitir a los usuarios de este servidor recibir de usuarios de otros servidores",
     "Allow users on this server to send shares to groups on other servers" : "Permitir a los usuarios de este servidor enviar a grupos de otros servidores",
     "Allow users on this server to receive group shares from other servers" : "Permitir a los usuarios de este servidor recibir de grupos de otros servidores",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Añadir a su sitio web",
     "Share with me via Nextcloud" : "Compartirlo conmigo vía Nextcloud",
     "HTML Code:" : "Código HTML:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Has recibido \"/%3$s\" como un recurso compartido remoto de %1$s (en nombre de %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Has recibido \"%3$s\" como un compartido remoto de %1$s"
+    "Allow users on this server to send shares to other servers" : "Permitir a los usuarios de este servidor compartir con usuarios de otros servidores"
 },
 "nplurals=2; plural=(n != 1);");

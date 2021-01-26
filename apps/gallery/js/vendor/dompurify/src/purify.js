@@ -8,7 +8,7 @@
     } else if (typeof module !== 'undefined') {
         module.exports = factory(root);
     } else {
-        root.DOMPurify = factory(root);
+      //  root.DOMPurify = factory(root);
     }
 }(function factory(window) {
     'use strict';

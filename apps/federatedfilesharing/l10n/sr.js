@@ -38,12 +38,12 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Здружено дељење у облаку",
     "Open documentation" : "Отвори документацију",
     "Adjust how people can share between servers." : "Подеси како људи деле фајлове између сервера.",
-    "Allow users on this server to send shares to other servers" : "Дозвољава корисницима овог сервера да шаљу дељења на друге сервере",
-    "Allow users on this server to receive shares from other servers" : "Дозвољава корисницима овог сервера да примају дељења са других сервера",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Дозволи корисницима овог сервера да шаљу дељења на друге сервере (ова опција такође дозвољава WebDAV приступ јавним дељењима)",
+    "Allow users on this server to receive shares from other servers" : "Дозволи корисницима овог сервера да примају дељења са других сервера",
     "Allow users on this server to send shares to groups on other servers" : "Дозволи корисницима са овог сервера да деле са групама на другим серверима",
     "Allow users on this server to receive group shares from other servers" : "Дозволи корисницима на овом серверу да примају групна дељења са других сервера",
-    "Search global and public address book for users" : "Тражи кориснике и у глобалним и јавним именицима",
-    "Allow users to publish their data to a global and public address book" : "Дозволи корисницима да објаве своје податке у јавне и глобалне именике",
+    "Search global and public address book for users" : "Кориснике тражи и у глобалним и у јавним адресарима",
+    "Allow users to publish their data to a global and public address book" : "Дозволи корисницима да објаве своје податке у јавне и глобалне адресаре",
     "Federated Cloud" : "Здружени облак",
     "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "Можете делите ствари са било ким ко користи Некстклауд сервер или неки други Open Cloud Mesh (OCM) компатибилни сервер и сервисе! Само унесите ИД из њиховог Здруженог Облака у дијалог за дељење. Тај ИД изгледа нешто попут person@cloud.example.com",
     "Your Federated Cloud ID:" : "ИД вашег здруженог облака:",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Додај на свој веб сајт",
     "Share with me via Nextcloud" : "Дели са мном преко Некстклауда",
     "HTML Code:" : "ХТМЛ кôд:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Примили сте „%3$s“ као удаљено дељење од %1$s (у име %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Примили сте „%3$s“ као удаљено дељење од %1$s"
+    "Allow users on this server to send shares to other servers" : "Дозволи корисницима овог сервера да шаљу дељења на друге сервере"
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");

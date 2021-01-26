@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -16,9 +18,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Encryption\Exceptions;
 
 use OCP\Encryption\Exceptions\GenericEncryptionException;
@@ -29,10 +32,9 @@ class PublicKeyMissingException extends GenericEncryptionException {
 	 * @param string $userId
 	 */
 	public function __construct($userId) {
-		if(empty($userId)) {
+		if (empty($userId)) {
 			$userId = "<no-user-id-given>";
 		}
 		parent::__construct("Public Key missing for user: $userId");
 	}
-
 }

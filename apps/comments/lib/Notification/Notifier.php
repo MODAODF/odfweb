@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,6 +33,7 @@ use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\L10N\IFactory;
+use OCP\Notification\AlreadyProcessedException;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
@@ -67,18 +69,40 @@ class Notifier implements INotifier {
 	}
 
 	/**
+	 * Identifier of the notifier, only use [a-z0-9_]
+	 *
+	 * @return string
+	 * @since 17.0.0
+	 */
+	public function getID(): string {
+		return 'comments';
+	}
+
+	/**
+	 * Human readable name describing the notifier
+	 *
+	 * @return string
+	 * @since 17.0.0
+	 */
+	public function getName(): string {
+		return $this->l10nFactory->get('comments')->t('Comments');
+	}
+
+	/**
 	 * @param INotification $notification
 	 * @param string $languageCode The code of the language that should be used to prepare the notification
 	 * @return INotification
 	 * @throws \InvalidArgumentException When the notification was not prepared by a notifier
+	 * @throws AlreadyProcessedException When the notification is not needed anymore and should be deleted
+	 * @since 9.0.0
 	 */
-	public function prepare(INotification $notification, $languageCode) {
-		if($notification->getApp() !== 'comments') {
+	public function prepare(INotification $notification, string $languageCode): INotification {
+		if ($notification->getApp() !== 'comments') {
 			throw new \InvalidArgumentException();
 		}
 		try {
 			$comment = $this->commentsManager->get($notification->getObjectId());
-		} catch(NotFoundException $e) {
+		} catch (NotFoundException $e) {
 			// needs to be converted to InvalidArgumentException, otherwise none Notifications will be shown at all
 			throw new \InvalidArgumentException('Comment not found', 0, $e);
 		}
@@ -95,13 +119,13 @@ class Notifier implements INotifier {
 		switch ($notification->getSubject()) {
 			case 'mention':
 				$parameters = $notification->getSubjectParameters();
-				if($parameters[0] !== 'files') {
+				if ($parameters[0] !== 'files') {
 					throw new \InvalidArgumentException('Unsupported comment object');
 				}
 				$userFolder = $this->rootFolder->getUserFolder($notification->getUser());
 				$nodes = $userFolder->getById((int)$parameters[1]);
-				if(empty($nodes)) {
-					throw new \InvalidArgumentException('Cannot resolve file ID to node instance');
+				if (empty($nodes)) {
+					throw new AlreadyProcessedException();
 				}
 				$node = $nodes[0];
 
@@ -194,7 +218,7 @@ class Notifier implements INotifier {
 			$placeholders[] = '{' . $placeholder . '}';
 			if ($parameter['type'] === 'user') {
 				$replacements[] = '@' . $parameter['name'];
-			} else if ($parameter['type'] === 'file') {
+			} elseif ($parameter['type'] === 'file') {
 				$replacements[] = $parameter['path'];
 			} else {
 				$replacements[] = $parameter['name'];

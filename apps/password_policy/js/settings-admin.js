@@ -20,11 +20,11 @@
 
 var passwordPolicy = {
 
-	saveMinLength: function(minLength) {
+	saveNumberValue: function(name, value) {
 		OC.msg.startSaving('#password-policy-settings-msg');
 
-		if (/^\d+$/.test(minLength)) {
-			OCP.AppConfig.setValue('password_policy', 'minLength', minLength);
+		if (/^\d+$/.test(value)) {
+			OCP.AppConfig.setValue('password_policy', name, value);
 			OC.msg.finishedSaving('#password-policy-settings-msg',
 				{
 					'status': 'success',
@@ -34,11 +34,23 @@ var passwordPolicy = {
 				}
 			);
 		} else {
+			var message = OC.L10N.translate('password_policy', 'Unknown error');
+			switch (name) {
+				case "minLength":
+					message = OC.L10N.translate('password_policy', 'Minimal length has to be a non negative number');
+					break;
+				case "historySize":
+					message = OC.L10N.translate('password_policy', 'History size has to be a non negative number');
+					break;
+				case "expiration":
+					message = OC.L10N.translate('password_policy', 'Expiration days have to be a non negative number');
+					break;
+			}
 			OC.msg.finishedSaving('#password-policy-settings-msg',
 				{
 					'status': 'failure',
 					'data': {
-						'message': OC.L10N.translate('password_policy', 'Minimal length has to be a non negative number')
+						'message': message
 					}
 				}
 			);
@@ -84,12 +96,33 @@ $(document).ready(function(){
 		OCP.AppConfig.setValue('password_policy', 'enforceHaveIBeenPwned', value);
 	});
 
-	$('#password-policy-min-length').keyup(function (e) {
-		if (e.keyCode === 13) {
-			passwordPolicy.saveMinLength($(this).val());
-		}
-	}).focusout(function () {
-		passwordPolicy.saveMinLength($(this).val());
-	});
+	// register save handler for number input fields
+	[
+		{
+			elem: '#password-policy-min-length',
+			conf: 'minLength',
+		},
+		{
+			elem: '#password-policy-history-size',
+			conf: 'historySize',
+		},
+		{
+			elem: '#password-policy-expiration',
+			conf: 'expiration',
+		},
+		{
+			elem: '#password-policy-failed-login',
+			conf: 'maximumLoginAttempts'
+		},
+	].forEach(function (configField) {
+		console.log(configField);
+		$(configField.elem).keyup(function (e) {
+			if (e.keyCode === 13) {
+				passwordPolicy.saveNumberValue(configField.conf, $(this).val());
+			}
+		}).focusout(function () {
+			passwordPolicy.saveNumberValue(configField.conf, $(this).val());
+		});
+	})
 
 });

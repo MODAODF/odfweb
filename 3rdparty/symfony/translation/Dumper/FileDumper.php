@@ -63,7 +63,7 @@ abstract class FileDumper implements DumperInterface
      */
     public function dump(MessageCatalogue $messages, $options = [])
     {
-        if (!array_key_exists('path', $options)) {
+        if (!\array_key_exists('path', $options)) {
             throw new InvalidArgumentException('The file dumper needs a path option.');
         }
 
@@ -103,9 +103,7 @@ abstract class FileDumper implements DumperInterface
     /**
      * Transforms a domain of a message catalogue to its string representation.
      *
-     * @param MessageCatalogue $messages
-     * @param string           $domain
-     * @param array            $options
+     * @param string $domain
      *
      * @return string representation
      */

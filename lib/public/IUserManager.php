@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
@@ -23,12 +24,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCP;
-
 
 /**
  * Class Manager
@@ -44,11 +44,10 @@ namespace OCP;
  * - preUnassignedUserId(string $uid)
  * - postUnassignedUserId(string $uid)
  *
- * @package OC\User
  * @since 8.0.0
  */
 interface IUserManager {
-		/**
+	/**
 	 * register a user backend
 	 *
 	 * @param \OCP\UserInterface $backend
@@ -156,6 +155,7 @@ interface IUserManager {
 
 	/**
 	 * @param \Closure $callback
+	 * @psalm-param \Closure(\OCP\IUser):void $callback
 	 * @param string $search
 	 * @since 9.0.0
 	 */
@@ -179,6 +179,7 @@ interface IUserManager {
 
 	/**
 	 * @param \Closure $callback
+	 * @psalm-param \Closure(\OCP\IUser):?bool $callback
 	 * @since 11.0.0
 	 */
 	public function callForSeenUsers(\Closure $callback);

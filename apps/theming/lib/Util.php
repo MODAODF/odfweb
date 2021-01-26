@@ -2,9 +2,12 @@
 /**
  * @copyright Copyright (c) 2016 Julius Härtl <jus@bitgrid.net>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Michael Weimann <mail@michael-weimann.eu>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -19,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -31,7 +34,7 @@ use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\IConfig;
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 class Util {
 
@@ -63,7 +66,7 @@ class Util {
 	 */
 	public function invertTextColor($color) {
 		$l = $this->calculateLuma($color);
-		if($l>0.6) {
+		if ($l>0.6) {
 			return true;
 		} else {
 			return false;
@@ -73,14 +76,23 @@ class Util {
 	/**
 	 * get color for on-page elements:
 	 * theme color by default, grey if theme color is to bright
-	 * @param $color
+	 * @param string $color
+	 * @param bool $brightBackground
 	 * @return string
 	 */
-	public function elementColor($color) {
-		$l = $this->calculateLuminance($color);
-		if($l>0.8) {
+	public function elementColor($color, bool $brightBackground = true) {
+		$luminance = $this->calculateLuminance($color);
+
+		if ($brightBackground && $luminance > 0.8) {
+			// If the color is too bright in bright mode, we fall back to a darker gray
 			return '#aaaaaa';
 		}
+
+		if (!$brightBackground && $luminance < 0.2) {
+			// If the color is too dark in dark mode, we fall back to a brighter gray
+			return '#555555';
+		}
+
 		return $color;
 	}
 
@@ -111,7 +123,7 @@ class Util {
 	public function hexToRGB($color) {
 		$hex = preg_replace("/[^0-9A-Fa-f]/", '', $color);
 		if (strlen($hex) === 3) {
-			$hex = $hex{0} . $hex{0} . $hex{1} . $hex{1} . $hex{2} . $hex{2};
+			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
 		}
 		if (strlen($hex) !== 6) {
 			return 0;
@@ -139,7 +151,7 @@ class Util {
 	 * @return string|ISimpleFile path to app icon / file of logo
 	 */
 	public function getAppIcon($app) {
-		$app = str_replace(array('\0', '/', '\\', '..'), '', $app);
+		$app = str_replace(['\0', '/', '\\', '..'], '', $app);
 		try {
 			$appPath = $this->appManager->getAppPath($app);
 			$icon = $appPath . '/img/' . $app . '.svg';
@@ -150,7 +162,8 @@ class Util {
 			if (file_exists($icon)) {
 				return $icon;
 			}
-		} catch (AppPathNotFoundException $e) {}
+		} catch (AppPathNotFoundException $e) {
+		}
 
 		if ($this->config->getAppValue('theming', 'logoMime', '') !== '') {
 			$logoFile = null;
@@ -159,7 +172,8 @@ class Util {
 				if ($folder !== null) {
 					return $folder->getFile('logo');
 				}
-			} catch (NotFoundException $e) {}
+			} catch (NotFoundException $e) {
+			}
 		}
 		return \OC::$SERVERROOT . '/core/img/logo/logo.svg';
 	}
@@ -170,8 +184,8 @@ class Util {
 	 * @return string|false absolute path to image
 	 */
 	public function getAppImage($app, $image) {
-		$app = str_replace(array('\0', '/', '\\', '..'), '', $app);
-		$image = str_replace(array('\0', '\\', '..'), '', $image);
+		$app = str_replace(['\0', '/', '\\', '..'], '', $app);
+		$image = str_replace(['\0', '\\', '..'], '', $image);
 		if ($app === "core") {
 			$icon = \OC::$SERVERROOT . '/core/img/' . $image;
 			if (file_exists($icon)) {
@@ -217,7 +231,7 @@ class Util {
 	 * @return string
 	 */
 	public function colorizeSvg($svg, $color) {
-		$svg = preg_replace('/#0082c9/i', $color, $svg);
+		$svg = preg_replace('/#ECECFF/i', $color, $svg);
 		return $svg;
 	}
 
@@ -245,5 +259,4 @@ class Util {
 		}
 		return $backgroundLogo && $backgroundLogo !== 'backgroundColor' && $backgroundExists;
 	}
-
 }

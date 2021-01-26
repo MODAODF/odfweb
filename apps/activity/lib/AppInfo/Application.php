@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ <skjnldsv@protonmail.com>
  *
  * @license AGPL-3.0
  *
@@ -25,54 +26,46 @@ namespace OCA\Activity\AppInfo;
 use OC\Files\View;
 use OCA\Activity\Capabilities;
 use OCA\Activity\Consumer;
-use OCA\Activity\Controller\Activities;
-use OCA\Activity\Controller\APIv1;
-use OCA\Activity\Controller\APIv2;
-use OCA\Activity\Controller\Feed;
-use OCA\Activity\Controller\RemoteActivity;
-use OCA\Activity\Controller\Settings;
 use OCA\Activity\FilesHooksStatic;
 use OCA\Activity\Hooks;
+use OCA\Activity\Listener\LoadSidebarScripts;
+use OCA\Activity\NotificationGenerator;
+use OCA\Files\Event\LoadSidebar;
 use OCP\AppFramework\App;
-use OCP\IL10N;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Util;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
+
+	const APP_ID = 'activity';
+
 	public function __construct () {
-		parent::__construct('activity');
-		$container = $this->getContainer();
-
-		// Allow automatic DI for the View, until we migrated to Nodes API
-		$container->registerService(View::class, function() {
-			return new View('');
-		}, false);
-		$container->registerService('isCLI', function() {
-			return \OC::$CLI;
-		});
-
-		// Aliases for the controllers so we can use the automatic DI
-		$container->registerAlias('ActivitiesController', Activities::class);
-		$container->registerAlias('APIv1Controller', APIv1::class);
-		$container->registerAlias('APIv2Controller', APIv2::class);
-		$container->registerAlias('FeedController', Feed::class);
-		$container->registerAlias('RemoteActivityController', RemoteActivity::class);
-		$container->registerAlias('SettingsController', Settings::class);
-
-		$container->registerCapability(Capabilities::class);
+		parent::__construct(self::APP_ID);
 	}
 
-	/**
-	 * Register the different app parts
-	 */
-	public function register() {
+	public function register(IRegistrationContext $context): void {
+		// Allow automatic DI for the View, until we migrated to Nodes API
+		$context->registerService(View::class, function() {
+			return new View('');
+		}, false);
+
+		$context->registerCapability(Capabilities::class);
+
+		$context->registerEventListener(LoadSidebar::class, LoadSidebarScripts::class);
+	}
+
+	public function boot(IBootContext $context): void {
 		$this->registerActivityConsumer();
 		$this->registerHooksAndEvents();
+		$this->registerNotifier();
 	}
 
 	/**
 	 * Registers the consumer to the Activity Manager
 	 */
-	public function registerActivityConsumer() {
+	private function registerActivityConsumer() {
 		$c = $this->getContainer();
 		/** @var \OCP\IServerContainer $server */
 		$server = $c->getServer();
@@ -82,13 +75,15 @@ class Application extends App {
 		});
 	}
 
+	public function registerNotifier() {
+		$server = $this->getContainer()->getServer();
+		$server->getNotificationManager()->registerNotifierService(NotificationGenerator::class);
+	}
+
 	/**
 	 * Register the hooks and events
 	 */
-	public function registerHooksAndEvents() {
-		$eventDispatcher = $this->getContainer()->getServer()->getEventDispatcher();
-		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts', [Hooks::class, 'onLoadFilesAppScripts']);
-
+	private function registerHooksAndEvents() {
 		Util::connectHook('OC_User', 'post_deleteUser', Hooks::class, 'deleteUser');
 		Util::connectHook('OC_User', 'post_login', Hooks::class, 'setDefaultsForUser');
 
@@ -98,7 +93,7 @@ class Application extends App {
 	/**
 	 * Register the hooks for filesystem operations
 	 */
-	public function registerFilesActivity() {
+	private function registerFilesActivity() {
 		// All other events from other apps have to be send via the Consumer
 		Util::connectHook('OC_Filesystem', 'post_create', FilesHooksStatic::class, 'fileCreate');
 		Util::connectHook('OC_Filesystem', 'post_update', FilesHooksStatic::class, 'fileUpdate');

@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Esteu segur que voleu suprimir aquest emmagatzematge extern?",
     "Delete storage?" : "Suprimeix-ho l'emmagatzematge?",
     "Saved" : "Desat",
-    "Saving..." : "S'està desant...",
+    "Saving …" : "S'està desant ...",
     "Save" : "Desa",
     "Empty response from the server" : "Resposta buida del servidor",
     "Couldn't access. Please log out and in again to activate this mount point" : "No s'ha pogut accedir. Si us plau, tanqueu la sessió i torneu a iniciar-la per activar aquest punt de muntatge",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Comparteix",
     "Show hidden files" : "Mostra els fitxers ocults",
+    "Verify ACL access when listing files" : "Verificar accés ACL quan es llistin fitxers",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "Comprovar els ACLs de cada fitxer o carpeta a dins d'un directori per filtrar els elements pels que l'usuari no tingui permís, provoca una disminució del rendiment",
     "Timeout" : "Sense temps",
     "SMB / CIFS using OC login" : "SMB / CIFS fent servir acreditació OC",
     "Username as share" : "Nom d'usuari amb que es comparteix",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Afegeix emmagatzematge",
     "Advanced settings" : "Paràmetres avançats",
     "Allow users to mount external storage" : "Permet als usuaris muntar emmagatzematge extern",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Les credencials globals es poden utilitzar per autenticar-se amb múltiples emmagatzematges externs que tenen les mateixes credencials."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Les credencials globals es poden utilitzar per autenticar-se amb múltiples emmagatzematges externs que tenen les mateixes credencials.",
+    "Saving..." : "S'està desant..."
 },
 "nplurals=2; plural=(n != 1);");

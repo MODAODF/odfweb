@@ -177,4 +177,30 @@ class PasswordPolicyConfig {
 		$this->config->setAppValue('password_policy', 'enforceHaveIBeenPwned', $enforceHaveIBeenPwned ? '1' : '0');
 	}
 
+	public function getHistorySize(): int {
+		return (int)$this->config->getAppValue(
+			'password_policy',
+			'historySize',
+			0
+		);
+	}
+
+	public function getExpiryInDays(): int {
+		return (int)$this->config->getAppValue(
+			'password_policy',
+			'expiration',
+			0
+		);
+	}
+
+	/**
+	 * @return int if 0 then there is no limit
+	 */
+	public function getMaximumLoginAttempts(): int {
+		return (int)$this->config->getAppValue(
+			'password_policy',
+			'maximumLoginAttempts',
+			0
+		);
+	}
 }

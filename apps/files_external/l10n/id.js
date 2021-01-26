@@ -19,10 +19,11 @@ OC.L10N.register(
     "Check for changes" : "Periksa perubahan",
     "Never" : "Jangan pernah",
     "Once every direct access" : "Setiap kali akses langsung",
+    "Read only" : "Hanya baca",
     "Delete" : "Hapus",
     "Admin defined" : "Terdefinisi Admin",
     "Saved" : "Disimpan",
-    "Saving..." : "Menyimpan...",
+    "Saving …" : "Menyimpan ...",
     "Save" : "Simpan",
     "Empty response from the server" : "Tidak ada respon dari server",
     "Couldn't get the information from the remote server: {code} {type}" : "Tidak dapat mengambil informasi dari server remote: {code} {type}",
@@ -109,6 +110,7 @@ OC.L10N.register(
     "Available for" : "Tersedia untuk",
     "Add storage" : "Tambahkan penyimpanan",
     "Advanced settings" : "Pengaturan Lanjutan",
-    "Allow users to mount external storage" : "Izinkan pengguna untuk mengaitkan penyimpanan eksternal"
+    "Allow users to mount external storage" : "Izinkan pengguna untuk mengaitkan penyimpanan eksternal",
+    "Saving..." : "Menyimpan..."
 },
 "nplurals=1; plural=0;");

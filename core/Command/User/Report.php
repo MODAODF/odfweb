@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -20,12 +21,13 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Core\Command\User;
 
+use OCP\IConfig;
 use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -35,12 +37,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Report extends Command {
 	/** @var IUserManager */
 	protected $userManager;
+	/** @var IConfig */
+	private $config;
 
 	/**
 	 * @param IUserManager $userManager
 	 */
-	public function __construct(IUserManager $userManager) {
+	public function __construct(IUserManager $userManager, IConfig $config) {
 		$this->userManager = $userManager;
+		$this->config = $config;
 		parent::__construct();
 	}
 
@@ -50,30 +55,35 @@ class Report extends Command {
 			->setDescription('shows how many users have access');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$table = new Table($output);
-		$table->setHeaders(array('User Report', ''));
+		$table->setHeaders(['User Report', '']);
 		$userCountArray = $this->countUsers();
-		if(!empty($userCountArray)) {
+		if (!empty($userCountArray)) {
 			$total = 0;
-			$rows = array();
-			foreach($userCountArray as $classname => $users) {
+			$rows = [];
+			foreach ($userCountArray as $classname => $users) {
 				$total += $users;
-				$rows[] = array($classname, $users);
+				$rows[] = [$classname, $users];
 			}
 
-			$rows[] = array(' ');
-			$rows[] = array('total users', $total);
+			$rows[] = [' '];
+			$rows[] = ['total users', $total];
 		} else {
-			$rows[] = array('No backend enabled that supports user counting', '');
+			$rows[] = ['No backend enabled that supports user counting', ''];
 		}
 
 		$userDirectoryCount = $this->countUserDirectories();
-		$rows[] = array(' ');
-		$rows[] = array('user directories', $userDirectoryCount);
+		$rows[] = [' '];
+		$rows[] = ['user directories', $userDirectoryCount];
+
+		$disabledUsers = $this->config->getUsersForUserValue('core', 'enabled', 'false');
+		$disabledUsersCount = count($disabledUsers);
+		$rows[] = ['disabled users', $disabledUsersCount];
 
 		$table->setRows($rows);
 		$table->render();
+		return 0;
 	}
 
 	private function countUsers() {

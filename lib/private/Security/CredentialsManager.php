@@ -2,7 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,15 +19,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Security;
 
-use OCP\Security\ICrypto;
 use OCP\IDBConnection;
 use OCP\Security\ICredentialsManager;
+use OCP\Security\ICrypto;
 
 /**
  * Store and retrieve credentials for external services
@@ -32,8 +35,7 @@ use OCP\Security\ICredentialsManager;
  * @package OC\Security
  */
 class CredentialsManager implements ICredentialsManager {
-
-	const DB_TABLE = 'credentials';
+	public const DB_TABLE = 'storages_credentials';
 
 	/** @var ICrypto */
 	protected $crypto;
@@ -79,10 +81,17 @@ class CredentialsManager implements ICredentialsManager {
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->select('credentials')
 			->from(self::DB_TABLE)
-			->where($qb->expr()->eq('user', $qb->createNamedParameter((string)$userId)))
-			->andWhere($qb->expr()->eq('identifier', $qb->createNamedParameter($identifier)))
-		;
-		$result = $qb->execute()->fetch();
+			->where($qb->expr()->eq('identifier', $qb->createNamedParameter($identifier)));
+
+		if ($userId === '') {
+			$qb->andWhere($qb->expr()->emptyString('user'));
+		} else {
+			$qb->andWhere($qb->expr()->eq('user', $qb->createNamedParameter((string)$userId)));
+		}
+
+		$qResult = $qb->execute();
+		$result = $qResult->fetch();
+		$qResult->closeCursor();
 
 		if (!$result) {
 			return null;
@@ -102,9 +111,14 @@ class CredentialsManager implements ICredentialsManager {
 	public function delete($userId, $identifier) {
 		$qb = $this->dbConnection->getQueryBuilder();
 		$qb->delete(self::DB_TABLE)
-			->where($qb->expr()->eq('user', $qb->createNamedParameter((string)$userId)))
-			->andWhere($qb->expr()->eq('identifier', $qb->createNamedParameter($identifier)))
-		;
+			->where($qb->expr()->eq('identifier', $qb->createNamedParameter($identifier)));
+
+		if ($userId === '') {
+			$qb->andWhere($qb->expr()->emptyString('user'));
+		} else {
+			$qb->andWhere($qb->expr()->eq('user', $qb->createNamedParameter((string)$userId)));
+		}
+
 		return $qb->execute();
 	}
 
@@ -121,5 +135,4 @@ class CredentialsManager implements ICredentialsManager {
 		;
 		return $qb->execute();
 	}
-
 }

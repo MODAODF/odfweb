@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Действительно удалить это внешнее хранилище?",
     "Delete storage?" : "Удалить хранилище?",
     "Saved" : "Сохранено",
-    "Saving..." : "Сохранение…",
+    "Saving …" : "Сохранение ...",
     "Save" : "Сохранить",
     "Empty response from the server" : "Получен пустой ответ сервера",
     "Couldn't access. Please log out and in again to activate this mount point" : "Не удалось получить доступ. Для активации этой точки подключения выйдите и снова войдите в систему",
@@ -78,8 +78,8 @@ OC.L10N.register(
     "User entered, store in database" : "Указанные пользователем, хранить в базе данных",
     "RSA public key" : "Открытый ключ RSA",
     "Public key" : "Открытый ключ",
-    "RSA private key" : "RSA частный ключ",
-    "Private key" : "Частный ключ",
+    "RSA private key" : "Закрытый ключ RSA",
+    "Private key" : "Закрытый ключ",
     "Kerberos ticket" : "Kerberos тикет",
     "Amazon S3" : "Amazon S3",
     "Bucket" : "Корзина",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Общий ресурс",
     "Show hidden files" : "Показать скрытые файлы",
+    "Verify ACL access when listing files" : "Проверять права ACL при получении списка файлов",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "При получении списка файлов возможно проверять права доступа и исключать из списка файлы, к которым отсутствуют права чтения. Такая проверка снижает производительность.",
     "Timeout" : "Тайм-аут",
     "SMB / CIFS using OC login" : "SMB / CIFS с использованием логина OC",
     "Username as share" : "Имя пользователя в качестве имени общего ресурса",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Добавить хранилище",
     "Advanced settings" : "Расширенные настройки",
     "Allow users to mount external storage" : "Разрешить пользователями подключать внешние хранилища",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Глобальные учетные данные могут использоваться для аутентификации с несколькими внешними хранилищами, которые имеют одинаковые учетные данные."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Глобальные учетные данные могут использоваться для аутентификации с несколькими внешними хранилищами, которые имеют одинаковые учетные данные.",
+    "Saving..." : "Сохранение…"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

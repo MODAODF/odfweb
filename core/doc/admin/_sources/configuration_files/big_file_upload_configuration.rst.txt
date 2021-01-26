@@ -14,7 +14,8 @@ hard limits that cannot be exceeded:
 filesystem.
 
 .. note:: The Nextcloud sync client is not affected by these upload limits
-   as it is uploading files in smaller chunks.
+   as it is uploading files in smaller chunks. See `Client documentation <https://docs.nextcloud.com/desktop/3.0/advancedusage.html>`_
+   for more information on configuration options.
 
 System configuration
 --------------------
@@ -75,13 +76,13 @@ Apache with mod_fcgid
 
 nginx
 ^^^^^
-* `client_max_body_size <http://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size>`_
-* `fastcgi_read_timeout <http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_read_timeout>`_
-* `client_body_temp_path <http://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_temp_path>`_
+* `client_max_body_size <https://nginx.org/en/docs/http/ngx_http_core_module.html#client_max_body_size>`_
+* `fastcgi_read_timeout <https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_read_timeout>`_
+* `client_body_temp_path <https://nginx.org/en/docs/http/ngx_http_core_module.html#client_body_temp_path>`_
 
 Since nginx 1.7.11 a new config option `fastcgi_request_buffering
 <https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_request_buffering>`_
-is availabe. Setting this option to ``fastcgi_request_buffering off;`` in your nginx config
+is available. Setting this option to ``fastcgi_request_buffering off;`` in your nginx config
 might help with timeouts during the upload. Furthermore it helps if you're running out of
 disc space on the tmp partition of your system.
 
@@ -95,8 +96,8 @@ If your site is behind a nginx frontend (for example a loadbalancer):
 
 By default, downloads will be limited to 1GB due to ``proxy_buffering`` and ``proxy_max_temp_file_size`` on the frontend.
 
-* If you can access the frontend's configuration, disable `proxy_buffering <http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering>`_ or increase `proxy_max_temp_file_size <http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_max_temp_file_size>`_ from the default 1GB.
-* If you do not have access to the frontend, set the `X-Accel-Buffering <http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering>`_ header to ``add_header X-Accel-Buffering no;`` on your backend server.
+* If you can access the frontend's configuration, disable `proxy_buffering <https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering>`_ or increase `proxy_max_temp_file_size <https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_max_temp_file_size>`_ from the default 1GB.
+* If you do not have access to the frontend, set the `X-Accel-Buffering <https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering>`_ header to ``add_header X-Accel-Buffering no;`` on your backend server.
 
 Configuring PHP
 ---------------
@@ -138,3 +139,13 @@ the longest upload will take. If unsure remove this completely from your
 configuration to reset it to the default shown in the ``config.sample.php``.
 
 
+Adjust chunk size on Nextcloud side
+-----------------------------------
+
+For upload performance improvements in environments with high upload bandwidth, the server's upload chunk size may be adjusted::
+
+ sudo -u www-data php occ config:app:set files max_chunk_size
+
+Put in a value in bytes or set ``--value 0`` for no chunking at all.
+
+Default is 10485760 (10 MB).

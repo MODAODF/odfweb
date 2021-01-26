@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -59,8 +59,7 @@ class CleanupRemoteStorages extends Command {
 			);
 	}
 
-	public function execute(InputInterface $input, OutputInterface $output) {
-
+	public function execute(InputInterface $input, OutputInterface $output): int {
 		$remoteStorages = $this->getRemoteStorages();
 
 		$output->writeln(count($remoteStorages) . ' remote storage(s) need(s) to be checked');
@@ -94,6 +93,7 @@ class CleanupRemoteStorages extends Command {
 				}
 			}
 		}
+		return 0;
 	}
 
 	public function countFiles($numericId, OutputInterface $output) {
@@ -138,7 +138,6 @@ class CleanupRemoteStorages extends Command {
 	}
 
 	public function getRemoteStorages() {
-
 		$queryBuilder = $this->connection->getQueryBuilder();
 		$queryBuilder->select(['id', 'numeric_id'])
 			->from('storages')
@@ -166,7 +165,6 @@ class CleanupRemoteStorages extends Command {
 	}
 
 	public function getRemoteShareIds() {
-
 		$queryBuilder = $this->connection->getQueryBuilder();
 		$queryBuilder->select(['id', 'share_token', 'remote'])
 			->from('share_external');

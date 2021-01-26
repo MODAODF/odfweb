@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
+ *
+ * @author Joas Schilling <coding@schilljs.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +20,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -47,7 +51,7 @@ class ClearCollectionsAccessCache implements IRepairStep {
 
 	private function shouldRun(): bool {
 		$versionFromBeforeUpdate = $this->config->getSystemValue('version', '0.0.0.0');
-		return version_compare($versionFromBeforeUpdate, '16.0.4.2', '<=');
+		return version_compare($versionFromBeforeUpdate, '17.0.0.3', '<=');
 	}
 
 	public function run(IOutput $output): void {

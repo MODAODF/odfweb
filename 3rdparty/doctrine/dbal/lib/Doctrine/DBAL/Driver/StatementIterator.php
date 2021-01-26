@@ -2,17 +2,14 @@
 
 namespace Doctrine\DBAL\Driver;
 
-class StatementIterator implements \IteratorAggregate
+use IteratorAggregate;
+
+class StatementIterator implements IteratorAggregate
 {
-    /**
-     * @var Statement
-     */
+    /** @var ResultStatement */
     private $statement;
 
-    /**
-     * @param Statement $statement
-     */
-    public function __construct(Statement $statement)
+    public function __construct(ResultStatement $statement)
     {
         $this->statement = $statement;
     }
@@ -22,7 +19,7 @@ class StatementIterator implements \IteratorAggregate
      */
     public function getIterator()
     {
-        while (false !== ($result = $this->statement->fetch())) {
+        while (($result = $this->statement->fetch()) !== false) {
             yield $result;
         }
     }

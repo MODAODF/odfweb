@@ -23,45 +23,50 @@ namespace OCA\Notifications\Controller;
 
 use OCA\Notifications\Exceptions\NotificationNotFoundException;
 use OCA\Notifications\Handler;
+use OCA\Notifications\Push;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
-use OCP\IConfig;
 use OCP\IRequest;
 use OCP\IUser;
 use OCP\IUserSession;
+use OCP\L10N\IFactory;
 use OCP\Notification\IAction;
 use OCP\Notification\IManager;
 use OCP\Notification\INotification;
+use OCP\UserStatus\IManager as IUserStatusManager;
+use OCP\UserStatus\IUserStatus;
 
 class EndpointController extends OCSController {
 	/** @var Handler */
 	private $handler;
-
 	/** @var IManager */
 	private $manager;
-
+	/** @var IFactory */
+	private $l10nFactory;
 	/** @var IUserSession */
 	private $session;
+	/** @var IUserStatusManager */
+	private $userStatusManager;
+	/** @var Push */
+	private $push;
 
-	/** @var IConfig */
-	private $config;
-
-	/**
-	 * @param string $appName
-	 * @param IRequest $request
-	 * @param Handler $handler
-	 * @param IManager $manager
-	 * @param IConfig $config
-	 * @param IUserSession $session
-	 */
-	public function __construct($appName, IRequest $request, Handler $handler, IManager $manager, IConfig $config, IUserSession $session) {
+	public function __construct(string $appName,
+								IRequest $request,
+								Handler $handler,
+								IManager $manager,
+								IFactory $l10nFactory,
+								IUserSession $session,
+								IUserStatusManager $userStatusManager,
+								Push $push) {
 		parent::__construct($appName, $request);
 
 		$this->handler = $handler;
 		$this->manager = $manager;
-		$this->config = $config;
+		$this->l10nFactory = $l10nFactory;
 		$this->session = $session;
+		$this->userStatusManager = $userStatusManager;
+		$this->push = $push;
 	}
 
 	/**
@@ -72,16 +77,25 @@ class EndpointController extends OCSController {
 	 * @return DataResponse
 	 */
 	public function listNotifications(string $apiVersion): DataResponse {
+		$userStatus = $this->userStatusManager->getUserStatuses([
+			$this->getCurrentUser(),
+		]);
+
+		$headers = ['X-Nextcloud-User-Status' => IUserStatus::ONLINE];
+		if (isset($userStatus[$this->getCurrentUser()])) {
+			$userStatus = $userStatus[$this->getCurrentUser()];
+			$headers['X-Nextcloud-User-Status'] = $userStatus->getStatus();
+		}
+
 		// When there are no apps registered that use the notifications
 		// We stop polling for them.
 		if (!$this->manager->hasNotifiers()) {
-			return new DataResponse(null, Http::STATUS_NO_CONTENT);
+			return new DataResponse(null, Http::STATUS_NO_CONTENT, $headers);
 		}
 
 		$filter = $this->manager->createNotification();
 		$filter->setUser($this->getCurrentUser());
-		$language = $this->config->getUserValue($this->getCurrentUser(), 'core', 'lang', null);
-
+		$language = $this->l10nFactory->getUserLanguage($this->session->getUser());
 		$notifications = $this->handler->get($filter);
 
 		$data = [];
@@ -100,11 +114,13 @@ class EndpointController extends OCSController {
 		}
 
 		$eTag = $this->generateETag($notificationIds);
+
+		$headers['ETag'] = $eTag;
 		if ($apiVersion !== 'v1' && $this->request->getHeader('If-None-Match') === $eTag) {
-			return new DataResponse([], Http::STATUS_NOT_MODIFIED);
+			return new DataResponse([], Http::STATUS_NOT_MODIFIED, $headers);
 		}
 
-		return new DataResponse($data, Http::STATUS_OK, ['ETag' => $eTag]);
+		return new DataResponse($data, Http::STATUS_OK, $headers);
 	}
 
 	/**
@@ -130,7 +146,7 @@ class EndpointController extends OCSController {
 			return new DataResponse(null, Http::STATUS_NOT_FOUND);
 		}
 
-		$language = $this->config->getUserValue($this->getCurrentUser(), 'core', 'lang', null);
+		$language = $this->l10nFactory->getUserLanguage($this->session->getUser());
 
 		try {
 			$notification = $this->manager->prepare($notification, $language);
@@ -153,7 +169,19 @@ class EndpointController extends OCSController {
 			return new DataResponse(null, Http::STATUS_NOT_FOUND);
 		}
 
-		$this->handler->deleteById($id, $this->getCurrentUser());
+		if ($this->session->getImpersonatingUserID() !== null) {
+			return new DataResponse(null, Http::STATUS_FORBIDDEN);
+		}
+
+		try {
+			$deleted = $this->handler->deleteById($id, $this->getCurrentUser());
+
+			if ($deleted) {
+				$this->push->pushDeleteToDevice($this->getCurrentUser(), $id);
+			}
+		} catch (NotificationNotFoundException $e) {
+		}
+
 		return new DataResponse();
 	}
 
@@ -163,7 +191,14 @@ class EndpointController extends OCSController {
 	 * @return DataResponse
 	 */
 	public function deleteAllNotifications(): DataResponse {
-		$this->handler->deleteByUser($this->getCurrentUser());
+		if ($this->session->getImpersonatingUserID() !== null) {
+			return new DataResponse(null, Http::STATUS_FORBIDDEN);
+		}
+
+		$deletedSomething = $this->handler->deleteByUser($this->getCurrentUser());
+		if ($deletedSomething) {
+			$this->push->pushDeleteToDevice($this->getCurrentUser(), 0);
+		}
 		return new DataResponse();
 	}
 

@@ -1,8 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
  *
- * @author John Molakvoæ <skjnldsv@protonmail.com>
+ * @author Alexey Pyltsyn <lex61rus@gmail.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,61 +31,66 @@
 
 namespace OCA\Accessibility\AppInfo;
 
+use OCA\Accessibility\Service\JSDataService;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
-use OCP\IUserSession;
+use OCP\IInitialStateService;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
+use function count;
+use function implode;
+use function md5;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 
 	/** @var string */
-	protected $appName = 'accessibility';
-
-	/** @var IConfig */
-	private $config;
-
-	/** @var IUserSession */
-	private $userSession;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
+	public const APP_ID = 'accessibility';
 
 	public function __construct() {
-		parent::__construct($this->appName);
-		$this->config       = \OC::$server->getConfig();
-		$this->userSession  = \OC::$server->getUserSession();
-		$this->urlGenerator = \OC::$server->getURLGenerator();
+		parent::__construct(self::APP_ID);
 	}
 
-	public function injectCss() {
+	public function register(IRegistrationContext $context): void {
+	}
+
+	public function boot(IBootContext $context): void {
+		$context->injectFn([$this, 'injectCss']);
+		$context->injectFn([$this, 'registerInitialState']);
+	}
+
+	public function injectCss(IUserSession $userSession,
+							   IConfig $config,
+							   IURLGenerator $urlGenerator) {
 		// Inject the fake css on all pages if enabled and user is logged
-		$loggedUser = $this->userSession->getUser();
-		if (!is_null($loggedUser)) {
-			$userValues = $this->config->getUserKeys($loggedUser->getUID(), $this->appName);
+		$loggedUser = $userSession->getUser();
+		if ($loggedUser !== null) {
+			$userValues = $config->getUserKeys($loggedUser->getUID(), self::APP_ID);
 			// we want to check if any theme or font is enabled.
 			if (count($userValues) > 0) {
-				$hash = $this->config->getUserValue($loggedUser->getUID(), $this->appName, 'icons-css', md5(implode('-', $userValues)));
-				$linkToCSS = $this->urlGenerator->linkToRoute($this->appName . '.accessibility.getCss', ['md5' => $hash]);
+				$hash = $config->getUserValue($loggedUser->getUID(), self::APP_ID, 'icons-css', md5(implode('-', $userValues)));
+				$linkToCSS = $urlGenerator->linkToRoute(self::APP_ID . '.accessibility.getCss', ['md5' => $hash]);
 				\OCP\Util::addHeader('link', ['rel' => 'stylesheet', 'href' => $linkToCSS]);
 			}
+			\OCP\Util::addScript('accessibility', 'accessibilityoca');
+		} else {
+			$userValues = ['dark'];
+
+			$hash = md5(implode('-', $userValues));
+			$linkToCSS = $urlGenerator->linkToRoute(self::APP_ID . '.accessibility.getCss', ['md5' => $hash]);
+			\OCP\Util::addHeader('link', ['rel' => 'stylesheet', 'media' => '(prefers-color-scheme: dark)', 'href' => $linkToCSS]);
 		}
 	}
 
-	public function injectJavascript() {
-		$linkToJs = $this->urlGenerator->linkToRoute(
-			$this->appName . '.accessibility.getJavascript',
-			[
-				'v' => \OC::$server->getConfig()->getAppValue('accessibility', 'cachebuster', '0'),
-			]
-		);
-
-		\OCP\Util::addHeader(
-			'script',
-			[
-				'src' => $linkToJs,
-				'nonce' => \OC::$server->getContentSecurityPolicyNonceManager()->getNonce()
-			],
-			''
-		);
+	public function registerInitialState(IInitialStateService $initialState,
+										  IAppContainer $container) {
+		$initialState->provideLazyInitialState(self::APP_ID, 'data', function () use ($container) {
+			/** @var JSDataService $data */
+			$data = $container->query(JSDataService::class);
+			return $data;
+		});
 	}
 }

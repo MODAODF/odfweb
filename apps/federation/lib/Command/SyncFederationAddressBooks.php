@@ -2,9 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,9 +20,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OCA\Federation\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -54,14 +56,12 @@ class SyncFederationAddressBooks extends Command {
 	 * @param OutputInterface $output
 	 * @return int
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output) {
-
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$progress = new ProgressBar($output);
 		$progress->start();
-		$this->syncService->syncThemAll(function($url, $ex) use ($progress, $output) {
+		$this->syncService->syncThemAll(function ($url, $ex) use ($progress, $output) {
 			if ($ex instanceof \Exception) {
 				$output->writeln("Error while syncing $url : " . $ex->getMessage());
-
 			} else {
 				$progress->advance();
 			}

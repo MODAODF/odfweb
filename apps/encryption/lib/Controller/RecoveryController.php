@@ -3,8 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Clark Tomlinson <fallen013@gmail.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,20 +20,19 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Encryption\Controller;
 
-
 use OCA\Encryption\Recovery;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\AppFramework\Http\DataResponse;
 
 class RecoveryController extends Controller {
 	/**
@@ -121,7 +122,7 @@ class RecoveryController extends Controller {
 
 		if (empty($newPassword)) {
 			$errorMessage = (string)$this->l->t('Please provide a new recovery password');
-			return new DataResponse (['data' => ['message' => $errorMessage]], Http::STATUS_BAD_REQUEST);
+			return new DataResponse(['data' => ['message' => $errorMessage]], Http::STATUS_BAD_REQUEST);
 		}
 
 		if (empty($confirmPassword)) {
@@ -161,7 +162,6 @@ class RecoveryController extends Controller {
 	 */
 	public function userSetRecovery($userEnableRecovery) {
 		if ($userEnableRecovery === '0' || $userEnableRecovery === '1') {
-
 			$result = $this->recovery->setRecoveryForUser($userEnableRecovery);
 
 			if ($result) {
@@ -180,7 +180,6 @@ class RecoveryController extends Controller {
 					]
 				);
 			}
-
 		}
 		return new DataResponse(
 			[
@@ -189,5 +188,4 @@ class RecoveryController extends Controller {
 				]
 			], Http::STATUS_BAD_REQUEST);
 	}
-
 }

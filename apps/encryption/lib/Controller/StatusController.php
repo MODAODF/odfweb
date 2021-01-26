@@ -4,6 +4,7 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
@@ -19,13 +20,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Encryption\Controller;
-
 
 use OCA\Encryption\Session;
 use OCP\AppFramework\Controller;
@@ -69,10 +68,9 @@ class StatusController extends Controller {
 	 * @return DataResponse
 	 */
 	public function getStatus() {
-
 		$status = 'error';
 		$message = 'no valid init status';
-		switch( $this->session->getStatus()) {
+		switch ($this->session->getStatus()) {
 			case Session::INIT_EXECUTED:
 				$status = 'interactionNeeded';
 				$message = (string)$this->l->t(
@@ -104,5 +102,4 @@ class StatusController extends Controller {
 			]
 		);
 	}
-
 }

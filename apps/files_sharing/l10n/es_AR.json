@@ -9,6 +9,8 @@
     "No shared links" : "No hay links compartidos",
     "Files and folders you share by link will show up here" : "Los archivos y carpetas que comparta por links se mostrarán aquí",
     "Shares" : "Shares",
+    "Restore" : "Restaurar",
+    "error" : "error",
     "Move or copy" : "Mover o Copiar",
     "Download" : "Descargar",
     "Delete" : "Eliminar",
@@ -62,6 +64,7 @@
     "{actor} shared {file} with you" : "{actor} ha compartido {file} con usted",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Un archivo o carpeta compartido por correo o por link público ha sido <strong>descargado</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Un archivo o carpeta fue compartido desde <strong>otro servidor</strong>",
+    "Files" : "Archivos",
     "A file or folder has been <strong>shared</strong>" : "Un archivo o carpeta ha sido <strong>compartido</strong>",
     "Wrong share ID, share doesn't exist" : "ID del elemento compartido equivocado, el elemento compartido no existe",
     "Could not delete share" : "No fue posible borrar el elemento compartido",
@@ -97,6 +100,7 @@
     "group" : "grupo",
     "remote" : "remoto",
     "Link copied" : "Link copiado",
+    "Cannot copy, please copy the link manually" : "No es posible copiar, por favor copia el enlace manualmente",
     "Copy to clipboard" : "Copiar al portapapeles",
     "Only works for users with access to this folder" : "Solo funciona para usuarios con acceso a esta carpeta",
     "Password protection" : "Protección con contraseña",
@@ -107,8 +111,12 @@
     "File drop (upload only)" : "Soltar archivo (solo para carga)",
     "Hide download" : "Ocultar descarga",
     "Password protect" : "Proteger con contraseña",
+    "Add another link" : "Agregar otro enlace",
     "Share link" : "Compartir enlace",
+    "No recommendations. Start typing." : "No hay sugerencias. Comenzar a escribir",
     "Resharing is not allowed" : "No está permitido volver a compartir",
+    "Searching …" : "Buscando ...",
+    "No elements found." : "No se encontraron elementos",
     "Shared" : "Compartido",
     "Share" : "Compartir",
     "Shared with you and the group {group} by {owner}" : "Compartido con usted y el grupo {group} por {owner}",
@@ -129,8 +137,7 @@
     "Upload files to %s" : "Cargar archivos a %s",
     "Note" : "Nota",
     "Select or drop files" : "Seleccione o suelte los archivos",
-    "Uploading files…" : "Cargando archivos...",
     "Uploaded files:" : "Archivos cargados:",
-    "could not delete share" : "no fue posible borrar el elemento compartido"
+    "Uploading files…" : "Cargando archivos..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

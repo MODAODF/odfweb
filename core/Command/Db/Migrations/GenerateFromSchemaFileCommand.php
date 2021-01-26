@@ -2,7 +2,9 @@
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Maxence Lange <maxence@artificial-owl.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,12 +19,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OC\Core\Command\Db\Migrations;
-
 
 use Doctrine\DBAL\Schema\Schema;
 use OC\DB\MDB2SchemaReader;
@@ -51,7 +52,7 @@ class GenerateFromSchemaFileCommand extends GenerateCommand {
 		$this->setName('migrations:generate-from-schema');
 	}
 
-	public function execute(InputInterface $input, OutputInterface $output) {
+	public function execute(InputInterface $input, OutputInterface $output): int {
 		$appName = $input->getArgument('app');
 		$version = $input->getArgument('version');
 
@@ -129,7 +130,7 @@ EOT
 				if ($default !== null) {
 					if (is_string($default)) {
 						$default = "'$default'";
-					} else if (is_bool($default)) {
+					} elseif (is_bool($default)) {
 						$default = ($default === true) ? 'true' : 'false';
 					}
 					$content .= str_replace('{{default}}', $default, <<<'EOT'

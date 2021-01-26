@@ -22,9 +22,9 @@
 namespace OCA\Activity\Settings;
 
 use OCA\Activity\UserSettings;
+use OCP\Activity\ActivitySettings;
 use OCP\Activity\IExtension;
 use OCP\Activity\IManager;
-use OCP\Activity\ISetting;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -62,7 +62,7 @@ class Admin implements ISettings {
 	 */
 	public function getForm() {
 		$settings = $this->manager->getSettings();
-		usort($settings, function(ISetting $a, ISetting $b) {
+		usort($settings, function(ActivitySettings $a, ActivitySettings $b) {
 			if ($a->getPriority() === $b->getPriority()) {
 				return $a->getIdentifier() > $b->getIdentifier();
 			}
@@ -70,29 +70,44 @@ class Admin implements ISettings {
 			return $a->getPriority() > $b->getPriority();
 		});
 
-		$activities = [];
+		$activityGroups = [];
 		foreach ($settings as $setting) {
-			if (!$setting->canChangeStream() && !$setting->canChangeMail()) {
+			if (!$setting->canChangeMail() && !$setting->canChangeNotification()) {
 				// No setting can be changed => don't display
 				continue;
 			}
 
 			$methods = [];
-			if ($setting->canChangeStream()) {
-				$methods[] = IExtension::METHOD_STREAM;
-			}
 			if ($setting->canChangeMail()) {
 				$methods[] = IExtension::METHOD_MAIL;
 			}
 
-			$identifier = $setting->getIdentifier();
+			if ($setting->canChangeNotification()) {
+				$methods[] = IExtension::METHOD_NOTIFICATION;
+			}
 
-			$activities[$identifier] = array(
+			$identifier = $setting->getIdentifier();
+			$groupIdentifier = $setting->getGroupIdentifier();
+
+			if (!isset($activityGroups[$groupIdentifier])) {
+				$activityGroups[$groupIdentifier] = [
+					'activities' => [],
+					'name' => $setting->getGroupName()
+				];
+			}
+
+			$activityGroups[$groupIdentifier]['activities'][$identifier] = array(
 				'desc'		=> $setting->getName(),
 				IExtension::METHOD_MAIL		=> $this->userSettings->getConfigSetting('email', $identifier),
-				IExtension::METHOD_STREAM	=> $this->userSettings->getConfigSetting('stream', $identifier),
+				IExtension::METHOD_NOTIFICATION	=> $this->userSettings->getConfigSetting('notification', $identifier),
 				'methods'	=> $methods,
 			);
+		}
+
+		if (isset($activityGroups['other'])) {
+			$otherActivities = $activityGroups['other'];
+			unset($activityGroups['other']);
+			$activityGroups['other'] = $otherActivities;
 		}
 
 		$settingBatchTime = UserSettings::EMAIL_SEND_HOURLY;
@@ -107,7 +122,7 @@ class Admin implements ISettings {
 
 		return new TemplateResponse('activity', 'settings/admin', [
 			'setting'			=> 'admin',
-			'activities'		=> $activities,
+			'activityGroups'		=> $activityGroups,
 			'is_email_set'		=> true,
 			'email_enabled'		=> $this->config->getAppValue('activity', 'enable_email', 'yes') === 'yes',
 
@@ -118,7 +133,7 @@ class Admin implements ISettings {
 
 			'methods'			=> [
 				IExtension::METHOD_MAIL => $this->l10n->t('Mail'),
-				IExtension::METHOD_STREAM => $this->l10n->t('Stream'),
+				IExtension::METHOD_NOTIFICATION => $this->l10n->t('Push'),
 			],
 		], 'blank');
 	}

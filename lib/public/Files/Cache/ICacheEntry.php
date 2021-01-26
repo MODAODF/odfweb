@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
@@ -16,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -28,7 +29,7 @@ namespace OCP\Files\Cache;
  * @since 9.0.0
  */
 interface ICacheEntry {
-	const DIRECTORY_MIMETYPE = 'httpd/unix-directory';
+	public const DIRECTORY_MIMETYPE = 'httpd/unix-directory';
 
 	/**
 	 * Get the numeric id of a file
@@ -132,4 +133,28 @@ interface ICacheEntry {
 	 * @since 9.0.0
 	 */
 	public function isEncrypted();
+
+	/**
+	 * Get the metadata etag for the file
+	 *
+	 * @return string | null
+	 * @since 18.0.0
+	 */
+	public function getMetadataEtag(): ?string;
+
+	/**
+	 * Get the last modified date as unix timestamp
+	 *
+	 * @return int | null
+	 * @since 18.0.0
+	 */
+	public function getCreationTime(): ?int;
+
+	/**
+	 * Get the last modified date as unix timestamp
+	 *
+	 * @return int | null
+	 * @since 18.0.0
+	 */
+	public function getUploadTime(): ?int;
 }

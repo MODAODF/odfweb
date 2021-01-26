@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
@@ -16,11 +17,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCP\Files\Cache;
+
 use OCP\Files\Search\ISearchQuery;
 
 /**
@@ -36,10 +38,10 @@ use OCP\Files\Search\ISearchQuery;
  * @since 9.0.0
  */
 interface ICache {
-	const NOT_FOUND = 0;
-	const PARTIAL = 1; //only partial data available, file not cached in the database
-	const SHALLOW = 2; //folder in cache, but not all child files are completely scanned
-	const COMPLETE = 3;
+	public const NOT_FOUND = 0;
+	public const PARTIAL = 1; //only partial data available, file not cached in the database
+	public const SHALLOW = 2; //folder in cache, but not all child files are completely scanned
+	public const COMPLETE = 3;
 
 	/**
 	 * Get the numeric storage id for this cache's storage
@@ -222,19 +224,6 @@ interface ICache {
 	 * @since 12.0.0
 	 */
 	public function searchQuery(ISearchQuery $query);
-
-	/**
-	 * Search for files by tag of a given users.
-	 *
-	 * Note that every user can tag files differently.
-	 *
-	 * @param string|int $tag name or tag id
-	 * @param string $userId owner of the tags
-	 * @return ICacheEntry[] file data
-	 * @since 9.0.0
-	 * @deprecated 9.0.0 due to lack of pagination, not all backends might implement this
-	 */
-	public function searchByTag($tag, $userId);
 
 	/**
 	 * find a folder in the cache which has not been fully scanned

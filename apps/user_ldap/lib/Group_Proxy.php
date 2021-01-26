@@ -4,6 +4,7 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christopher Schäpers <kondou@ts.unde.re>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
@@ -21,26 +22,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\User_LDAP;
 
-class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
-	private $backends = array();
+use OCP\Group\Backend\IGetDisplayNameBackend;
+
+class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP, IGetDisplayNameBackend {
+	private $backends = [];
 	private $refBackend = null;
 
 	/**
 	 * Constructor
+	 *
 	 * @param string[] $serverConfigPrefixes array containing the config Prefixes
 	 */
 	public function __construct($serverConfigPrefixes, ILDAPWrapper $ldap, GroupPluginManager $groupPluginManager) {
 		parent::__construct($ldap);
-		foreach($serverConfigPrefixes as $configPrefix) {
+		foreach ($serverConfigPrefixes as $configPrefix) {
 			$this->backends[$configPrefix] =
 				new \OCA\User_LDAP\Group_LDAP($this->getAccess($configPrefix), $groupPluginManager);
-			if(is_null($this->refBackend)) {
+			if (is_null($this->refBackend)) {
 				$this->refBackend = &$this->backends[$configPrefix];
 			}
 		}
@@ -48,16 +52,20 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 
 	/**
 	 * Tries the backends one after the other until a positive result is returned from the specified method
-	 * @param string $gid the gid connected to the request
+	 *
+	 * @param string $id the gid connected to the request
 	 * @param string $method the method of the group backend that shall be called
 	 * @param array $parameters an array of parameters to be passed
-	 * @return mixed, the result of the method or false
+	 * @return mixed the result of the method or false
 	 */
-	protected function walkBackends($gid, $method, $parameters) {
+	protected function walkBackends($id, $method, $parameters) {
+		$gid = $id;
 		$cacheKey = $this->getGroupCacheKey($gid);
-		foreach($this->backends as $configPrefix => $backend) {
-			if($result = call_user_func_array(array($backend, $method), $parameters)) {
-				$this->writeToCache($cacheKey, $configPrefix);
+		foreach ($this->backends as $configPrefix => $backend) {
+			if ($result = call_user_func_array([$backend, $method], $parameters)) {
+				if (!$this->isSingleBackend()) {
+					$this->writeToCache($cacheKey, $configPrefix);
+				}
 				return $result;
 			}
 		}
@@ -66,27 +74,29 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 
 	/**
 	 * Asks the backend connected to the server that supposely takes care of the gid from the request.
-	 * @param string $gid the gid connected to the request
+	 *
+	 * @param string $id the gid connected to the request
 	 * @param string $method the method of the group backend that shall be called
 	 * @param array $parameters an array of parameters to be passed
 	 * @param mixed $passOnWhen the result matches this variable
-	 * @return mixed, the result of the method or false
+	 * @return mixed the result of the method or false
 	 */
-	protected function callOnLastSeenOn($gid, $method, $parameters, $passOnWhen) {
+	protected function callOnLastSeenOn($id, $method, $parameters, $passOnWhen) {
+		$gid = $id;
 		$cacheKey = $this->getGroupCacheKey($gid);
 		$prefix = $this->getFromCache($cacheKey);
 		//in case the uid has been found in the past, try this stored connection first
-		if(!is_null($prefix)) {
-			if(isset($this->backends[$prefix])) {
-				$result = call_user_func_array(array($this->backends[$prefix], $method), $parameters);
-				if($result === $passOnWhen) {
+		if (!is_null($prefix)) {
+			if (isset($this->backends[$prefix])) {
+				$result = call_user_func_array([$this->backends[$prefix], $method], $parameters);
+				if ($result === $passOnWhen) {
 					//not found here, reset cache to null if group vanished
 					//because sometimes methods return false with a reason
 					$groupExists = call_user_func_array(
-						array($this->backends[$prefix], 'groupExists'),
-						array($gid)
+						[$this->backends[$prefix], 'groupExists'],
+						[$gid]
 					);
-					if(!$groupExists) {
+					if (!$groupExists) {
 						$this->writeToCache($cacheKey, null);
 					}
 				}
@@ -96,8 +106,13 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 		return false;
 	}
 
+	protected function activeBackends(): int {
+		return count($this->backends);
+	}
+
 	/**
 	 * is user in group?
+	 *
 	 * @param string $uid uid of the user
 	 * @param string $gid gid of the group
 	 * @return bool
@@ -105,11 +120,12 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	 * Checks whether the user is member of a group or not.
 	 */
 	public function inGroup($uid, $gid) {
-		return $this->handleRequest($gid, 'inGroup', array($uid, $gid));
+		return $this->handleRequest($gid, 'inGroup', [$uid, $gid]);
 	}
 
 	/**
 	 * Get all groups a user belongs to
+	 *
 	 * @param string $uid Name of the user
 	 * @return string[] with group names
 	 *
@@ -117,9 +133,9 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	 * if the user exists at all.
 	 */
 	public function getUserGroups($uid) {
-		$groups = array();
+		$groups = [];
 
-		foreach($this->backends as $backend) {
+		foreach ($this->backends as $backend) {
 			$backendGroups = $backend->getUserGroups($uid);
 			if (is_array($backendGroups)) {
 				$groups = array_merge($groups, $backendGroups);
@@ -131,12 +147,13 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 
 	/**
 	 * get a list of all users in a group
+	 *
 	 * @return string[] with user ids
 	 */
 	public function usersInGroup($gid, $search = '', $limit = -1, $offset = 0) {
-		$users = array();
+		$users = [];
 
-		foreach($this->backends as $backend) {
+		foreach ($this->backends as $backend) {
 			$backendUsers = $backend->usersInGroup($gid, $search, $limit, $offset);
 			if (is_array($backendUsers)) {
 				$users = array_merge($users, $backendUsers);
@@ -152,21 +169,23 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	 */
 	public function createGroup($gid) {
 		return $this->handleRequest(
-			$gid, 'createGroup', array($gid));
+			$gid, 'createGroup', [$gid]);
 	}
 
 	/**
 	 * delete a group
+	 *
 	 * @param string $gid gid of the group to delete
 	 * @return bool
 	 */
 	public function deleteGroup($gid) {
 		return $this->handleRequest(
-			$gid, 'deleteGroup', array($gid));
+			$gid, 'deleteGroup', [$gid]);
 	}
 
 	/**
 	 * Add a user to a group
+	 *
 	 * @param string $uid Name of the user to add to group
 	 * @param string $gid Name of the group in which add the user
 	 * @return bool
@@ -175,11 +194,12 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	 */
 	public function addToGroup($uid, $gid) {
 		return $this->handleRequest(
-			$gid, 'addToGroup', array($uid, $gid));
+			$gid, 'addToGroup', [$uid, $gid]);
 	}
 
 	/**
 	 * Removes a user from a group
+	 *
 	 * @param string $uid Name of the user to remove from group
 	 * @param string $gid Name of the group from which remove the user
 	 * @return bool
@@ -188,40 +208,43 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	 */
 	public function removeFromGroup($uid, $gid) {
 		return $this->handleRequest(
-			$gid, 'removeFromGroup', array($uid, $gid));
+			$gid, 'removeFromGroup', [$uid, $gid]);
 	}
 
 	/**
 	 * returns the number of users in a group, who match the search term
+	 *
 	 * @param string $gid the internal group name
 	 * @param string $search optional, a search string
 	 * @return int|bool
 	 */
 	public function countUsersInGroup($gid, $search = '') {
 		return $this->handleRequest(
-			$gid, 'countUsersInGroup', array($gid, $search));
+			$gid, 'countUsersInGroup', [$gid, $search]);
 	}
 
 	/**
 	 * get an array with group details
+	 *
 	 * @param string $gid
 	 * @return array|false
 	 */
 	public function getGroupDetails($gid) {
 		return $this->handleRequest(
-			$gid, 'getGroupDetails', array($gid));
+			$gid, 'getGroupDetails', [$gid]);
 	}
 
 	/**
 	 * get a list of all groups
+	 *
 	 * @return string[] with group names
 	 *
 	 * Returns a list with all groups
 	 */
 	public function getGroups($search = '', $limit = -1, $offset = 0) {
-		$groups = array();
+		$groups = [];
 
-		foreach($this->backends as $backend) {
+		foreach ($this->backends as $backend) {
 			$backendGroups = $backend->getGroups($search, $limit, $offset);
 			if (is_array($backendGroups)) {
 				$groups = array_merge($groups, $backendGroups);
@@ -233,15 +256,17 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 
 	/**
 	 * check if a group exists
+	 *
 	 * @param string $gid
 	 * @return bool
 	 */
 	public function groupExists($gid) {
-		return $this->handleRequest($gid, 'groupExists', array($gid));
+		return $this->handleRequest($gid, 'groupExists', [$gid]);
 	}
 
 	/**
 	 * Check if backend implements actions
+	 *
 	 * @param int $actions bitwise-or'ed actions
 	 * @return boolean
 	 *
@@ -255,6 +280,7 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 
 	/**
 	 * Return access for LDAP interaction.
+	 *
 	 * @param string $gid
 	 * @return Access instance of Access for LDAP interaction
 	 */
@@ -265,11 +291,15 @@ class Group_Proxy extends Proxy implements \OCP\GroupInterface, IGroupLDAP {
 	/**
 	 * Return a new LDAP connection for the specified group.
 	 * The connection needs to be closed manually.
+	 *
 	 * @param string $gid
 	 * @return resource of the LDAP connection
 	 */
 	public function getNewLDAPConnection($gid) {
-		return $this->handleRequest($gid, 'getNewLDAPConnection', array($gid));
+		return $this->handleRequest($gid, 'getNewLDAPConnection', [$gid]);
 	}
 
+	public function getDisplayName(string $gid): string {
+		return $this->handleRequest($gid, 'getDisplayName', [$gid]);
+	}
 }

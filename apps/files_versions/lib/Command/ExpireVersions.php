@@ -2,7 +2,10 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud GmbH.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -39,7 +42,7 @@ class ExpireVersions extends Command {
 	 * @var Expiration
 	 */
 	private $expiration;
-	
+
 	/**
 	 * @var IUserManager
 	 */
@@ -68,12 +71,11 @@ class ExpireVersions extends Command {
 			);
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
-
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$maxAge = $this->expiration->getMaxAgeAsTimestamp();
 		if (!$maxAge) {
 			$output->writeln("No expiry configured.");
-			return;
+			return 1;
 		}
 
 		$users = $input->getArgument('user_id');
@@ -85,21 +87,23 @@ class ExpireVersions extends Command {
 					$this->expireVersionsForUser($userObject);
 				} else {
 					$output->writeln("<error>Unknown user $user</error>");
+					return 1;
 				}
 			}
 		} else {
 			$p = new ProgressBar($output);
 			$p->start();
-			$this->userManager->callForSeenUsers(function(IUser $user) use ($p) {
+			$this->userManager->callForSeenUsers(function (IUser $user) use ($p) {
 				$p->advance();
 				$this->expireVersionsForUser($user);
 			});
 			$p->finish();
 			$output->writeln('');
 		}
+		return 0;
 	}
 
-	function expireVersionsForUser(IUser $user) {
+	public function expireVersionsForUser(IUser $user) {
 		$uid = $user->getUID();
 		if (!$this->setupFS($uid)) {
 			return;

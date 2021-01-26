@@ -1,6 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -15,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,6 +35,7 @@ use OCP\Files\FileInfo;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
 use OCP\Files\NotFoundException;
+use OCP\Files\Storage\IStorage;
 use OCP\IUser;
 use OCP\IUserManager;
 
@@ -41,6 +48,10 @@ class LegacyVersionsBackend implements IVersionBackend {
 	public function __construct(IRootFolder $rootFolder, IUserManager $userManager) {
 		$this->rootFolder = $rootFolder;
 		$this->userManager = $userManager;
+	}
+
+	public function useBackendForStorage(IStorage $storage): bool {
+		return true;
 	}
 
 	public function getVersionsForFile(IUser $user, FileInfo $file): array {
@@ -108,7 +119,7 @@ class LegacyVersionsBackend implements IVersionBackend {
 		return $file->fopen('r');
 	}
 
-	public function getVersionFile(IUser $user, FileInfo $sourceFile, int $revision): File {
+	public function getVersionFile(IUser $user, FileInfo $sourceFile, $revision): File {
 		$userFolder = $this->rootFolder->getUserFolder($user->getUID());
 		$versionFolder = $this->getVersionFolder($user);
 		/** @var File $file */

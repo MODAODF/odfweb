@@ -23,15 +23,14 @@ OC.L10N.register(
     "Missing a temporary folder" : "Отсутствует временный каталог",
     "Could not write file to disk" : "Невозможно записать файл на диск",
     "A PHP extension stopped the file upload" : "Расширение PHP прервало загрузку файла",
-    "No file uploaded" : "Нет отправленных файлов",
-    "Unsupported image type" : "Неподдерживаемый тип изображения",
-    "You are already using a custom theme. Theming app settings might be overwritten by that." : "Вы уже используете настраиваемую тему. Из за этого установки приложения для тем могут быть перезаписаны.",
-    "Theming" : "Темы оформления",
+    "No file uploaded" : "Нет загруженных файлов",
+    "You are already using a custom theme. Theming app settings might be overwritten by that." : "Вы уже используете настраиваемое оформление, которое может быть перезаписано этим приложением.",
+    "Theming" : "Внешний вид",
     "Legal notice" : "Официальное уведомление",
     "Privacy policy" : "Политика конфиденциальности",
     "Adjust the Nextcloud theme" : "Скорректируйте тему Nextcloud'а",
     "Open documentation" : "Открыть документацию",
-    "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Темы оформление позволяют легко настроить внешний вид вашего сервера и поддерживаемых клиентов. Это будет доступно для всех пользователей.",
+    "Theming makes it possible to easily customize the look and feel of your instance and supported clients. This will be visible for all users." : "Этот модуль позволяют настроить внешний вид сервера и поддерживаемых клиентов. Настройки, определённые в этом модуле, распространяются на всех пользователей.",
     "Name" : "Название",
     "Reset to default" : "Сбросить изменения",
     "Web link" : "Ссылка",
@@ -50,6 +49,7 @@ OC.L10N.register(
     "Upload new header logo" : "Загрузить логотип заголовка",
     "Favicon" : "Favicon (значок сайта)",
     "Upload new favicon" : "Загрузить значок сайта",
-    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Для автоматической генерации favicon на основе загруженного логотипа и цвета нужно установить PHP расширение Imagemagick  с поддержкой изображений SVG "
+    "Install the Imagemagick PHP extension with support for SVG images to automatically generate favicons based on the uploaded logo and color." : "Для автоматической генерации favicon на основе загруженного логотипа и цвета нужно установить PHP расширение Imagemagick  с поддержкой изображений SVG ",
+    "Unsupported image type" : "Неподдерживаемый тип изображения"
 },
 "nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);");

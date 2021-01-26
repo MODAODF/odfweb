@@ -16,14 +16,14 @@
     "Enable sharing" : "Aktivera delning",
     "Check for changes" : "Sök efter ändringar",
     "Never" : "Aldrig",
-    "Once every direct access" : "En gång vid varje direktanslutning",
+    "Once every direct access" : "En gång vid varje direktåtkomst",
     "Read only" : "Skrivskyddad",
-    "Delete" : "Radera",
+    "Delete" : "Ta bort",
     "Admin defined" : "Admin definerad",
     "Are you sure you want to delete this external storage?" : "Är du säker på att du vill ta bort denna externa lagring?",
     "Delete storage?" : "Ta bort lagring?",
     "Saved" : "Sparad",
-    "Saving..." : "Sparar...",
+    "Saving …" : "Sparar ...",
     "Save" : "Spara",
     "Empty response from the server" : "Tomt svar från servern",
     "Couldn't access. Please log out and in again to activate this mount point" : "Kunde inte ansluta. Försök logga ut och in igen för att aktivera denna monteringspunkt",
@@ -109,7 +109,7 @@
     "OpenStack Object Storage" : "OpenStack Object Storage",
     "Service name" : "Namn på tjänst",
     "Request timeout (seconds)" : "Sekunder för anslutningsförsök",
-    "The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "cURL-stöd i PHP är inte aktiverat eller har inte installerats. Montering av %s är inte möjlig. Be din systemadministratör om installation.",
+    "The cURL support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "cURL-stödet i PHP är inte aktiverat eller installerat. Montering av %s är inte möjlig. Vänligen be din systemadministratör att installera den.",
     "The FTP support in PHP is not enabled or installed. Mounting of %s is not possible. Please ask your system administrator to install it." : "FTP-stöd i PHP är inte aktiverat eller har inte installerats. Montering av %s är inte möjlig. Be din systemadministratör om installation.",
     "\"%1$s\" is not installed. Mounting of %2$s is not possible. Please ask your system administrator to install it." : "\"%1$s\" är inte installerad. Montering av %2$s är inte möjlig. Be din systemadministratör att installera den.",
     "External storage support" : "Stöd för extern lagring",
@@ -130,6 +130,7 @@
     "Add storage" : "Lägg till lagring",
     "Advanced settings" : "Avancerade inställningar",
     "Allow users to mount external storage" : "Tillåt användare att montera extern lagring",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globala användaruppgifter kan användas för att autentisera med flera externa lagrings-instanser som använder samma användaruppgifter."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globala användaruppgifter kan användas för att autentisera med flera externa lagrings-instanser som använder samma användaruppgifter.",
+    "Saving..." : "Sparar..."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

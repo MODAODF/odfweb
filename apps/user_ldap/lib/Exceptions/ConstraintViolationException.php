@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2017 Roger Szabo <roger.szabo@web.de>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roger Szabo <roger.szabo@web.de>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,10 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP\Exceptions;
 
-class ConstraintViolationException extends \Exception {}
+class ConstraintViolationException extends \Exception {
+}

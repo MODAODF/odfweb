@@ -1,9 +1,10 @@
-﻿<?php
+<?php
   /** @var array $_ */
   /** @var OCP\IURLGenerator $urlGenerator */
   $urlGenerator = $_['urlGenerator'];
   $version = \OC::$server->getAppManager()->getAppVersion('files_pdfviewer');
 ?>
+
 <!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation
@@ -27,26 +28,26 @@ Adobe CMap resources are covered by their own copyright but the same license:
 See https://github.com/adobe-type-tools/cmap-resources
 -->
 <html dir="ltr" mozdisallowselectionprint>
-  <head data-workersrc="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/build/pdf.worker.js')) ?>?v=<?php p($version) ?>"
-        data-cmapurl="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/web/cmaps/')) ?>">
+  <head data-workersrc="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/build/pdf.worker.js')) ?>?v=<?php p($version) ?>"
+        data-cmapurl="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/cmaps/')) ?>">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="google" content="notranslate">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>PDF.js viewer</title>
 
-    <link rel="stylesheet" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/web/viewer.css')) ?>?v=<?php p($version) ?>"/>
+    <link rel="stylesheet" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/viewer.css')) ?>?v=<?php p($version) ?>"/>
     <link rel="stylesheet" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'css/viewer.css')) ?>?v=<?php p($version) ?>"/>
-    <?php if($_['minmode']):?>
+    <?php if ($_['minmode']):?>
       <link rel="stylesheet" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'css/minmode.css')) ?>?v=<?php p($version) ?>"/>
     <?php endif;?>
 
 
     <!-- This snippet is used in production (included from viewer.html) -->
-    <link rel="resource" type="application/l10n" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/web/locale/locale.properties')) ?>?v=<?php p($version) ?>"/>
-    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/build/pdf.js')) ?>?v=<?php p($version) ?>"></script>
-    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'vendor/pdfjs/web/viewer.js')) ?>?v=<?php p($version) ?>"></script>
-    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/workersrc.js')) ?>?v=<?php p($version) ?>"></script>
+    <link rel="resource" type="application/l10n" href="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/locale/locale.properties')) ?>?v=<?php p($version) ?>"/>
+    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/build/pdf.js')) ?>?v=<?php p($version) ?>"></script>
+    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/pdfjs/web/viewer.js')) ?>?v=<?php p($version) ?>"></script>
+    <script nonce="<?php p(\OC::$server->getContentSecurityPolicyNonceManager()->getNonce()) ?>" src="<?php p($urlGenerator->linkTo('files_pdfviewer', 'js/files_pdfviewer-workersrc.js')) ?>?v=<?php p($version) ?>"></script>
   </head>
 
   <body tabindex="1" class="loadingInProgress">
@@ -123,7 +124,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="print_label">Print</span>
             </button>
 
-            <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download">
+            <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download" hidden="true">
               <span data-l10n-id="download_label">Download</span>
             </button>
 
@@ -226,7 +227,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="print_label">Print</span>
                 </button>
 
-                <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
+                <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download" hidden="true">
                   <span data-l10n-id="download_label">Download</span>
                 </button>
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
@@ -234,10 +235,6 @@ See https://github.com/adobe-type-tools/cmap-resources
                 </a>
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
-
-                <button id="secondaryToolbarClose" class="toolbarButton" title="Close" tabindex="37" data-l10n-id="Close">
-                  <span data-l10n-id="close_label">Close</span>
-                </button>
 
                 <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36" data-l10n-id="tools">
                   <span data-l10n-id="tools_label">Tools</span>

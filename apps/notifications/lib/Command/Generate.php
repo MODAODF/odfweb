@@ -87,7 +87,6 @@ class Generate extends Command {
 	 * @return int
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-
 		$userId = $input->getArgument('user-id');
 		$subject = $input->getArgument('short-message');
 		$message = $input->getOption('long-message');
@@ -109,15 +108,13 @@ class Generate extends Command {
 		}
 
 		$notification = $this->notificationManager->createNotification();
-		$time = $this->timeFactory->getTime();
-		$datetime = new \DateTime();
-		$datetime->setTimestamp($time);
+		$datetime = $this->timeFactory->getDateTime();
 
 		try {
 			$notification->setApp('admin_notifications')
 				->setUser($user->getUID())
 				->setDateTime($datetime)
-				->setObject('admin_notifications', dechex($time))
+				->setObject('admin_notifications', dechex($datetime->getTimestamp()))
 				->setSubject('cli', [$subject]);
 
 			if ($message !== '') {

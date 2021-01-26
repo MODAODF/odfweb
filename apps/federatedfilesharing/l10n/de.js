@@ -10,7 +10,7 @@ OC.L10N.register(
     "Copied!" : "Kopiert!",
     "Not supported!" : "Nicht unterstützt!",
     "Press ⌘-C to copy." : "⌘-C zum Kopieren drücken.",
-    "Press Ctrl-C to copy." : "Ctrl-C zum Kopieren drücken.",
+    "Press Ctrl-C to copy." : "Zum Kopieren Strg-C drücken.",
     "Invalid Federated Cloud ID" : "Ungültige Federated-Cloud-ID",
     "Server to server sharing is not enabled on this server" : "Das Server-zu-Server-Teilen ist auf diesem Server nicht aktiviert",
     "Couldn't establish a federated share." : "Federated-Share konnte nicht aufgebaut werden",
@@ -38,11 +38,11 @@ OC.L10N.register(
     "Federated Cloud Sharing" : "Federated-Cloud-Sharing",
     "Open documentation" : "Dokumentation öffnen",
     "Adjust how people can share between servers." : "Definiere wie die Benutzer Inhalte mit anderen Servern teilen können.",
-    "Allow users on this server to send shares to other servers" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben",
+    "Allow users on this server to send shares to other servers (this option also allows WebDAV access to public shares)" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben (Diese Option ermöglicht auch den WebDAV-Zugriff auf öffentliche Freigaben)",
     "Allow users on this server to receive shares from other servers" : "Benutzern auf diesem Server das Empfangen von Freigaben von anderen Servern erlauben",
-    "Allow users on this server to send shares to groups on other servers" : "Ermögliche Nutzern dieses Servers Freigaben an Gruppen auf anderen Servern zu senden",
-    "Allow users on this server to receive group shares from other servers" : "Ermögliche Nutzern dieses Servers Gruppen-Freigaben von anderen Servern zu empfangen",
-    "Search global and public address book for users" : "Globale Suche und ein öffentliches Adressbuch für Benutzer",
+    "Allow users on this server to send shares to groups on other servers" : "Ermögliche Benutzern dieses Servers Freigaben an Gruppen auf anderen Servern zu senden",
+    "Allow users on this server to receive group shares from other servers" : "Ermögliche Benutzern dieses Servers Gruppen-Freigaben von anderen Servern zu empfangen",
+    "Search global and public address book for users" : "Durchsuche globales und öffentliches Adressbuch nach Benutzern",
     "Allow users to publish their data to a global and public address book" : "Erlaube Benutzern ihre Daten an ein globales und öffentliches Adressbuch zu veröffentlichen",
     "Federated Cloud" : "Federated Cloud",
     "You can share with anyone who uses a Nextcloud server or other Open Cloud Mesh (OCM) compatible servers and services! Just put their Federated Cloud ID in the share dialog. It looks like person@cloud.example.com" : "Du kannst mit jedem teilen, der einen Nextcloud-Server oder andere Open Cloud Mesh (OCM) kompatible Server und Dienste verwendet! Gebe einfach deren Federated-Cloud-ID in den Teilen-Dialog ein. Diese sieht wie folgt aus: person@cloud.example.com",
@@ -51,7 +51,6 @@ OC.L10N.register(
     "Add to your website" : "Zu Deiner Webseite hinzufügen",
     "Share with me via Nextcloud" : "Teile mit mir über Nextcloud",
     "HTML Code:" : "HTML-Code:",
-    "You received \"%3$s\" as a remote share from %1$s (on behalf of %2$s)" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen (im Auftrag von %2$s)",
-    "You received \"%3$s\" as a remote share from %1$s" : "Du hast \"%3$s\" als externe Freigabe von \"%1$s\" empfangen"
+    "Allow users on this server to send shares to other servers" : "Benutzern auf diesem Server das Senden von Freigaben an andere Server erlauben"
 },
 "nplurals=2; plural=(n != 1);");

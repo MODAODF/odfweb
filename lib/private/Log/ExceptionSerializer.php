@@ -2,6 +2,13 @@
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ *
  * @license GNU AGPL version 3 or any later version
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -23,10 +30,12 @@ namespace OC\Log;
 
 use OC\Core\Controller\SetupController;
 use OC\HintException;
+use OC\Security\IdentityProof\Key;
 use OC\Setup;
+use OC\SystemConfig;
 
 class ExceptionSerializer {
-	const methodsWithSensitiveParameters = [
+	public const methodsWithSensitiveParameters = [
 		// Session/User
 		'completeLogin',
 		'login',
@@ -73,14 +82,24 @@ class ExceptionSerializer {
 		'storeKeyPair',
 		'setupUser',
 
-		// files_external: OC_Mount_Config
+		// files_external: OCA\Files_External\MountConfig
 		'getBackendStatus',
 
 		// files_external: UserStoragesController
 		'update',
+
+		// Preview providers, don't log big data strings
+		'imagecreatefromstring',
 	];
 
-	const methodsWithSensitiveParametersByClass = [
+	/** @var SystemConfig */
+	private $systemConfig;
+
+	public function __construct(SystemConfig $systemConfig) {
+		$this->systemConfig = $systemConfig;
+	}
+
+	public const methodsWithSensitiveParametersByClass = [
 		SetupController::class => [
 			'run',
 			'display',
@@ -88,11 +107,16 @@ class ExceptionSerializer {
 		],
 		Setup::class => [
 			'install'
-		]
+		],
+		Key::class => [
+			'__construct'
+		],
 	];
 
 	private function editTrace(array &$sensitiveValues, array $traceLine): array {
-		$sensitiveValues = array_merge($sensitiveValues, $traceLine['args']);
+		if (isset($traceLine['args'])) {
+			$sensitiveValues = array_merge($sensitiveValues, $traceLine['args']);
+		}
 		$traceLine['args'] = ['*** sensitive parameters replaced ***'];
 		return $traceLine;
 	}
@@ -124,7 +148,7 @@ class ExceptionSerializer {
 		foreach ($args as &$arg) {
 			if (in_array($arg, $values, true)) {
 				$arg = '*** sensitive parameter replaced ***';
-			} else if (is_array($arg)) {
+			} elseif (is_array($arg)) {
 				$arg = $this->removeValuesFromArgs($arg, $values);
 			}
 		}
@@ -146,11 +170,21 @@ class ExceptionSerializer {
 			$data = get_object_vars($arg);
 			$data['__class__'] = get_class($arg);
 			return array_map([$this, 'encodeArg'], $data);
-		} else if (is_array($arg)) {
-			return array_map([$this, 'encodeArg'], $arg);
-		} else {
-			return $arg;
 		}
+
+		if (is_array($arg)) {
+			// Only log the first 5 elements of an array unless we are on debug
+			if ((int)$this->systemConfig->getValue('loglevel', 2) !== 0) {
+				$elemCount = count($arg);
+				if ($elemCount > 5) {
+					$arg = array_slice($arg, 0, 5);
+					$arg[] = 'And ' . ($elemCount - 5) . ' more entries, set log level to debug to see all entries';
+				}
+			}
+			return array_map([$this, 'encodeArg'], $arg);
+		}
+
+		return $arg;
 	}
 
 	public function serializeException(\Throwable $exception) {

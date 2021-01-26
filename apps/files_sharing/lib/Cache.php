@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Christopher Schäpers <kondou@ts.unde.re>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
@@ -22,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -145,16 +146,15 @@ class Cache extends CacheJail {
 		}
 
 		try {
-			$sharePermissions = $this->storage->getPermissions($entry['path']);
+			if (isset($entry['permissions'])) {
+				$entry['permissions'] &= $this->storage->getShare()->getPermissions();
+			} else {
+				$entry['permissions'] = $this->storage->getPermissions($entry['path']);
+			}
 		} catch (StorageNotAvailableException $e) {
 			// thrown by FailedStorage e.g. when the sharer does not exist anymore
 			// (IDE may say the exception is never thrown – false negative)
 			$sharePermissions = 0;
-		}
-		if (isset($entry['permissions'])) {
-			$entry['permissions'] &= $sharePermissions;
-		} else {
-			$entry['permissions'] = $sharePermissions;
 		}
 		$entry['uid_owner'] = $this->storage->getOwner('');
 		$entry['displayname_owner'] = $this->getOwnerDisplayName();
@@ -176,5 +176,21 @@ class Cache extends CacheJail {
 	 */
 	public function clear() {
 		// Not a valid action for Shared Cache
+	}
+
+	public function search($pattern) {
+		// Do the normal search on the whole storage for non files
+		if ($this->storage->getItemType() !== 'file') {
+			return parent::search($pattern);
+		}
+
+		$regex = '/' . str_replace('%', '.*', $pattern) . '/i';
+
+		$data = $this->get('');
+		if (preg_match($regex, $data->getName()) === 1) {
+			return [$data];
+		}
+
+		return [];
 	}
 }

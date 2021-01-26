@@ -4,9 +4,8 @@
 	<id>recommendations</id>
 	<name>Recommendations</name>
 	<summary>Shows recommended files</summary>
-	<description>Shows recommended files for quick access of files and folders with recent activity
-	</description>
-	<version>0.4.0</version>
+	<description>Shows recommended files for quick access of files and folders with recent activity</description>
+	<version>0.8.0</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
 	<author>Jan-Christoph Borchardt</author>
@@ -14,10 +13,10 @@
 	<namespace>Recommendations</namespace>
 	<category>office</category>
 	<dependencies>
-		<php min-version="7.1" max-version="7.3"/>
-		<nextcloud min-version="16" max-version="16"/>
+		<php min-version="7.2" max-version="7.4"/>
+		<nextcloud min-version="20" max-version="20" />
 	</dependencies>
 	<commands>
-		<command>\OCA\Recommendations\Command\GetRecommendations</command>
+		<command>OCA\Recommendations\Command\GetRecommendations</command>
 	</commands>
 </info>

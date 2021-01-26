@@ -45,7 +45,7 @@ class RecursiveDirectoryIteratorWithoutData extends \RecursiveFilterIterator {
 			'data',
 			'..',
 		];
-		return !(in_array($this->getFilename(), $excludes, true) || $this->isDir());
+		return !(in_array($this->current()->getFilename(), $excludes, true) || $this->current()->isDir());
 	}
 }
 
@@ -469,12 +469,9 @@ class Updater {
 		];
 
 		// Create new folder for the backup
-		$backupFolderLocation = $this->getDataDirectoryLocation() . '/updater-'.$this->getConfigOption('instanceid').'/backups/nextcloud-'.$this->getConfigOption('version') . '/';
-		if(file_exists($backupFolderLocation)) {
-			$this->silentLog('[info] backup folder location exists');
+		$backupFolderLocation = $this->getDataDirectoryLocation() . '/updater-'.$this->getConfigOption('instanceid').'/backups/nextcloud-'.$this->getConfigOption('version') . '-' . time() . '/';
+		$this->silentLog('[info] backup folder location: ' . $backupFolderLocation);
 
-			$this->recursiveDelete($backupFolderLocation);
-		}
 		$state = mkdir($backupFolderLocation, 0750, true);
 		if($state === false) {
 			throw new \Exception('Could not create backup folder location');
@@ -694,12 +691,15 @@ class Updater {
 		$storageLocation = $this->getDataDirectoryLocation() . '/updater-'.$this->getConfigOption('instanceid') . '/downloads/';
 		$this->silentLog('[info] storage location: ' . $storageLocation);
 
-		$files = scandir($storageLocation);
-		// ., .. and downloaded zip archive
-		if(count($files) !== 3) {
-			throw new \Exception('Not exact 3 files existent in folder');
+		$filesInStorageLocation = scandir($storageLocation);
+		$files = array_values(array_filter($filesInStorageLocation, function($path){
+			return $path !== '.' && $path !== '..';
+		}));
+		// only the downloaded archive
+		if(count($files) !== 1) {
+			throw new \Exception('There are more files than the downloaded archive in the downloads/ folder.');
 		}
-		return $storageLocation . '/' . $files[2];
+		return $storageLocation . '/' . $files[0];
 	}
 
 	/**
@@ -907,9 +907,18 @@ EOF;
 		if(!file_exists($shippedAppsFile)) {
 			throw new \Exception('core/shipped.json is not available');
 		}
+
+		$newShippedAppsFile = $this->getDataDirectoryLocation() . '/updater-'.$this->getConfigOption('instanceid') . '/downloads/nextcloud/core/shipped.json';
+		if(!file_exists($newShippedAppsFile)) {
+			throw new \Exception('core/shipped.json is not available in the new release');
+		}
+
 		// Delete shipped apps
-		$shippedApps = json_decode(file_get_contents($shippedAppsFile), true);
-		foreach($shippedApps['shippedApps'] as $app) {
+		$shippedApps = array_merge(
+			json_decode(file_get_contents($shippedAppsFile), true)['shippedApps'],
+			json_decode(file_get_contents($newShippedAppsFile), true)['shippedApps']
+		);
+		foreach($shippedApps as $app) {
 			$this->recursiveDelete($this->baseDir . '/../apps/' . $app);
 		}
 
@@ -1454,7 +1463,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 			right: 0;
 			height: 45px;
 			line-height: 2.5em;
-			background-color: #ECECFF;
+			background-color: #0082c9;
 			box-sizing: border-box;
 		}
 		.header-appname {
@@ -1645,7 +1654,7 @@ if(strpos($updaterUrl, 'index.php') === false) {
 		}
 
 		button:hover, button:focus, a.button:hover, a.button:focus {
-			border-color: #ECECFF;
+			border-color: #0082c9;
 		}
 
 		code {
@@ -1678,6 +1687,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 		.section {
 			max-width: 600px;
 			margin: 0 auto;
+		}
+
+		pre {
+			word-wrap: break-word;
 		}
 
 	</style>
@@ -1879,7 +1892,8 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					// it seems that this is not a JSON object
 					var response = {
 						processed: false,
-						response: 'Parsing response failed. ' + httpRequest.responseText
+						response: 'Parsing response failed.',
+						detailedResponseText: httpRequest.responseText,
 					};
 					callback(response);
 				} else {
@@ -1908,6 +1922,8 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					var text = '';
 					if (typeof response['response'] === 'string') {
 						text = escapeHTML(response['response']);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response['detailedResponseText']) + '</code></pre></details>';
 					} else {
 						text = 'The following extra files have been found:<ul>';
 						response['response'].forEach(function(file) {
@@ -1929,6 +1945,8 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					var text = '';
 					if (typeof response['response'] === 'string') {
 						text = escapeHTML(response['response']);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response['detailedResponseText']) + '</code></pre></details>';
 					} else {
 						text = 'The following places can not be written to:<ul>';
 						response['response'].forEach(function(file) {
@@ -1948,7 +1966,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-backup', 3);
 
 					if(response.response) {
-						addStepText('step-backup', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-backup', text);
 					}
 				}
 			},
@@ -1961,7 +1982,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-download', 4);
 
 					if(response.response) {
-						addStepText('step-download', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-download', text);
 					}
 				}
 			},
@@ -1974,7 +1998,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-verify-integrity', 5);
 
 					if(response.response) {
-						addStepText('step-verify-integrity', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-verify-integrity', text);
 					}
 				}
 			},
@@ -1987,7 +2014,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-extract', 6);
 
 					if(response.response) {
-						addStepText('step-extract', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-extract', text);
 					}
 				}
 			},
@@ -2000,7 +2030,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-enable-maintenance', 7);
 
 					if(response.response) {
-						addStepText('step-enable-maintenance', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-enable-maintenance', text);
 					}
 				}
 			},
@@ -2013,7 +2046,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-entrypoints', 8);
 
 					if(response.response) {
-						addStepText('step-entrypoints', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-entrypoints', text);
 					}
 				}
 			},
@@ -2026,7 +2062,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-delete', 9);
 
 					if(response.response) {
-						addStepText('step-delete', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-delete', text);
 					}
 				}
 			},
@@ -2043,7 +2082,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-move', 10);
 
 					if(response.response) {
-						addStepText('step-move', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-move', text);
 					}
 				}
 			},
@@ -2056,7 +2098,10 @@ if(strpos($updaterUrl, 'index.php') === false) {
 					errorStep('step-maintenance-mode', 11);
 
 					if(response.response) {
-						addStepText('step-maintenance-mode', escapeHTML(response.response));
+						var text = escapeHTML(response.response);
+						text += '<br><details><summary>Show detailed response</summary><pre><code>' +
+							escapeHTML(response.detailedResponseText) + '</code></pre></details>';
+						addStepText('step-maintenance-mode', text);
 					}
 				}
 			},
@@ -2154,3 +2199,4 @@ if(strpos($updaterUrl, 'index.php') === false) {
 <?php endif; ?>
 
 </html>
+

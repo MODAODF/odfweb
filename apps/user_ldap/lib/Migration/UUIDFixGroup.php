@@ -3,7 +3,8 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
- * @author Roger Szabo <roger.szabo@web.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Vinicius Cubas Brand <vinicius@eita.org.br>
  *
  * @license GNU AGPL version 3 or any later version
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,13 +30,14 @@ use OCA\User_LDAP\Helper;
 use OCA\User_LDAP\LDAP;
 use OCA\User_LDAP\Mapping\GroupMapping;
 use OCA\User_LDAP\User_Proxy;
+use OCA\User_LDAP\UserPluginManager;
 use OCP\IConfig;
 
 class UUIDFixGroup extends UUIDFix {
 	public function __construct(GroupMapping $mapper, LDAP $ldap, IConfig $config, Helper $helper) {
 		$this->mapper = $mapper;
-		$this->proxy = new User_Proxy($helper->getServerConfigurationPrefixes(true), $ldap, $config, 
+		$this->proxy = new User_Proxy($helper->getServerConfigurationPrefixes(true), $ldap, $config,
 			\OC::$server->getNotificationManager(), \OC::$server->getUserSession(),
-			\OC::$server->query('LDAPUserPluginManager'));
+			\OC::$server->query(UserPluginManager::class));
 	}
 }

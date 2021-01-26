@@ -3,10 +3,16 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Blaok <i@blaok.me>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Joas Schilling <coding@schilljs.com>
+ * @author Joel S <joel.devbox@protonmail.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author martin.mattel@diemattels.at <martin.mattel@diemattels.at>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
  *
@@ -22,7 +28,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -32,16 +38,17 @@ use Doctrine\DBAL\Connection;
 use OC\Core\Command\Base;
 use OC\Core\Command\InterruptedException;
 use OC\ForbiddenException;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Files\Mount\IMountPoint;
 use OCP\Files\NotFoundException;
 use OCP\Files\StorageNotAvailableException;
 use OCP\IDBConnection;
 use OCP\IUserManager;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 class Scan extends Base {
 
@@ -110,7 +117,7 @@ class Scan extends Base {
 
 	protected function scanFiles($user, $path, OutputInterface $output, $backgroundScan = false, $recursive = true, $homeOnly = false) {
 		$connection = $this->reconnectToDatabase($output);
-		$scanner = new \OC\Files\Utils\Scanner($user, $connection, \OC::$server->getLogger());
+		$scanner = new \OC\Files\Utils\Scanner($user, $connection, \OC::$server->query(IEventDispatcher::class), \OC::$server->getLogger());
 
 		# check on each file/folder if there was a user interrupt (ctrl-c) and throw an exception
 
@@ -163,13 +170,13 @@ class Scan extends Base {
 		return substr_count($mountPoint->getMountPoint(), '/') <= 3;
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$inputPath = $input->getOption('path');
 		if ($inputPath) {
 			$inputPath = '/' . trim($inputPath, '/');
-			list (, $user,) = explode('/', $inputPath, 3);
-			$users = array($user);
-		} else if ($input->getOption('all')) {
+			list(, $user,) = explode('/', $inputPath, 3);
+			$users = [$user];
+		} elseif ($input->getOption('all')) {
 			$users = $this->userManager->search('');
 		} else {
 			$users = $input->getArgument('user_id');
@@ -184,7 +191,7 @@ class Scan extends Base {
 		$users_total = count($users);
 		if ($users_total === 0) {
 			$output->writeln('<error>Please specify the user id to scan, --all to scan for all users or --path=...</error>');
-			return;
+			return 1;
 		}
 
 		$this->initTools();
@@ -213,6 +220,7 @@ class Scan extends Base {
 		}
 
 		$this->presentStats($output);
+		return 0;
 	}
 
 	/**
@@ -315,5 +323,4 @@ class Scan extends Base {
 		}
 		return $connection;
 	}
-
 }

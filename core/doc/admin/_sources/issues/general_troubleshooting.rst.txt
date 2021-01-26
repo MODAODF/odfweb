@@ -35,8 +35,8 @@ configuration report with the :ref:`occ config command
 .. _the Nextcloud Forums: https://help.nextcloud.com
 .. _FAQ page: https://help.nextcloud.com/c/faq
 .. _bugtracker: https://github.com/nextcloud/server/issues
-.. _webchat: http://webchat.freenode.net/?channels=nextcloud
-   https://docs.nextcloud.org/server/14/developer_manual/bugtracker/index.html
+.. _webchat: https://webchat.freenode.net/?channels=nextcloud
+   https://docs.nextcloud.org/server/latest/developer_manual/bugtracker/index.html
 .. TODO ON RELEASE: Update version number above on release
 
 General troubleshooting
@@ -274,8 +274,8 @@ document root of your Web server and add the following lines::
       RewriteRule ^\.well-known/host-meta /nextcloud/public.php?service=host-meta [QSA,L]
       RewriteRule ^\.well-known/host-meta\.json /nextcloud/public.php?service=host-meta-json [QSA,L]
       RewriteRule ^\.well-known/webfinger /nextcloud/public.php?service=webfinger [QSA,L]
-      RewriteRule ^\.well-known/carddav /nextcloud/remote.php/dav/ [R=301,L]
-      RewriteRule ^\.well-known/caldav /nextcloud/remote.php/dav/ [R=301,L]
+      RewriteRule ^\.well-known/carddav /nextcloud/remote.php/dav [R=301,L]
+      RewriteRule ^\.well-known/caldav /nextcloud/remote.php/dav [R=301,L]
     </IfModule>
 
 Make sure to change /nextcloud to the actual subfolder your Nextcloud instance is running in.

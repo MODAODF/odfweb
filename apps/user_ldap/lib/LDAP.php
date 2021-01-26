@@ -4,11 +4,14 @@
  *
  * @author Alexander Bergolth <leo@strike.wu.ac.at>
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Peter Kubica <peter@kubica.ch>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  *
  * @license AGPL-3.0
@@ -23,7 +26,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -31,10 +34,24 @@ namespace OCA\User_LDAP;
 
 use OC\ServerNotAvailableException;
 use OCA\User_LDAP\Exceptions\ConstraintViolationException;
+use OCA\User_LDAP\PagedResults\IAdapter;
+use OCA\User_LDAP\PagedResults\Php54;
+use OCA\User_LDAP\PagedResults\Php73;
 
 class LDAP implements ILDAPWrapper {
 	protected $curFunc = '';
-	protected $curArgs = array();
+	protected $curArgs = [];
+
+	/** @var IAdapter */
+	protected $pagedResultsAdapter;
+
+	public function __construct() {
+		if (version_compare(PHP_VERSION, '7.3', '<') === true) {
+			$this->pagedResultsAdapter = new Php54();
+		} else {
+			$this->pagedResultsAdapter = new Php73();
+		}
+	}
 
 	/**
 	 * @param resource $link
@@ -52,27 +69,28 @@ class LDAP implements ILDAPWrapper {
 	 * @return mixed
 	 */
 	public function connect($host, $port) {
-		if(strpos($host, '://') === false) {
+		if (strpos($host, '://') === false) {
 			$host = 'ldap://' . $host;
 		}
-		if(strpos($host, ':', strpos($host, '://') + 1) === false) {
+		if (strpos($host, ':', strpos($host, '://') + 1) === false) {
 			//ldap_connect ignores port parameter when URLs are passed
 			$host .= ':' . $port;
 		}
 		return $this->invokeLDAPMethod('connect', $host);
 	}
 
-	/**
-	 * @param resource $link
-	 * @param resource $result
-	 * @param string $cookie
-	 * @return bool|LDAP
-	 */
-	public function controlPagedResultResponse($link, $result, &$cookie) {
-		$this->preFunctionCall('ldap_control_paged_result_response',
-			array($link, $result, $cookie));
-		$result = ldap_control_paged_result_response($link, $result, $cookie);
-		$this->postFunctionCall();
+	public function controlPagedResultResponse($link, $result, &$cookie): bool {
+		$this->preFunctionCall(
+			$this->pagedResultsAdapter->getResponseCallFunc(),
+			$this->pagedResultsAdapter->getResponseCallArgs([$link, $result, &$cookie])
+		);
+
+		$result = $this->pagedResultsAdapter->responseCall($link);
+		$cookie = $this->pagedResultsAdapter->getCookie($link);
+
+		if ($this->isResultFalse($result)) {
+			$this->postFunctionCall();
+		}
 
 		return $result;
 	}
@@ -81,12 +99,23 @@ class LDAP implements ILDAPWrapper {
 	 * @param LDAP $link
 	 * @param int $pageSize
 	 * @param bool $isCritical
-	 * @param string $cookie
 	 * @return mixed|true
 	 */
-	public function controlPagedResult($link, $pageSize, $isCritical, $cookie) {
-		return $this->invokeLDAPMethod('control_paged_result', $link, $pageSize,
-										$isCritical, $cookie);
+	public function controlPagedResult($link, $pageSize, $isCritical) {
+		$fn = $this->pagedResultsAdapter->getRequestCallFunc();
+		$this->pagedResultsAdapter->setRequestParameters($link, $pageSize, $isCritical);
+		if ($fn === null) {
+			return true;
+		}
+
+		$this->preFunctionCall($fn, $this->pagedResultsAdapter->getRequestCallArgs($link));
+		$result = $this->pagedResultsAdapter->requestCall($link);
+
+		if ($this->isResultFalse($result)) {
+			$this->postFunctionCall();
+		}
+
+		return $result;
 	}
 
 	/**
@@ -178,12 +207,13 @@ class LDAP implements ILDAPWrapper {
 	 * @return mixed
 	 */
 	public function read($link, $baseDN, $filter, $attr) {
-		return $this->invokeLDAPMethod('read', $link, $baseDN, $filter, $attr);
+		$this->pagedResultsAdapter->setReadArgs($link, $baseDN, $filter, $attr);
+		return $this->invokeLDAPMethod('read', ...$this->pagedResultsAdapter->getReadArgs($link));
 	}
 
 	/**
 	 * @param LDAP $link
-	 * @param string $baseDN
+	 * @param string[] $baseDN
 	 * @param string $filter
 	 * @param array $attr
 	 * @param int $attrsOnly
@@ -192,15 +222,17 @@ class LDAP implements ILDAPWrapper {
 	 * @throws \Exception
 	 */
 	public function search($link, $baseDN, $filter, $attr, $attrsOnly = 0, $limit = 0) {
-		$oldHandler = set_error_handler(function($no, $message, $file, $line) use (&$oldHandler) {
-			if(strpos($message, 'Partial search results returned: Sizelimit exceeded') !== false) {
+		$oldHandler = set_error_handler(function ($no, $message, $file, $line) use (&$oldHandler) {
+			if (strpos($message, 'Partial search results returned: Sizelimit exceeded') !== false) {
 				return true;
 			}
 			$oldHandler($no, $message, $file, $line);
 			return true;
 		});
 		try {
-			$result = $this->invokeLDAPMethod('search', $link, $baseDN, $filter, $attr, $attrsOnly, $limit);
+			$this->pagedResultsAdapter->setSearchArgs($link, $baseDN, $filter, $attr, $attrsOnly, $limit);
+			$result = $this->invokeLDAPMethod('search', ...$this->pagedResultsAdapter->getSearchArgs($link));
+
 			restore_error_handler();
 			return $result;
 		} catch (\Exception $e) {
@@ -216,7 +248,18 @@ class LDAP implements ILDAPWrapper {
 	 * @return bool
 	 */
 	public function modReplace($link, $userDN, $password) {
-		return $this->invokeLDAPMethod('mod_replace', $link, $userDN, array('userPassword' => $password));
+		return $this->invokeLDAPMethod('mod_replace', $link, $userDN, ['userPassword' => $password]);
+	}
+
+	/**
+	 * @param LDAP $link
+	 * @param string $userDN
+	 * @param string $oldPassword
+	 * @param string $password
+	 * @return bool
+	 */
+	public function exopPasswd($link, $userDN, $oldPassword, $password) {
+		return $this->invokeLDAPMethod('exop_passwd', $link, $userDN, $oldPassword, $password);
 	}
 
 	/**
@@ -272,13 +315,13 @@ class LDAP implements ILDAPWrapper {
 	 * @return bool
 	 */
 	protected function isResultFalse($result) {
-		if($result === false) {
+		if ($result === false) {
 			return true;
 		}
 
-		if($this->curFunc === 'ldap_search' && is_array($result)) {
+		if ($this->curFunc === 'ldap_search' && is_array($result)) {
 			foreach ($result as $singleResult) {
-				if($singleResult === false) {
+				if ($singleResult === false) {
 					return true;
 				}
 			}
@@ -293,7 +336,7 @@ class LDAP implements ILDAPWrapper {
 	protected function invokeLDAPMethod() {
 		$arguments = func_get_args();
 		$func = 'ldap_' . array_shift($arguments);
-		if(function_exists($func)) {
+		if (function_exists($func)) {
 			$this->preFunctionCall($func, $arguments);
 			$result = call_user_func_array($func, $arguments);
 			if ($this->isResultFalse($result)) {
@@ -323,26 +366,26 @@ class LDAP implements ILDAPWrapper {
 	 */
 	private function processLDAPError($resource) {
 		$errorCode = ldap_errno($resource);
-		if($errorCode === 0) {
+		if ($errorCode === 0) {
 			return;
 		}
 		$errorMsg  = ldap_error($resource);
 
-		if($this->curFunc === 'ldap_get_entries'
+		if ($this->curFunc === 'ldap_get_entries'
 			&& $errorCode === -4) {
-		} else if ($errorCode === 32) {
+		} elseif ($errorCode === 32) {
 			//for now
-		} else if ($errorCode === 10) {
+		} elseif ($errorCode === 10) {
 			//referrals, we switch them off, but then there is AD :)
-		} else if ($errorCode === -1) {
+		} elseif ($errorCode === -1) {
 			throw new ServerNotAvailableException('Lost connection to LDAP server.');
-		} else if ($errorCode === 52) {
+		} elseif ($errorCode === 52) {
 			throw new ServerNotAvailableException('LDAP server is shutting down.');
-		} else if ($errorCode === 48) {
+		} elseif ($errorCode === 48) {
 			throw new \Exception('LDAP authentication method rejected', $errorCode);
-		} else if ($errorCode === 1) {
+		} elseif ($errorCode === 1) {
 			throw new \Exception('LDAP Operations error', $errorCode);
-		} else if ($errorCode === 19) {
+		} elseif ($errorCode === 19) {
 			ldap_get_option($this->curArgs[0], LDAP_OPT_ERROR_STRING, $extended_error);
 			throw new ConstraintViolationException(!empty($extended_error)?$extended_error:$errorMsg, $errorCode);
 		} else {
@@ -360,9 +403,9 @@ class LDAP implements ILDAPWrapper {
 	 * @throw \Exception
 	 */
 	private function postFunctionCall() {
-		if($this->isResource($this->curArgs[0])) {
+		if ($this->isResource($this->curArgs[0])) {
 			$resource = $this->curArgs[0];
-		} else if(
+		} elseif (
 			   $this->curFunc === 'ldap_search'
 			&& is_array($this->curArgs[0])
 			&& $this->isResource($this->curArgs[0][0])

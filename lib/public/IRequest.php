@@ -1,14 +1,17 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
  *
@@ -24,7 +27,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -36,6 +39,7 @@ declare(strict_types=1);
 
 // use OCP namespace for all classes that are considered public.
 // This means that they should be used by apps instead of the internal ownCloud classes
+
 namespace OCP;
 
 /**
@@ -68,37 +72,37 @@ interface IRequest {
 	/**
 	 * @since 9.1.0
 	 */
-	const USER_AGENT_CLIENT_ANDROID = '/^Mozilla\/5\.0 \(Android\) (ownCloud|Nextcloud)\-android.*$/';
+	public const USER_AGENT_CLIENT_ANDROID = '/^Mozilla\/5\.0 \(Android\) (ownCloud|Nextcloud)\-android.*$/';
 
 	/**
 	 * @since 13.0.0
 	 */
-	const USER_AGENT_TALK_ANDROID = '/^Mozilla\/5\.0 \(Android\) Nextcloud\-Talk v.*$/';
+	public const USER_AGENT_TALK_ANDROID = '/^Mozilla\/5\.0 \(Android\) Nextcloud\-Talk v.*$/';
 
 	/**
 	 * @since 9.1.0
 	 */
-	const USER_AGENT_CLIENT_DESKTOP = '/^Mozilla\/5\.0 \([A-Za-z ]+\) (mirall|csyncoC)\/.*$/';
+	public const USER_AGENT_CLIENT_DESKTOP = '/^Mozilla\/5\.0 \([A-Za-z ]+\) (mirall|csyncoC)\/.*$/';
 
 	/**
 	 * @since 9.1.0
 	 */
-	const USER_AGENT_CLIENT_IOS = '/^Mozilla\/5\.0 \(iOS\) (ownCloud|Nextcloud)\-iOS.*$/';
+	public const USER_AGENT_CLIENT_IOS = '/^Mozilla\/5\.0 \(iOS\) (ownCloud|Nextcloud)\-iOS.*$/';
 
 	/**
 	 * @since 13.0.0
 	 */
-	const USER_AGENT_TALK_IOS = '/^Mozilla\/5\.0 \(iOS\) Nextcloud\-Talk v.*$/';
+	public const USER_AGENT_TALK_IOS = '/^Mozilla\/5\.0 \(iOS\) Nextcloud\-Talk v.*$/';
 
 	/**
 	 * @since 13.0.1
 	 */
-	const USER_AGENT_OUTLOOK_ADDON = '/^Mozilla\/5\.0 \([A-Za-z ]+\) Nextcloud\-Outlook v.*$/';
+	public const USER_AGENT_OUTLOOK_ADDON = '/^Mozilla\/5\.0 \([A-Za-z ]+\) Nextcloud\-Outlook v.*$/';
 
 	/**
 	 * @since 13.0.1
 	 */
-	const USER_AGENT_THUNDERBIRD_ADDON = '/^Mozilla\/5\.0 \([A-Za-z ]+\) Nextcloud\-Thunderbird v.*$/';
+	public const USER_AGENT_THUNDERBIRD_ADDON = '/^Mozilla\/5\.0 \([A-Za-z ]+\) Nextcloud\-Thunderbird v.*$/';
 
 	/**
 	 * @param string $name

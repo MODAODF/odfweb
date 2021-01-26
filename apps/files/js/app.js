@@ -40,6 +40,8 @@
 		 */
 		fileList: null,
 
+		currentFileList: null,
+
 		/**
 		 * Backbone model for storing files preferences
 		 */
@@ -67,16 +69,12 @@
 			var fileActions = new OCA.Files.FileActions();
 			// default actions
 			fileActions.registerDefaultActions();
-			// legacy actions
-			fileActions.merge(window.FileActions);
 			// regular actions
 			fileActions.merge(OCA.Files.fileActions);
 
 			this._onActionsUpdated = _.bind(this._onActionsUpdated, this);
 			OCA.Files.fileActions.on('setDefault.app-files', this._onActionsUpdated);
 			OCA.Files.fileActions.on('registerAction.app-files', this._onActionsUpdated);
-			window.FileActions.on('setDefault.app-files', this._onActionsUpdated);
-			window.FileActions.on('registerAction.app-files', this._onActionsUpdated);
 
 			this.files = OCA.Files.Files;
 
@@ -116,6 +114,7 @@
 					maxChunkSize: OC.appConfig.files && OC.appConfig.files.max_chunk_size
 				}
 			);
+			this.updateCurrentFileList(this.fileList)
 			this.files.initialize();
 
 			// for backward compatibility, the global FileList will
@@ -150,8 +149,6 @@
 			this.files = null;
 			OCA.Files.fileActions.off('setDefault.app-files', this._onActionsUpdated);
 			OCA.Files.fileActions.off('registerAction.app-files', this._onActionsUpdated);
-			window.FileActions.off('setDefault.app-files', this._onActionsUpdated);
-			window.FileActions.off('registerAction.app-files', this._onActionsUpdated);
 		},
 
 		_onActionsUpdated: function(ev) {
@@ -164,6 +161,28 @@
 					ev.defaultAction.name
 				);
 			}
+		},
+
+		/**
+		 * Set the currently active file list
+		 *
+		 * Due to the file list implementations being registered after clicking the
+		 * navigation item for the first time, OCA.Files.App is not aware of those until
+		 * they have initialized themselves. Therefore the files list needs to call this
+		 * method manually
+		 *
+		 * @param {OCA.Files.FileList} newFileList
+		 */
+		updateCurrentFileList: function(newFileList) {
+			this.currentFileList = newFileList;
+		},
+
+		/**
+		 * Return the currently active file list
+		 * @return {?OCA.Files.FileList}
+		 */
+		getCurrentFileList: function () {
+			return this.currentFileList;
 		},
 
 		/**
@@ -337,7 +356,7 @@
 	};
 })();
 
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
 	// wait for other apps/extensions to register their event handlers and file actions
 	// in the "ready" clause
 	_.defer(function() {

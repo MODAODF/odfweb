@@ -27,7 +27,7 @@ of memcache that best fits your needs. The supported caching backends are:
    A local cache for systems.
 * `Redis <http://redis.io/>`_, PHP module 2.2.6 and up required.
    For local and distributed caching as well as transactional file locking.
-* `Memcached <http://www.memcached.org/>`_
+* `Memcached <https://www.memcached.org/>`_
    For distributed caching.
    
 Memcaches must be explicitly configured in Nextcloud by installing
@@ -59,7 +59,7 @@ Refresh your Nextcloud admin page, and the cache warning should disappear.
 
 .. warning:: APCu is disabled by default on CLI which could cause issues with nextcloud's
    cron jobs. Please make sure you set the ``apc.enable_cli`` to ``1`` on your ``php.ini``
-   config file.
+   config file or append ``--define apc.enable_cli=1`` to the cron job call.
 
 Redis
 -----
@@ -107,7 +107,7 @@ recommended if Redis is running on the same system as Nextcloud) use this exampl
   'memcache.local' => '\OC\Memcache\APCu',
   'memcache.distributed' => '\OC\Memcache\Redis',
   'redis' => [
-       'host'     => '/var/run/redis/redis.sock',
+       'host'     => '/run/redis/redis-server.sock',
        'port'     => 0,
        'dbindex'  => 0,
        'password' => 'secret',
@@ -115,6 +115,8 @@ recommended if Redis is running on the same system as Nextcloud) use this exampl
   ],
 
 Only "host" and "port" variables are required, the other ones are optional.
+
+Update the redis configuration in ``/etc/redis/redis.conf`` accordingly: uncomment Unix socket options and ensure the "socket" and "port" settings match your Nextcloud configuration.
 
 Be sure to set the right permissions on redis.sock so that your webserver can
 read and write to it. For this you typically have to add the webserver user

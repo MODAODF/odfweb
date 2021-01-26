@@ -11,6 +11,8 @@ OC.L10N.register(
     "No shared links" : "No hay ligas compartidas",
     "Files and folders you share by link will show up here" : "Los archivos y carpetas que compartas por ligas se mostrarán aquí",
     "Shares" : "Elementos compartidos",
+    "Restore" : "Restaurar",
+    "error" : "error",
     "Move or copy" : "Mover o copiar",
     "Download" : "Descargar",
     "Delete" : "Borrar",
@@ -64,6 +66,7 @@ OC.L10N.register(
     "{actor} shared {file} with you" : "{actor} ha compartido {file} contigo",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "Un archivo o carpeta comparitdo por correo o por liga pública ha sido <strong>descargado</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "Un archivo o carpeta fue compartido desde <strong>otro servidor</strong>",
+    "Files" : "Archivos",
     "A file or folder has been <strong>shared</strong>" : "Un archivo o carpeta ha sido <strong>compartido</strong>",
     "Wrong share ID, share doesn't exist" : "ID del elemento compartido equivocado, el elemento compartido no existe",
     "Could not delete share" : "No fue posible borrar el elemento compartido",
@@ -125,8 +128,7 @@ OC.L10N.register(
     "Download %s" : "Descargar %s",
     "Upload files to %s" : "Cargar archivos a %s",
     "Select or drop files" : "Selecciona o suelta los archivos",
-    "Uploading files…" : "Cargando archivos...",
     "Uploaded files:" : "Archivos cargados:",
-    "could not delete share" : "no fue posible borrar el elemento compartido"
+    "Uploading files…" : "Cargando archivos..."
 },
 "nplurals=2; plural=(n != 1);");

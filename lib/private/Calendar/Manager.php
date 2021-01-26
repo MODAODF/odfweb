@@ -2,6 +2,7 @@
 /**
  * @copyright 2017, Georg Ehrke <oc.list@georgehrke.com>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Georg Ehrke <oc.list@georgehrke.com>
  *
  * @license GNU AGPL version 3 or any later version
@@ -17,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -53,9 +54,9 @@ class Manager implements \OCP\Calendar\IManager {
 	public function search($pattern, array $searchProperties=[], array $options=[], $limit=null, $offset=null) {
 		$this->loadCalendars();
 		$result = [];
-		foreach($this->calendars as $calendar) {
+		foreach ($this->calendars as $calendar) {
 			$r = $calendar->search($pattern, $searchProperties, $options, $limit, $offset);
-			foreach($r as $o) {
+			foreach ($r as $o) {
 				$o['calendar-key'] = $calendar->getKey();
 				$result[] = $o;
 			}
@@ -132,7 +133,7 @@ class Manager implements \OCP\Calendar\IManager {
 	 * loads all calendars
 	 */
 	private function loadCalendars() {
-		foreach($this->calendarLoaders as $callable) {
+		foreach ($this->calendarLoaders as $callable) {
 			$callable($this);
 		}
 		$this->calendarLoaders = [];

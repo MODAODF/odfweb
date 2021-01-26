@@ -45,6 +45,9 @@ class Settings implements ISettings {
 			'enforceNumericCharacters' => $this->config->getEnforceNumericCharacters(),
 			'enforceSpecialCharacters' => $this->config->getEnforceSpecialCharacters(),
 			'enforceHaveIBeenPwned' => $this->config->getEnforceHaveIBeenPwned(),
+			'historySize' => $this->config->getHistorySize(),
+			'expiration' => $this->config->getExpiryInDays(),
+			'maximumLoginAttempts' => $this->config->getMaximumLoginAttempts(),
 		]);
 
 		return $response;

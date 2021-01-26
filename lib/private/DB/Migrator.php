@@ -2,10 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author martin-rueegg <martin.rueegg@metaworx.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author tbelau666 <thomas.belau@gmx.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Victor Dubiniuk <dubiniuk@owncloud.com>
@@ -23,23 +25,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\DB;
 
-use \Doctrine\DBAL\DBALException;
-use \Doctrine\DBAL\Schema\Index;
-use \Doctrine\DBAL\Schema\Table;
-use \Doctrine\DBAL\Schema\Schema;
-use \Doctrine\DBAL\Schema\SchemaConfig;
-use \Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Index;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaConfig;
+use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
 use OCP\IConfig;
 use OCP\Security\ISecureRandom;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Migrator {
@@ -53,22 +55,22 @@ class Migrator {
 	/** @var IConfig */
 	protected $config;
 
-	/** @var EventDispatcher  */
+	/** @var EventDispatcherInterface  */
 	private $dispatcher;
 
 	/** @var bool */
 	private $noEmit = false;
 
 	/**
-	 * @param \Doctrine\DBAL\Connection|Connection $connection
+	 * @param \Doctrine\DBAL\Connection $connection
 	 * @param ISecureRandom $random
 	 * @param IConfig $config
-	 * @param EventDispatcher $dispatcher
+	 * @param EventDispatcherInterface $dispatcher
 	 */
 	public function __construct(\Doctrine\DBAL\Connection $connection,
 								ISecureRandom $random,
 								IConfig $config,
-								EventDispatcher $dispatcher = null) {
+								EventDispatcherInterface $dispatcher = null) {
 		$this->connection = $connection;
 		$this->random = $random;
 		$this->config = $config;
@@ -153,7 +155,7 @@ class Migrator {
 		$tmpTable = $this->renameTableSchema($table, $tmpName);
 		$schemaConfig = new SchemaConfig();
 		$schemaConfig->setName($this->connection->getDatabase());
-		$schema = new Schema(array($tmpTable), array(), $schemaConfig);
+		$schema = new Schema([$tmpTable], [], $schemaConfig);
 
 		try {
 			$this->applySchema($schema);
@@ -178,7 +180,7 @@ class Migrator {
 		 * @var \Doctrine\DBAL\Schema\Index[] $indexes
 		 */
 		$indexes = $table->getIndexes();
-		$newIndexes = array();
+		$newIndexes = [];
 		foreach ($indexes as $index) {
 			if ($index->isPrimary()) {
 				// do not rename primary key
@@ -191,7 +193,7 @@ class Migrator {
 		}
 
 		// foreign keys are not supported so we just set it to an empty array
-		return new Table($newName, $table->getColumns(), $newIndexes, array(), 0, $table->getOptions());
+		return new Table($newName, $table->getColumns(), $newIndexes, [], 0, $table->getOptions());
 	}
 
 	public function createSchema() {
@@ -224,7 +226,6 @@ class Migrator {
 		$sourceSchema = $connection->getSchemaManager()->createSchema();
 
 		// remove tables we don't know about
-		/** @var $table \Doctrine\DBAL\Schema\Table */
 		foreach ($sourceSchema->getTables() as $table) {
 			if (!$targetSchema->hasTable($table->getName())) {
 				$sourceSchema->dropTable($table->getName());
@@ -300,14 +301,14 @@ class Migrator {
 		if ($this->noEmit) {
 			return;
 		}
-		if(is_null($this->dispatcher)) {
+		if (is_null($this->dispatcher)) {
 			return;
 		}
 		$this->dispatcher->dispatch('\OC\DB\Migrator::executeSql', new GenericEvent($sql, [$step+1, $max]));
 	}
 
 	private function emitCheckStep($tableName, $step, $max) {
-		if(is_null($this->dispatcher)) {
+		if (is_null($this->dispatcher)) {
 			return;
 		}
 		$this->dispatcher->dispatch('\OC\DB\Migrator::checkTable', new GenericEvent($tableName, [$step+1, $max]));

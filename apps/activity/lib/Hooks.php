@@ -48,7 +48,7 @@ class Hooks {
 	 */
 	static protected function deleteUserStream($user) {
 		// Delete activity entries
-		$app = new Application();
+		$app = \OC::$server->query(Application::class);
 		/** @var Data $activityData */
 		$activityData = $app->getContainer()->query(Data::class);
 		$activityData->deleteActivities(array('affecteduser' => $user));
@@ -72,13 +72,18 @@ class Hooks {
 
 	static public function setDefaultsForUser($params) {
 		$config = \OC::$server->getConfig();
-		if ($config->getUserValue($params['uid'], 'activity','notify_setting_batchtime', null) !== null) {
+		if ($config->getUserValue($params['uid'], 'activity', 'configured', 'no') === 'yes') {
 			// Already has settings
 			return;
 		}
 
 		foreach ($config->getAppKeys('activity') as $key) {
 			if (strpos($key, 'notify_') !== 0) {
+				continue;
+			}
+
+			if ($config->getUserValue($params['uid'], 'activity', $key, null) !== null) {
+				// Already has this setting
 				continue;
 			}
 
@@ -89,13 +94,8 @@ class Hooks {
 				$config->getAppValue('activity', $key)
 			);
 		}
-	}
 
-	/**
-	 * Load additional scripts when the files app is visible
-	 */
-	public static function onLoadFilesAppScripts() {
-		Util::addStyle('activity', 'style');
-		Util::addScript('activity', 'activity-sidebar');
+		// Mark settings as configured
+		$config->setUserValue($params['uid'], 'activity', 'configured', 'yes');
 	}
 }

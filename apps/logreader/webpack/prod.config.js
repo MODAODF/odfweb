@@ -2,8 +2,8 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const CleanPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const strip = require('strip-loader');
 
 const relativeAssetsPath = '../build';
@@ -20,7 +20,7 @@ module.exports = {
 		path: assetsPath,
 		filename: '[name].js',
 		chunkFilename: '[name]-[chunkhash].js',
-		publicPath: '/dist/'
+		publicPath: '/build/'
 	},
 	module: {
 		rules: [
@@ -36,24 +36,24 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: ExtractTextPlugin.extract({
-					fallback: "style-loader",
-					use: [
-						{
-							loader: 'css-loader',
-							options: {
-								modules: true
-							}
-						},
-						'postcss-loader'
-					]
-				})
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+					},
+					{
+						loader: 'css-loader',
+						options: {
+							modules: true,
+						}
+					},
+					'postcss-loader',
+				]
 			}
 		]
 	},
 	plugins: [
-		new CleanPlugin([relativeAssetsPath]),
-		new ExtractTextPlugin("[name].css"),
+		new CleanWebpackPlugin(),
+		new MiniCssExtractPlugin({filename: "[name].css"}),
 		new webpack.DefinePlugin({
 			__CLIENT__: true,
 			__SERVER__: false,

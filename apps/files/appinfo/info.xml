@@ -5,7 +5,7 @@
 	<name>Files</name>
 	<summary>File Management</summary>
 	<description>File Management</description>
-	<version>1.11.0</version>
+	<version>1.15.0</version>
 	<licence>agpl</licence>
 	<author>Robin Appelman</author>
 	<author>Vincent Petry</author>
@@ -19,13 +19,14 @@
 	<category>files</category>
 	<bugs>https://github.com/nextcloud/server/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="16" max-version="16"/>
+		<nextcloud min-version="20" max-version="20"/>
 	</dependencies>
 
 	<background-jobs>
 		<job>OCA\Files\BackgroundJob\ScanFiles</job>
 		<job>OCA\Files\BackgroundJob\DeleteOrphanedItems</job>
 		<job>OCA\Files\BackgroundJob\CleanupFileLocks</job>
+		<job>OCA\Files\BackgroundJob\CleanupDirectEditingTokens</job>
 	</background-jobs>
 
 	<commands>
@@ -39,10 +40,7 @@
 		<settings>
 			<setting>OCA\Files\Activity\Settings\FavoriteAction</setting>
 			<setting>OCA\Files\Activity\Settings\FileChanged</setting>
-			<setting>OCA\Files\Activity\Settings\FileCreated</setting>
-			<setting>OCA\Files\Activity\Settings\FileDeleted</setting>
-			<setting>OCA\Files\Activity\Settings\FileFavorite</setting>
-			<setting>OCA\Files\Activity\Settings\FileRestored</setting>
+			<setting>OCA\Files\Activity\Settings\FileFavoriteChanged</setting>
 		</settings>
 
 		<filters>
@@ -63,5 +61,9 @@
 			<order>0</order>
 		</navigation>
 	</navigations>
+
+	<settings>
+		<personal>OCA\Files\Settings\PersonalSettings</personal>
+	</settings>
 
 </info>

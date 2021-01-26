@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017, ownCloud GmbH
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license AGPL-3.0
  *
@@ -16,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -52,7 +53,7 @@ class StatusCommand extends Command implements CompletionAwareInterface {
 			->addArgument('app', InputArgument::REQUIRED, 'Name of the app this migration command shall work on');
 	}
 
-	public function execute(InputInterface $input, OutputInterface $output) {
+	public function execute(InputInterface $input, OutputInterface $output): int {
 		$appName = $input->getArgument('app');
 		$ms = new MigrationService($appName, $this->connection, new ConsoleOutput($output));
 
@@ -67,6 +68,7 @@ class StatusCommand extends Command implements CompletionAwareInterface {
 				$output->writeln("    <comment>>></comment> $key: " . str_repeat(' ', 50 - strlen($key)) . $value);
 			}
 		}
+		return 0;
 	}
 
 	/**
@@ -96,7 +98,6 @@ class StatusCommand extends Command implements CompletionAwareInterface {
 	 * @return array associative array of human readable info name as key and the actual information as value
 	 */
 	public function getMigrationsInfos(MigrationService $ms) {
-
 		$executedMigrations = $ms->getMigratedVersions();
 		$availableMigrations = $ms->getAvailableVersions();
 		$executedUnavailableMigrations = array_diff($executedMigrations, array_keys($availableMigrations));
@@ -144,6 +145,4 @@ class StatusCommand extends Command implements CompletionAwareInterface {
 
 		return $migration;
 	}
-
-
 }

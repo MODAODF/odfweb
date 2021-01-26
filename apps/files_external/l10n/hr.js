@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Jeste li sigurni da želite izbrisati ovu vanjsku pohranu?",
     "Delete storage?" : "Želite li izbrisati pohranu?",
     "Saved" : "Spremljeno",
-    "Saving..." : "Spremanje...",
+    "Saving …" : "Spremanje...",
     "Save" : "Spremi",
     "Empty response from the server" : "Prazan odgovor poslužitelja",
     "Couldn't access. Please log out and in again to activate this mount point" : "Nije moguće pristupiti. Odjavite se i ponovno se prijavite kako biste aktivirali ovu točku postavljanja",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Dijeli",
     "Show hidden files" : "Prikaz skrivenih datoteka",
+    "Verify ACL access when listing files" : "Provjeri ACL pristup pri pregledu popisa datoteka",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "Provjerava ACL-ove pojedinih datoteka ili mapa unutar direktorija radi filtriranja stavki za koje korisnik nema pravo pristupa, opterećuje rad sustava",
     "Timeout" : "Istek vremena",
     "SMB / CIFS using OC login" : "SMB / CIFS s prijavom putem OC-a",
     "Username as share" : "Korisničko ime kao dijeljenje",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Dodaj pohranu",
     "Advanced settings" : "Napredne postavke",
     "Allow users to mount external storage" : "Dopusti korisnicima postavljanje vanjske pohrane",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globalne vjerodajnice mogu se upotrebljavati za provođenje autentifikacije na više vanjskih pohrana koje imaju iste vjerodajnice."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globalne vjerodajnice mogu se upotrebljavati za provođenje autentifikacije na više vanjskih pohrana koje imaju iste vjerodajnice.",
+    "Saving..." : "Spremanje..."
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

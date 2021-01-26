@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Vincent Petry <pvince81@owncloud.com>
@@ -18,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -116,13 +118,13 @@ class Listener {
 				$actor,
 				$this->prepareTagAsParameter($event->getTag()),
 			]);
-		} else if ($event->getEvent() === ManagerEvent::EVENT_UPDATE) {
+		} elseif ($event->getEvent() === ManagerEvent::EVENT_UPDATE) {
 			$activity->setSubject(Provider::UPDATE_TAG, [
 				$actor,
 				$this->prepareTagAsParameter($event->getTag()),
 				$this->prepareTagAsParameter($event->getTagBefore()),
 			]);
-		} else if ($event->getEvent() === ManagerEvent::EVENT_DELETE) {
+		} elseif ($event->getEvent() === ManagerEvent::EVENT_DELETE) {
 			$activity->setSubject(Provider::DELETE_TAG, [
 				$actor,
 				$this->prepareTagAsParameter($event->getTag()),
@@ -216,7 +218,7 @@ class Listener {
 						$path,
 						$this->prepareTagAsParameter($tag),
 					]);
-				} else if ($event->getEvent() === MapperEvent::EVENT_UNASSIGN) {
+				} elseif ($event->getEvent() === MapperEvent::EVENT_UNASSIGN) {
 					$activity->setSubject(Provider::UNASSIGN_TAG, [
 						$actor,
 						$path,

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -20,13 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\Federation;
-
 
 use OC\Files\Filesystem;
 use OC\HintException;
@@ -121,8 +120,10 @@ class DbHandler {
 		$query->select('*')->from($this->dbTable)
 			->where($query->expr()->eq('id', $query->createParameter('id')))
 			->setParameter('id', $id);
-		$query->execute();
-		$result = $query->execute()->fetchAll();
+
+		$qResult = $query->execute();
+		$result = $qResult->fetchAll();
+		$qResult->closeCursor();
 
 		if (empty($result)) {
 			throw new \Exception('No Server found with ID: ' . $id);
@@ -304,7 +305,7 @@ class DbHandler {
 
 		if (strpos($url, 'https://') === 0) {
 			$normalized = substr($url, strlen('https://'));
-		} else if (strpos($url, 'http://') === 0) {
+		} elseif (strpos($url, 'http://') === 0) {
 			$normalized = substr($url, strlen('http://'));
 		}
 
@@ -332,5 +333,4 @@ class DbHandler {
 		$statement->closeCursor();
 		return !empty($result);
 	}
-
 }

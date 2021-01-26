@@ -2,7 +2,6 @@
     "seconds ago" : "i a qualques segondas",
     "Help" : "Ajuda",
     "Settings" : "Paramètres",
-    "Sharing" : "Partiment",
     "Sunday" : "Dimenge",
     "Monday" : "Diluns",
     "Tuesday" : "Dimars",
@@ -10,8 +9,20 @@
     "Thursday" : "Dijòus",
     "Friday" : "Divendres",
     "Saturday" : "Dissabte",
-    "Create" : "Crear",
-    "Delete" : "Suprimir",
-    "Share" : "Partejar"
+    "January" : "Genièr",
+    "February" : "Febrièr",
+    "March" : "Març",
+    "April" : "Abril",
+    "May" : "Mai",
+    "June" : "Junh",
+    "July" : "Julhet",
+    "August" : "Agost",
+    "September" : "Setembre",
+    "October" : "Octòbre",
+    "November" : "Novembre",
+    "December" : "Decembre",
+    "May." : "Mai",
+    "a safe home for all your data" : "un ostal segur per vòstras donadas",
+    "Sharing" : "Partiment"
 },"pluralForm" :"nplurals=2; plural=(n > 1);"
 }

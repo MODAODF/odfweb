@@ -22,7 +22,7 @@
 
 namespace OCA\ServerInfo;
 
-
+use Doctrine\DBAL\DBALException;
 use OCP\IConfig;
 use OCP\IDBConnection;
 
@@ -61,7 +61,7 @@ class DatabaseStatistics {
 				$sql = 'SELECT sqlite_version() AS version';
 				break;
 			case 'oci':
-				$sql = 'SELECT version FROM v$instance';
+				$sql = 'SELECT VERSION FROM PRODUCT_COMPONENT_VERSION';
 				break;
 			case 'mysql':
 			case 'pgsql':
@@ -69,11 +69,14 @@ class DatabaseStatistics {
 				$sql = 'SELECT VERSION() AS version';
 				break;
 		}
-		$result = $this->connection->executeQuery($sql);
-		$row = $result->fetch();
-		$result->closeCursor();
-		if ($row) {
-			return $this->cleanVersion($row['version']);
+		try {
+			$result = $this->connection->executeQuery($sql);
+			$version = $result->fetchColumn();
+			$result->closeCursor();
+			if ($version) {
+				return $this->cleanVersion($version);
+			}
+		} catch (DBALException $e) {
 		}
 		return 'N/A';
 	}
@@ -92,12 +95,13 @@ class DatabaseStatistics {
 		// This code is heavily influenced by a similar routine in phpMyAdmin 2.2.0
 		switch ($this->config->getSystemValue('dbtype')) {
 			case 'mysql':
+				$mysqlEngine = ['MyISAM', 'InnoDB', 'Aria'];
 				$db_name = $this->config->getSystemValue('dbname');
 				$sql = 'SHOW TABLE STATUS FROM `' . $db_name . '`';
 				$result = $this->connection->executeQuery($sql);
 				$database_size = 0;
 				while ($row = $result->fetch()) {
-					if ((isset($row['Type']) && $row['Type'] !== 'MRG_MyISAM') || (isset($row['Engine']) && ($row['Engine'] === 'MyISAM' || $row['Engine'] === 'InnoDB'))) {
+					if (isset($row['Engine']) && in_array($row['Engine'], $mysqlEngine)) {
 						$database_size += $row['Data_length'] + $row['Index_length'];
 					}
 				}
@@ -123,8 +127,7 @@ class DatabaseStatistics {
 				$result->closeCursor();
 				if ($row['proname'] === 'pg_database_size') {
 					$database = $this->config->getSystemValue('dbname');
-					if (strpos($database, '.') !== false)
-					{
+					if (strpos($database, '.') !== false) {
 						list($database, ) = explode('.', $database);
 					}
 					$sql = "SELECT oid
@@ -145,7 +148,7 @@ class DatabaseStatistics {
 				$sql = 'SELECT SUM(bytes) as dbsize
 					FROM user_segments';
 				$result = $this->connection->executeQuery($sql);
-				$database_size = ($row = $result->fetch()) ? $row['dbsize'] : false;
+				$database_size = ($row = $result->fetchColumn()) ? (int)$row : false;
 				$result->closeCursor();
 				break;
 		}
@@ -166,6 +169,4 @@ class DatabaseStatistics {
 		}
 		return $version;
 	}
-
-
 }

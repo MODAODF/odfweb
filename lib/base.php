@@ -9,20 +9,26 @@
  * @author Bernhard Posselt <dev@bernhard-posselt.com>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
- * @author Christoph Wurst <christoph@owncloud.com>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Damjan Georgievski <gdamjan@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author davidgumberg <davidnoizgumberg@gmail.com>
+ * @author Eric Masseran <rico.masseran@gmail.com>
  * @author Florin Peter <github@florin-peter.de>
- * @author Individual IT Services <info@individual-it.net>
+ * @author Greta Doci <gretadoci@gmail.com>
  * @author Jakob Sack <mail@jakobsack.de>
+ * @author jaltek <jaltek@mailbox.org>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joachim Sokolowski <github@sokolowski.org>
  * @author Joas Schilling <coding@schilljs.com>
  * @author John Molakvoæ (skjnldsv) <skjnldsv@protonmail.com>
- * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
+ * @author Jose Quinteiro <github@quinteiro.org>
+ * @author Juan Pablo Villafáñez <jvillafanez@solidgear.es>
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Ko- <k.stoffelen@cs.ru.nl>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author MartB <mart.b@outlook.de>
  * @author Michael Gapczynski <GapczynskiM@gmail.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Owen Winkler <a_github@midnightcircus.com>
@@ -35,6 +41,7 @@
  * @author Stefan Weil <sw@weilnetz.de>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Thomas Tanghus <thomas@tanghus.net>
+ * @author Tobia De Koninck <tobia@ledfan.be>
  * @author Vincent Petry <pvince81@owncloud.com>
  * @author Volkan Gezer <volkangezer@gmail.com>
  *
@@ -50,10 +57,12 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\Group\Events\UserRemovedEvent;
 use OCP\ILogger;
 use OCP\Share;
 use OC\Encryption\HookManager;
@@ -71,7 +80,7 @@ class OC {
 	/**
 	 * Associative array for autoloading. classname => filename
 	 */
-	public static $CLASSPATH = array();
+	public static $CLASSPATH = [];
 	/**
 	 * The installation path for Nextcloud  on the server (e.g. /srv/http/nextcloud)
 	 */
@@ -88,7 +97,7 @@ class OC {
 	 * The installation path array of the apps folder on the server (e.g. /srv/http/nextcloud) 'path' and
 	 * web path in 'url'
 	 */
-	public static $APPSROOTS = array();
+	public static $APPSROOTS = [];
 
 	/**
 	 * @var string
@@ -128,11 +137,11 @@ class OC {
 	 * the app path list is empty or contains an invalid path
 	 */
 	public static function initPaths() {
-		if(defined('PHPUNIT_CONFIG_DIR')) {
+		if (defined('PHPUNIT_CONFIG_DIR')) {
 			self::$configDir = OC::$SERVERROOT . '/' . PHPUNIT_CONFIG_DIR . '/';
-		} elseif(defined('PHPUNIT_RUN') and PHPUNIT_RUN and is_dir(OC::$SERVERROOT . '/tests/config/')) {
+		} elseif (defined('PHPUNIT_RUN') and PHPUNIT_RUN and is_dir(OC::$SERVERROOT . '/tests/config/')) {
 			self::$configDir = OC::$SERVERROOT . '/tests/config/';
-		} elseif($dir = getenv('NEXTCLOUD_CONFIG_DIR')) {
+		} elseif ($dir = getenv('NEXTCLOUD_CONFIG_DIR')) {
 			self::$configDir = rtrim($dir, '/') . '/';
 		} else {
 			self::$configDir = OC::$SERVERROOT . '/config/';
@@ -191,7 +200,7 @@ class OC {
 		}
 
 		// search the apps folder
-		$config_paths = self::$config->getValue('apps_paths', array());
+		$config_paths = self::$config->getValue('apps_paths', []);
 		if (!empty($config_paths)) {
 			foreach ($config_paths as $paths) {
 				if (isset($paths['url']) && isset($paths['path'])) {
@@ -201,20 +210,20 @@ class OC {
 				}
 			}
 		} elseif (file_exists(OC::$SERVERROOT . '/apps')) {
-			OC::$APPSROOTS[] = array('path' => OC::$SERVERROOT . '/apps', 'url' => '/apps', 'writable' => true);
+			OC::$APPSROOTS[] = ['path' => OC::$SERVERROOT . '/apps', 'url' => '/apps', 'writable' => true];
 		} elseif (file_exists(OC::$SERVERROOT . '/../apps')) {
-			OC::$APPSROOTS[] = array(
+			OC::$APPSROOTS[] = [
 				'path' => rtrim(dirname(OC::$SERVERROOT), '/') . '/apps',
 				'url' => '/apps',
 				'writable' => true
-			);
+			];
 		}
 
 		if (empty(OC::$APPSROOTS)) {
 			throw new \RuntimeException('apps directory not found! Please put the Nextcloud apps folder in the Nextcloud folder'
 				. ' or the folder above. You can also configure the location in the config.php file.');
 		}
-		$paths = array();
+		$paths = [];
 		foreach (OC::$APPSROOTS as $path) {
 			$paths[] = $path['path'];
 			if (!is_dir($path['path'])) {
@@ -235,7 +244,7 @@ class OC {
 
 		// Create config if it does not already exist
 		$configFilePath = self::$configDir .'/config.php';
-		if(!file_exists($configFilePath)) {
+		if (!file_exists($configFilePath)) {
 			@touch($configFilePath);
 		}
 
@@ -243,13 +252,11 @@ class OC {
 		$configFileWritable = is_writable($configFilePath);
 		if (!$configFileWritable && !OC_Helper::isReadOnlyConfigEnabled()
 			|| !$configFileWritable && \OCP\Util::needUpgrade()) {
-
 			$urlGenerator = \OC::$server->getURLGenerator();
 
 			if (self::$CLI) {
 				echo $l->t('Cannot write into "config" directory!')."\n";
 				echo $l->t('This can usually be fixed by giving the webserver write access to the config directory')."\n";
-				echo $l->t('See %s', [ $urlGenerator->linkToDocs('admin-dir_permissions') ])."\n";
 				echo "\n";
 				echo $l->t('Or, if you prefer to keep config.php file read only, set the option "config_is_read_only" to true in it.')."\n";
 				echo $l->t('See %s', [ $urlGenerator->linkToDocs('admin-config') ])."\n";
@@ -257,10 +264,9 @@ class OC {
 			} else {
 				OC_Template::printErrorPage(
 					$l->t('Cannot write into "config" directory!'),
-					$l->t('This can usually be fixed by giving the webserver write access to the config directory. See %s',
-					[ $urlGenerator->linkToDocs('admin-dir_permissions') ]) . '. '
+					$l->t('This can usually be fixed by giving the webserver write access to the config directory.') . '. '
 					. $l->t('Or, if you prefer to keep config.php file read only, set the option "config_is_read_only" to true in it. See %s',
-					[ $urlGenerator->linkToDocs('admin-config') ] ),
+					[ $urlGenerator->linkToDocs('admin-config') ]),
 					503
 				);
 			}
@@ -292,7 +298,7 @@ class OC {
 
 			// render error page
 			$template = new OC_Template('', 'update.user', 'guest');
-			OC_Util::addScript('maintenance-check');
+			OC_Util::addScript('dist/maintenance');
 			OC_Util::addStyle('core', 'guest');
 			$template->printPage();
 			die();
@@ -366,7 +372,6 @@ class OC {
 
 		$oldTheme = $systemConfig->getValue('theme');
 		$systemConfig->setValue('theme', '');
-		OC_Util::addScript('config'); // needed for web root
 		OC_Util::addScript('update');
 
 		/** @var \OC\App\AppManager $appManager */
@@ -401,7 +406,7 @@ class OC {
 	}
 
 	public static function initSession() {
-		if(self::$server->getRequest()->getServerProtocol() === 'https') {
+		if (self::$server->getRequest()->getServerProtocol() === 'https') {
 			ini_set('session.cookie_secure', true);
 		}
 
@@ -416,14 +421,8 @@ class OC {
 		$sessionName = OC_Util::getInstanceId();
 
 		try {
-			// Allow session apps to create a custom session object
-			$useCustomSession = false;
-			$session = self::$server->getSession();
-			OC_Hook::emit('OC', 'initSession', array('session' => &$session, 'sessionName' => &$sessionName, 'useCustomSession' => &$useCustomSession));
-			if (!$useCustomSession) {
-				// set the session name to the instance id - which is unique
-				$session = new \OC\Session\Internal($sessionName);
-			}
+			// set the session name to the instance id - which is unique
+			$session = new \OC\Session\Internal($sessionName);
 
 			$cryptoWrapper = \OC::$server->getSessionCryptoWrapper();
 			$session = $cryptoWrapper->wrapSession($session);
@@ -478,11 +477,11 @@ class OC {
 
 		// Append __Host to the cookie if it meets the requirements
 		$cookiePrefix = '';
-		if($cookieParams['secure'] === true && $cookieParams['path'] === '/') {
+		if ($cookieParams['secure'] === true && $cookieParams['path'] === '/') {
 			$cookiePrefix = '__Host-';
 		}
 
-		foreach($policies as $policy) {
+		foreach ($policies as $policy) {
 			header(
 				sprintf(
 					'Set-Cookie: %snc_sameSiteCookie%s=true; path=%s; httponly;' . $secureCookie . 'expires=Fri, 31-Dec-2100 23:59:59 GMT; SameSite=%s',
@@ -524,31 +523,31 @@ class OC {
 			];
 		}
 
-		if($request->isUserAgent($incompatibleUserAgents)) {
+		if ($request->isUserAgent($incompatibleUserAgents)) {
 			return;
 		}
 
-		if(count($_COOKIE) > 0) {
+		if (count($_COOKIE) > 0) {
 			$requestUri = $request->getScriptName();
 			$processingScript = explode('/', $requestUri);
 			$processingScript = $processingScript[count($processingScript)-1];
 
 			// index.php routes are handled in the middleware
-			if($processingScript === 'index.php') {
+			if ($processingScript === 'index.php') {
 				return;
 			}
 
 			// All other endpoints require the lax and the strict cookie
-			if(!$request->passesStrictCookieCheck()) {
+			if (!$request->passesStrictCookieCheck()) {
 				self::sendSameSiteCookies();
 				// Debug mode gets access to the resources without strict cookie
 				// due to the fact that the SabreDAV browser also lives there.
-				if(!\OC::$server->getConfig()->getSystemValue('debug', false)) {
+				if (!\OC::$server->getConfig()->getSystemValue('debug', false)) {
 					http_response_code(\OCP\AppFramework\Http::STATUS_SERVICE_UNAVAILABLE);
 					exit();
 				}
 			}
-		} elseif(!isset($_COOKIE['nc_sameSiteCookielax']) || !isset($_COOKIE['nc_sameSiteCookiestrict'])) {
+		} elseif (!isset($_COOKIE['nc_sameSiteCookielax']) || !isset($_COOKIE['nc_sameSiteCookiestrict'])) {
 			self::sendSameSiteCookies();
 		}
 	}
@@ -566,7 +565,7 @@ class OC {
 		if (defined('PHPUNIT_RUN')) {
 			self::$loader->addValidRoot(OC::$SERVERROOT . '/tests');
 		}
-		spl_autoload_register(array(self::$loader, 'load'));
+		spl_autoload_register([self::$loader, 'load']);
 		$loaderEnd = microtime(true);
 
 		self::$CLI = (php_sapi_name() == 'cli');
@@ -582,7 +581,6 @@ class OC {
 				throw new \RuntimeException('Composer autoloader not found, unable to continue. Check the folder "3rdparty". Running "git submodule update --init" will initialize the git submodule that handles the subfolder "3rdparty".');
 			}
 			require_once $vendorAutoLoad;
-
 		} catch (\RuntimeException $e) {
 			if (!self::$CLI) {
 				http_response_code(503);
@@ -595,15 +593,20 @@ class OC {
 
 		// setup the basic server
 		self::$server = new \OC\Server(\OC::$WEBROOT, self::$config);
+		self::$server->boot();
 		\OC::$server->getEventLogger()->log('autoloader', 'Autoloader', $loaderStart, $loaderEnd);
 		\OC::$server->getEventLogger()->start('boot', 'Initialize');
 
+		// Override php.ini and log everything if we're troubleshooting
+		if (self::$config->getValue('loglevel') === ILogger::DEBUG) {
+			error_reporting(E_ALL);
+		}
+
 		// Don't display errors and log them
-		error_reporting(E_ALL | E_STRICT);
 		@ini_set('display_errors', '0');
 		@ini_set('log_errors', '1');
 
-		if(!date_default_timezone_set('UTC')) {
+		if (!date_default_timezone_set('UTC')) {
 			throw new \RuntimeException('Could not set timezone to UTC');
 		}
 
@@ -637,8 +640,12 @@ class OC {
 			OC\Log\ErrorHandler::register($debug);
 		}
 
+		/** @var \OC\AppFramework\Bootstrap\Coordinator $bootstrapCoordinator */
+		$bootstrapCoordinator = \OC::$server->query(\OC\AppFramework\Bootstrap\Coordinator::class);
+		$bootstrapCoordinator->runRegistration();
+
 		\OC::$server->getEventLogger()->start('init_session', 'Initialize session');
-		OC_App::loadApps(array('session'));
+		OC_App::loadApps(['session']);
 		if (!self::$CLI) {
 			self::initSession();
 		}
@@ -653,30 +660,35 @@ class OC {
 		if (!defined('OC_CONSOLE')) {
 			$errors = OC_Util::checkServer(\OC::$server->getSystemConfig());
 			if (count($errors) > 0) {
-				if (self::$CLI) {
-					// Convert l10n string into regular string for usage in database
-					$staticErrors = [];
-					foreach ($errors as $error) {
-						echo $error['error'] . "\n";
-						echo $error['hint'] . "\n\n";
-						$staticErrors[] = [
-							'error' => (string)$error['error'],
-							'hint' => (string)$error['hint'],
-						];
-					}
-
-					try {
-						\OC::$server->getConfig()->setAppValue('core', 'cronErrors', json_encode($staticErrors));
-					} catch (\Exception $e) {
-						echo('Writing to database failed');
-					}
-					exit(1);
-				} else {
+				if (!self::$CLI) {
 					http_response_code(503);
 					OC_Util::addStyle('guest');
-					OC_Template::printGuestPage('', 'error', array('errors' => $errors));
-					exit;
+					try {
+						OC_Template::printGuestPage('', 'error', ['errors' => $errors]);
+						exit;
+					} catch (\Exception $e) {
+						// In case any error happens when showing the error page, we simply fall back to posting the text.
+						// This might be the case when e.g. the data directory is broken and we can not load/write SCSS to/from it.
+					}
 				}
+
+				// Convert l10n string into regular string for usage in database
+				$staticErrors = [];
+				foreach ($errors as $error) {
+					echo $error['error'] . "\n";
+					echo $error['hint'] . "\n\n";
+					$staticErrors[] = [
+						'error' => (string)$error['error'],
+						'hint' => (string)$error['hint'],
+					];
+				}
+
+				try {
+					\OC::$server->getConfig()->setAppValue('core', 'cronErrors', json_encode($staticErrors));
+				} catch (\Exception $e) {
+					echo('Writing to database failed');
+				}
+				exit(1);
 			} elseif (self::$CLI && \OC::$server->getConfig()->getSystemValue('installed', false)) {
 				\OC::$server->getConfig()->deleteAppValue('core', 'cronErrors');
 			}
@@ -718,21 +730,21 @@ class OC {
 		self::registerEncryptionHooks();
 		self::registerAccountHooks();
 		self::registerResourceCollectionHooks();
+		self::registerAppRestrictionsHooks();
 
 		// Make sure that the application class is not loaded before the database is setup
 		if ($systemConfig->getValue("installed", false)) {
-			$settings = new \OC\Settings\Application();
-			$settings->register();
+			OC_App::loadApp('settings');
 		}
 
 		//make sure temporary files are cleaned up
 		$tmpManager = \OC::$server->getTempManager();
-		register_shutdown_function(array($tmpManager, 'clean'));
+		register_shutdown_function([$tmpManager, 'clean']);
 		$lockProvider = \OC::$server->getLockingProvider();
-		register_shutdown_function(array($lockProvider, 'releaseAll'));
+		register_shutdown_function([$lockProvider, 'releaseAll']);
 
 		// Check whether the sample configuration has been copied
-		if($systemConfig->getValue('copied_sample_config', false)) {
+		if ($systemConfig->getValue('copied_sample_config', false)) {
 			$l = \OC::$server->getL10N('lib');
 			OC_Template::printErrorPage(
 				$l->t('Sample configuration detected'),
@@ -754,11 +766,11 @@ class OC {
 		) {
 			// Allow access to CSS resources
 			$isScssRequest = false;
-			if(strpos($request->getPathInfo(), '/css/') === 0) {
+			if (strpos($request->getPathInfo(), '/css/') === 0) {
 				$isScssRequest = true;
 			}
 
-			if(substr($request->getRequestUri(), -11) === '/status.php') {
+			if (substr($request->getRequestUri(), -11) === '/status.php') {
 				http_response_code(400);
 				header('Content-Type: application/json');
 				echo '{"error": "Trusted domain error.", "code": 15}';
@@ -797,7 +809,7 @@ class OC {
 			// NOTE: This will be replaced to use OCP
 			$userSession = self::$server->getUserSession();
 			$userSession->listen('\OC\User', 'postLogin', function () use ($userSession) {
-				if (!defined('PHPUNIT_RUN')) {
+				if (!defined('PHPUNIT_RUN') && $userSession->isLoggedIn()) {
 					// reset brute force delay for this IP address and username
 					$uid = \OC::$server->getUserSession()->getUser()->getUID();
 					$request = \OC::$server->getRequest();
@@ -846,6 +858,28 @@ class OC {
 		\OCP\Util::connectHook('OC_User', 'changeUser', $hookHandler, 'changeUserHook');
 	}
 
+	private static function registerAppRestrictionsHooks() {
+		$groupManager = self::$server->query(\OCP\IGroupManager::class);
+		$groupManager->listen('\OC\Group', 'postDelete', function (\OCP\IGroup $group) {
+			$appManager = self::$server->getAppManager();
+			$apps = $appManager->getEnabledAppsForGroup($group);
+			foreach ($apps as $appId) {
+				$restrictions = $appManager->getAppRestriction($appId);
+				if (empty($restrictions)) {
+					continue;
+				}
+				$key = array_search($group->getGID(), $restrictions);
+				unset($restrictions[$key]);
+				$restrictions = array_values($restrictions);
+				if (empty($restrictions)) {
+					$appManager->disableApp($appId);
+				} else {
+					$appManager->enableAppForGroups($appId, $restrictions);
+				}
+			}
+		});
+	}
+
 	private static function registerResourceCollectionHooks() {
 		\OC\Collaboration\Resources\Listener::register(\OC::$server->getEventDispatcher());
 	}
@@ -865,8 +899,11 @@ class OC {
 	public static function registerShareHooks() {
 		if (\OC::$server->getSystemConfig()->getValue('installed')) {
 			OC_Hook::connect('OC_User', 'post_deleteUser', Hooks::class, 'post_deleteUser');
-			OC_Hook::connect('OC_User', 'post_removeFromGroup', Hooks::class, 'post_removeFromGroup');
 			OC_Hook::connect('OC_User', 'post_deleteGroup', Hooks::class, 'post_deleteGroup');
+
+			/** @var IEventDispatcher $dispatcher */
+			$dispatcher = \OC::$server->get(IEventDispatcher::class);
+			$dispatcher->addServiceListener(UserRemovedEvent::class, \OC\Share20\UserRemovedListener::class);
 		}
 	}
 
@@ -891,7 +928,6 @@ class OC {
 	 * Handle the request
 	 */
 	public static function handleRequest() {
-
 		\OC::$server->getEventLogger()->start('handle_request', 'Handle request');
 		$systemConfig = \OC::$server->getSystemConfig();
 
@@ -900,7 +936,7 @@ class OC {
 			\OC::$server->getSession()->clear();
 			$setupHelper = new OC\Setup(
 				$systemConfig,
-				\OC::$server->getIniWrapper(),
+				\OC::$server->get(\bantu\IniGetWrapper\IniGetWrapper::class),
 				\OC::$server->getL10N('lib'),
 				\OC::$server->query(\OCP\Defaults::class),
 				\OC::$server->getLogger(),
@@ -939,7 +975,7 @@ class OC {
 			\OC_JSON::callCheck();
 			\OC_JSON::checkAdminUser();
 			$appIds = (array)$request->getParam('appid');
-			foreach($appIds as $appId) {
+			foreach ($appIds as $appId) {
 				$appId = \OC_App::cleanAppId($appId);
 				\OC::$server->getAppManager()->disableApp($appId);
 			}
@@ -954,11 +990,11 @@ class OC {
 		if (!\OCP\Util::needUpgrade()
 			&& !((bool) $systemConfig->getValue('maintenance', false))) {
 			// For logged-in users: Load everything
-			if(\OC::$server->getUserSession()->isLoggedIn()) {
+			if (\OC::$server->getUserSession()->isLoggedIn()) {
 				OC_App::loadApps();
 			} else {
 				// For guests: Load only filesystem and logging
-				OC_App::loadApps(array('filesystem', 'logging'));
+				OC_App::loadApps(['filesystem', 'logging']);
 				self::handleLogin($request);
 			}
 		}
@@ -966,7 +1002,7 @@ class OC {
 		if (!self::$CLI) {
 			try {
 				if (!((bool) $systemConfig->getValue('maintenance', false)) && !\OCP\Util::needUpgrade()) {
-					OC_App::loadApps(array('filesystem', 'logging'));
+					OC_App::loadApps(['filesystem', 'logging']);
 					OC_App::loadApps();
 				}
 				OC_Util::setupFS();
@@ -1009,7 +1045,7 @@ class OC {
 	 * @param OCP\IRequest $request
 	 * @return boolean
 	 */
-	static function handleLogin(OCP\IRequest $request) {
+	public static function handleLogin(OCP\IRequest $request) {
 		$userSession = self::$server->getUserSession();
 		if (OC_User::handleApacheAuth()) {
 			return true;
@@ -1036,16 +1072,18 @@ class OC {
 		}
 
 		// Extract PHP_AUTH_USER/PHP_AUTH_PW from other headers if necessary.
-		$vars = array(
+		$vars = [
 			'HTTP_AUTHORIZATION', // apache+php-cgi work around
 			'REDIRECT_HTTP_AUTHORIZATION', // apache+php-cgi alternative
-		);
+		];
 		foreach ($vars as $var) {
 			if (isset($_SERVER[$var]) && preg_match('/Basic\s+(.*)$/i', $_SERVER[$var], $matches)) {
-				list($name, $password) = explode(':', base64_decode($matches[1]), 2);
-				$_SERVER['PHP_AUTH_USER'] = $name;
-				$_SERVER['PHP_AUTH_PW'] = $password;
-				break;
+				$credentials = explode(':', base64_decode($matches[1]), 2);
+				if (count($credentials) === 2) {
+					$_SERVER['PHP_AUTH_USER'] = $credentials[0];
+					$_SERVER['PHP_AUTH_PW'] = $credentials[1];
+					break;
+				}
 			}
 		}
 	}

@@ -4,10 +4,12 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Hemanth Kumar Veeranki <hems.india1997@gmail.com>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Michael Göhler <somebody.here@gmx.de>
  * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Oliver Salzburg <oliver.salzburg@gmail.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Vincent Petry <pvince81@owncloud.com>
@@ -24,15 +26,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+
 namespace OC\Setup;
 
-use OC\DatabaseSetupException;
 use OC\DB\MySqlTools;
 use OCP\IDBConnection;
 use OCP\ILogger;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
 
 class MySQL extends AbstractDatabase {
 	public $dbprettyname = 'MySQL/MariaDB';
@@ -40,20 +43,6 @@ class MySQL extends AbstractDatabase {
 	public function setupDatabase($username) {
 		//check if the database user has admin right
 		$connection = $this->connect(['dbname' => null]);
-
-		$result = $connection->query('SHOW VARIABLES LIKE "version" ;');
-		$row = $result->fetch();
-		$version = strtolower($row['Value']);
-
-		if (strpos($version, 'mariadb') !== false) {
-			if (version_compare($version, '10.4', '>=')) {
-				throw new DatabaseSetupException(sprintf('Unsupported MariaDB version %s, Nextcloud 16 requires a version lower than 10.4', $row['Value']));
-			}
-		} else {
-			if (version_compare($version, '8', '>=')) {
-				throw new DatabaseSetupException(sprintf('Unsupported MySQL version %s, Nextcloud 16 requires a version lower than 8.0', $row['Value']));
-			}
-		}
 
 		// detect mb4
 		$tools = new MySqlTools();
@@ -86,7 +75,7 @@ class MySQL extends AbstractDatabase {
 	 * @param \OC\DB\Connection $connection
 	 */
 	private function createDatabase($connection) {
-		try{
+		try {
 			$name = $this->dbName;
 			$user = $this->dbUser;
 			//we can't use OC_DB functions here because we need to connect as the administrative user.
@@ -104,7 +93,7 @@ class MySQL extends AbstractDatabase {
 
 		try {
 			//this query will fail if there aren't the right permissions, ignore the error
-			$query="GRANT ALL PRIVILEGES ON `$name` . * TO '$user'";
+			$query="GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EVENT, TRIGGER ON `$name` . * TO '$user'";
 			$connection->executeUpdate($query);
 		} catch (\Exception $ex) {
 			$this->logger->logException($ex, [
@@ -120,23 +109,24 @@ class MySQL extends AbstractDatabase {
 	 * @throws \OC\DatabaseSetupException
 	 */
 	private function createDBUser($connection) {
-		try{
+		try {
 			$name = $this->dbUser;
 			$password = $this->dbPassword;
 			// we need to create 2 accounts, one for global use and one for local user. if we don't specify the local one,
 			// the anonymous user would take precedence when there is one.
 
-			$query = "CREATE USER '$name'@'localhost' IDENTIFIED BY '$password'";
-			// nc11 update: $query = "CREATE USER '$name'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password'";
-
-			$connection->executeUpdate($query);
-
-			// nc11 update: $query = "CREATE USER '$name'@'%' IDENTIFIED WITH mysql_native_password BY '$password'";
-			$query = "CREATE USER '$name'@'%' IDENTIFIED BY '$password'";
-
-			$connection->executeUpdate($query);
-		}
-		catch (\Exception $ex){
+			if ($connection->getDatabasePlatform() instanceof Mysql80Platform) {
+				$query = "CREATE USER '$name'@'localhost' IDENTIFIED WITH mysql_native_password BY '$password'";
+				$connection->executeUpdate($query);
+				$query = "CREATE USER '$name'@'%' IDENTIFIED WITH mysql_native_password BY '$password'";
+				$connection->executeUpdate($query);
+			} else {
+				$query = "CREATE USER '$name'@'localhost' IDENTIFIED BY '$password'";
+				$connection->executeUpdate($query);
+				$query = "CREATE USER '$name'@'%' IDENTIFIED BY '$password'";
+				$connection->executeUpdate($query);
+			}
+		} catch (\Exception $ex) {
 			$this->logger->logException($ex, [
 				'message' => 'Database user creation failed.',
 				'level' => ILogger::ERROR,

@@ -24,6 +24,8 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
 	font-family: inherit;
 	vertical-align: baseline;
 	cursor: default;
+	scrollbar-color: var(--color-border-dark) transparent;
+	scrollbar-width: thin;
 }
 
 html, body {
@@ -86,8 +88,8 @@ ul {
 body {
 	background-color: var(--color-main-background);
 	font-weight: normal;
-	font-size: .8em;
-	line-height: 1.6em;
+	font-size: var(--default-font-size);
+	line-height: var(--default-line-height);
 	font-family: var(--font-face);
 	color: var(--color-main-text);
 }
@@ -148,7 +150,7 @@ body {
 /* SCROLLING */
 
 ::-webkit-scrollbar {
-	width: 9px;
+	width: 6px;
 	height: 5px;
 }
 
@@ -157,9 +159,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--color-background-darker);
+	background: var(--color-border-dark);
 	border-radius: var(--border-radius);
 }
+
+
+/* SELECTION */
+
+::selection {
+	background-color: var(--color-primary-element);
+	color: var(--color-primary-text);
+}
+
 
 /* CONTENT ------------------------------------------------------------------ */
 
@@ -170,7 +181,7 @@ body {
 	padding: 0;
 	margin: 0;
 	background-color: var(--color-main-background-translucent);
-	z-index: 60;
+	z-index: 61; /* must be above the filelist sticky header */
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -338,9 +349,9 @@ body {
 	}
 }
 
-.error {
+.error:not(.toastify) {
 	a {
-		color: var(--color-primary-text) !important;
+		color: white !important;
 		font-weight: bold !important;
 		&.button {
 			color: var(--color-text-lighter) !important;
@@ -395,7 +406,7 @@ body {
 .avatar, .avatardiv {
 	border-radius: 50%;
 	flex-shrink: 0;
-	img {
+	&> img {
 		border-radius: 50%;
 		flex-shrink: 0;
 	}
@@ -455,7 +466,9 @@ tr .action:not(.permanent), .selectedActions a {
 }
 
 tr {
-	&:hover .action, &:focus .action, .action.permanent {
+	&:hover .action:not(.menuitem),
+	&:focus .action:not(.menuitem),
+	.action.permanent:not(.menuitem) {
 		opacity: .5;
 	}
 }
@@ -706,6 +719,8 @@ code {
 /* ---- DIALOGS ---- */
 #oc-dialog-filepicker-content {
 	position: relative;
+	display: flex;
+	flex-direction:column;
 
 	.dirtree {
 		flex-wrap: wrap;
@@ -766,7 +781,9 @@ code {
 		border: 1px solid var(--color-border-dark);
 		border-radius: var(--border-radius-pill);
 		position: relative;
-		top: -5px;
+		left: 15px;
+		top:3px;
+		order:1;
 
 		.icon.icon-add{
 			background-image: var(--icon-add-000);
@@ -799,7 +816,8 @@ code {
 		box-sizing: border-box;
 		display: inline-block;
 		overflow-y: auto;
-		height: 100%;
+		flex: 1;
+		/*height: 100%;*/
 		/* overflow under the button row */
 		width: 100%;
 		overflow-x: hidden;
@@ -884,6 +902,9 @@ code {
 					overflow: hidden;
 					white-space: pre;
 					text-overflow: ellipsis;
+				}
+				&__last {
+					white-space: pre;
 				}
 			}
 		}
@@ -975,16 +996,12 @@ span.ui-icon {
 	}
 }
 
-#contactsmenu > .menu {
-	/* show ~4.5 entries */
-	height: 278px;
+#header .header-right > div#contactsmenu > .menu {
+	/* show 2.5 to 4.5 entries depending on the screen height */
+	height: calc(100vh - 50px * 3);
+	max-height: calc(50px * 4.5 + 50px);
+	min-height: calc(50px * 3.5);
 	width: 350px;
-	max-width: 90%;
-	right: 13px;
-
-	&::after {
-		right: 61px;
-	}
 
 	.emptycontent {
 		margin-top: 5vh !important;
@@ -996,8 +1013,10 @@ span.ui-icon {
 	}
 
 	.content {
-		max-height: calc(100% - #{$header-height});
-		height: 100%;
+		/* fixed max height of the parent container without the search input */
+		height: calc(100vh - 50px * 3 - 50px);
+		max-height: calc(50px * 4.5);
+		min-height: calc(50px * 3.5 - 50px);
 		overflow-y: auto;
 
 		.footer {
@@ -1186,7 +1205,8 @@ div.crumb {
 		// Some sane max-width for each folder name
 		max-width: 200px;
 
-		&.icon-home {
+		&.icon-home,
+		&.icon-delete {
 			// Hide home text
 			text-indent: -9999px;
 		}

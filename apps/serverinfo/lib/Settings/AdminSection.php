@@ -22,7 +22,6 @@
 
 namespace OCA\ServerInfo\Settings;
 
-
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
@@ -55,7 +54,7 @@ class AdminSection implements IIconSection {
 	 * @return string
 	 */
 	public function getName() {
-		return $this->l->t('Monitoring');
+		return $this->l->t('System');
 	}
 
 	/**
@@ -66,7 +65,7 @@ class AdminSection implements IIconSection {
 	 * keep the server setting at the top, right after "overview" and "basic settings"
 	 */
 	public function getPriority() {
-		return 1;
+		return 90;
 	}
 
 	/**

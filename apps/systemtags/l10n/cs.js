@@ -1,7 +1,6 @@
 OC.L10N.register(
     "systemtags",
     {
-    "Tags" : "Štítky",
     "Tag name is empty" : "Název štítku je prázdný",
     "Update" : "Aktualizovat",
     "Create" : "Vytvořit",
@@ -26,7 +25,7 @@ OC.L10N.register(
     "{actor} deleted system tag {systemtag}" : "{actor} odstranil(a) systémový štítek {systemtag}",
     "You updated system tag %2$s to %1$s" : "Aktualizoval(a) jste systémový štítek %2$s na %1$s",
     "You updated system tag {oldsystemtag} to {newsystemtag}" : "Aktualizovali jste systémový štítek {oldsystemtag} na {newsystemtag}",
-    "%1$s updated system tag %3$s to %2$s" : "%1$s aktualizoval systémový tag %3$s na %2$s",
+    "%1$s updated system tag %3$s to %2$s" : "%1$s aktualizován systémový štítek %3$s na %2$s",
     "{actor} updated system tag {oldsystemtag} to {newsystemtag}" : "{actor} aktualizoval(a) systémový štítek {oldsystemtag} na { newsystemtag}",
     "System tag %2$s was added to %1$s by the system" : "Systémový štítek %2$s byl přidán do %1$s systémem",
     "System tag {systemtag} was added to {file} by the system" : "Systémový štítek {systemtag} byl systémem přidán k {file}",
@@ -43,6 +42,7 @@ OC.L10N.register(
     "%s (restricted)" : "%s (omezeno)",
     "%s (invisible)" : "%s (neviditelný)",
     "<strong>System tags</strong> for a file have been modified" : "<strong>Systémové štítky</strong> souboru byly upraveny",
+    "Tags" : "Štítky",
     "Collaborative tags" : "Štítky pro spolupráci",
     "Collaborative tagging functionality which shares tags among users." : "Funkce pro spolupráci při opatřování štítky, sdílenými mezi uživateli.",
     "Collaborative tagging functionality which shares tags among users. Great for teams.\n\t(If you are a provider with a multi-tenancy installation, it is advised to deactivate this app as tags are shared.)" : "Funkce pro spolupráci při opatřování štítky, sdílenými mezi uživateli. Skvělé pro týmy.\n\t(Pokud jste poskytovatel instalace, sloužící více subjektům, je doporučeno tuto aplikaci vypnout, protože štítky jsou sdílené.)",

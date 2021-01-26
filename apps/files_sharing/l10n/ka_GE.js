@@ -11,6 +11,7 @@ OC.L10N.register(
     "No shared links" : "გაზიარებული ბმულები არაა",
     "Files and folders you share by link will show up here" : "აქ გამოჩნდება ფაილები და დირექტორიები რომლებსაც ბმულით აზიარებთ თქვენ",
     "Shares" : "გაზიარებები",
+    "Restore" : "აღდგენა",
     "Move or copy" : "გადაიტანეთ ან დააკოპირეთ",
     "Download" : "ჩამოტვირთვა",
     "Delete" : "წაშლა",
@@ -64,6 +65,7 @@ OC.L10N.register(
     "{actor} shared {file} with you" : "{actor} მომხმარებელმა თქვენთან გააზიარა {file}",
     "A file or folder shared by mail or by public link was <strong>downloaded</strong>" : "ელ-ფოსტით ან საზოგადო ბმულით გაზიარბული ფაილი ან დირექტორია  <strong>გადმოწერილ იქნა</strong>",
     "A file or folder was shared from <strong>another server</strong>" : "ფაილი ან დირექტორია გაზიარდა <strong>სხვა სერვერიდან</strong>",
+    "Files" : "ფაილები",
     "A file or folder has been <strong>shared</strong>" : "ფაილი ან დირექტორია <strong>გაზიარებულ იქნა</strong>",
     "Wrong share ID, share doesn't exist" : "არასწორი გაზიარების ID, გაზიარება არ არსებობს",
     "Could not delete share" : "გაზიარების გაუქმება ვერ მოხერხდა",
@@ -126,8 +128,7 @@ OC.L10N.register(
     "Download %s" : "%s-ის ჩამოტვირთვა",
     "Upload files to %s" : "ფაილების ატვირთვა %s-ში",
     "Select or drop files" : "აირჩიეთ ან გადმოიტანეთ ფაილები",
-    "Uploading files…" : "ფაილების ატვირთვა...",
     "Uploaded files:" : "ფაილების ატვირთვა:",
-    "could not delete share" : "გაზიარების გაუქმება ვერ მოხერხდა"
+    "Uploading files…" : "ფაილების ატვირთვა..."
 },
 "nplurals=2; plural=(n!=1);");

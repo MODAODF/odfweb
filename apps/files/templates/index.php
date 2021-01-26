@@ -1,10 +1,10 @@
-<?php /** @var $l \OCP\IL10N */ ?>
+<?php /** @var \OCP\IL10N $l */ ?>
 <?php $_['appNavigation']->printPage(); ?>
 <div id="app-content">
 
 	<?php if (!$_['isIE']) { ?>
 		<input type="checkbox" class="hidden-visually" id="showgridview"
-			<?php if($_['showgridview']) { ?>checked="checked" <?php } ?>/>
+			<?php if ($_['showgridview']) { ?>checked="checked" <?php } ?>/>
 		<label id="view-toggle" for="showgridview" class="button <?php p($_['showgridview'] ? 'icon-toggle-filelist' : 'icon-toggle-pictures') ?>"
 			title="<?php p($l->t('Toggle grid view'))?>"></label>
 	<?php } ?>

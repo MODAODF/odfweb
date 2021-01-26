@@ -2,7 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
- * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
@@ -17,13 +18,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Sharing;
 
 use OC\BackgroundJob\TimedJob;
+use OCP\Share\IShare;
 
 /**
  * Delete all shares that are expired
@@ -58,7 +60,10 @@ class ExpireSharesJob extends TimedJob {
 			->from('share')
 			->where(
 				$qb->expr()->andX(
-					$qb->expr()->eq('share_type', $qb->expr()->literal(\OCP\Share::SHARE_TYPE_LINK)),
+					$qb->expr()->orX(
+						$qb->expr()->eq('share_type', $qb->expr()->literal(IShare::TYPE_LINK)),
+						$qb->expr()->eq('share_type', $qb->expr()->literal(IShare::TYPE_EMAIL))
+					),
 					$qb->expr()->lte('expiration', $qb->expr()->literal($now)),
 					$qb->expr()->orX(
 						$qb->expr()->eq('item_type', $qb->expr()->literal('file')),
@@ -68,10 +73,9 @@ class ExpireSharesJob extends TimedJob {
 			);
 
 		$shares = $qb->execute();
-		while($share = $shares->fetch()) {
-			\OC\Share\Share::unshare($share['item_type'], $share['file_source'], \OCP\Share::SHARE_TYPE_LINK, null, $share['uid_owner']);
+		while ($share = $shares->fetch()) {
+			\OC\Share\Share::unshare($share['item_type'], $share['file_source'], IShare::TYPE_LINK, null, $share['uid_owner']);
 		}
 		$shares->closeCursor();
 	}
-
 }

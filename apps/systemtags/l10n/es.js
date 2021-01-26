@@ -1,14 +1,13 @@
 OC.L10N.register(
     "systemtags",
     {
-    "Tags" : "Etiquetas",
     "Tag name is empty" : "El nombre de la etiqueta está vacío",
     "Update" : "Actualizar",
     "Create" : "Crear",
     "Select tag…" : "Seleccionar etiqueta...",
     "System tag %1$s added by the system" : "Etiqueta de sistema %1$s añadida por el sistema",
     "Added system tag {systemtag}" : "Se añadió la etiqueta de sistema {systemtag}",
-    "Added system tag %1$s" : "Se añadió la etiqueta delsistema %1$s",
+    "Added system tag %1$s" : "Se añadió la etiqueta del sistema %1$s",
     "%1$s added system tag %2$s" : "%1$s añadió la etiqueta de sistema %2$s",
     "{actor} added system tag {systemtag}" : "{actor} añadió la etiqueta de sistema {systemtag}",
     "System tag %1$s removed by the system" : "Etiqueta de sistema %1$s eliminada por el sistema",
@@ -43,6 +42,7 @@ OC.L10N.register(
     "%s (restricted)" : "%s (restringido)",
     "%s (invisible)" : "%s (invisible)",
     "<strong>System tags</strong> for a file have been modified" : "Se han modificado las <strong>etiquetas de sistema</strong> de un archivo",
+    "Tags" : "Etiquetas",
     "Collaborative tags" : "Etiquetas colaborativas",
     "Collaborative tagging functionality which shares tags among users." : "Funcionalidad de etiquetado colaborativo que comparte las etiquetas entre usuarios.",
     "Collaborative tagging functionality which shares tags among users. Great for teams.\n\t(If you are a provider with a multi-tenancy installation, it is advised to deactivate this app as tags are shared.)" : "Funcionalidad de etiquetado colaborativo que comparte las etiquetas entre usuarios. Adecuado para equipos.\n\n(Si eres un proveedor con una instalación en multitenencia), se aconseja desactivar esta app pues las etiquetas se comparten).",

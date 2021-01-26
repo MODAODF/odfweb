@@ -1,6 +1,10 @@
 OC.L10N.register(
     "logreader",
     {
+    "Log levels" : "Log mailak",
+    "Log content" : "Log edukia",
+    "Live update" : "Etengabeko eguneraketa ",
+    "Download logs" : "Log fitxategiak jaitsi",
     "Error parsing log" : "Log fitxategia irakurtzean errorea",
     "Copy" : "Kopiatu",
     "Copy raw" : "Kopiatu gordin",
@@ -12,11 +16,10 @@ OC.L10N.register(
     "App" : "App",
     "Message" : "Mezua",
     "Time" : "Noiz",
-    "Log levels" : "Log mailak",
-    "Log content" : "Log edukia",
-    "Live update" : "Etengabeko eguneraketa ",
-    "Download logs" : "Log fitxategiak jaitsi",
+    "Caused by " : "Arrazoia",
     "Logging" : "Arazten",
-    "Log Reader" : "Log irakurgailua"
+    "Log Reader" : "Log irakurgailua",
+    "A log reader for Nextcloud" : "Nextcloudentzat log fitxategien irakurlea",
+    "Log reader for Nextcloud" : "Nextcloudentzat log fitxategien irakurlea"
 },
 "nplurals=2; plural=(n != 1);");

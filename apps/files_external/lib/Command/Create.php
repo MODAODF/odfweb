@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -64,7 +65,7 @@ class Create extends Base {
 	/** @var IUserSession */
 	private $userSession;
 
-	function __construct(GlobalStoragesService $globalService,
+	public function __construct(GlobalStoragesService $globalService,
 						 UserStoragesService $userService,
 						 IUserManager $userManager,
 						 IUserSession $userSession,
@@ -118,7 +119,7 @@ class Create extends Base {
 		parent::configure();
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$user = $input->getOption('user');
 		$mountPoint = $input->getArgument('mount_point');
 		$storageIdentifier = $input->getArgument('storage_backend');

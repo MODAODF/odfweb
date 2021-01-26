@@ -20,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -37,7 +37,6 @@ namespace OCP\AppFramework\Http;
  * @deprecated 9.2.0 To implement an OCS endpoint extend the OCSController
  */
 class OCSResponse extends Response {
-
 	private $data;
 	private $format;
 	private $statuscode;
@@ -59,6 +58,8 @@ class OCSResponse extends Response {
 	public function __construct($format, $statuscode, $message,
 								$data=[], $itemscount='',
 								$itemsperpage='') {
+		parent::__construct();
+
 		$this->format = $format;
 		$this->statuscode = $statuscode;
 		$this->message = $message;
@@ -91,6 +92,4 @@ class OCSResponse extends Response {
 
 		return \OC_API::renderResult($this->format, $r->getMeta(), $r->getData());
 	}
-
-
 }

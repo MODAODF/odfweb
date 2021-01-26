@@ -18,7 +18,7 @@
  *    - TODO music upload button
  */
 
-/* global jQuery, humanFileSize, md5 */
+/* global jQuery, md5 */
 
 /**
  * File upload object
@@ -586,7 +586,10 @@ OC.Uploader.prototype = _.extend({
 		_.each(uploads, function(upload) {
 			self._uploads[upload.data.uploadId] = upload;
 		});
-		self.totalToUpload = _.reduce(uploads, function(memo, upload) { return memo+upload.getFile().size; }, 0);
+		if (!self._uploading) {
+			self.totalToUpload = 0;
+		}
+		self.totalToUpload += _.reduce(uploads, function(memo, upload) { return memo+upload.getFile().size; }, 0);
 		var semaphore = new OCA.Files.Semaphore(5);
 		var promises = _.map(uploads, function(upload) {
 			return semaphore.acquire().then(function(){
@@ -753,11 +756,11 @@ OC.Uploader.prototype = _.extend({
 	 *
 	 * @param {array} selection of files to upload
 	 * @param {object} callbacks - object with several callback methods
-	 * @param {function} callbacks.onNoConflicts
-	 * @param {function} callbacks.onSkipConflicts
-	 * @param {function} callbacks.onReplaceConflicts
-	 * @param {function} callbacks.onChooseConflicts
-	 * @param {function} callbacks.onCancel
+	 * @param {Function} callbacks.onNoConflicts
+	 * @param {Function} callbacks.onSkipConflicts
+	 * @param {Function} callbacks.onReplaceConflicts
+	 * @param {Function} callbacks.onChooseConflicts
+	 * @param {Function} callbacks.onCancel
 	 */
 	checkExistingFiles: function (selection, callbacks) {
 		var fileList = this.fileList;
@@ -918,7 +921,7 @@ OC.Uploader.prototype = _.extend({
 				 */
 				add: function(e, data) {
 					self.log('add', e, data);
-					var that = $(this), freeSpace;
+					var that = $(this), freeSpace = 0;
 
 					var upload = new OC.FileUpload(self, data);
 					// can't link directly due to jQuery not liking cyclic deps on its ajax object
@@ -989,13 +992,20 @@ OC.Uploader.prototype = _.extend({
 					}
 
 					// check free space
-					freeSpace = $('#free_space').val();
+					if (!self.fileList || upload.getTargetFolder() === self.fileList.getCurrentDirectory()) {
+						// Use global free space if there is no file list to check or the current directory is the target
+						freeSpace = $('#free_space').val()
+					} else if (upload.getTargetFolder().indexOf(self.fileList.getCurrentDirectory()) === 0) {
+						// Check subdirectory free space if file is uploaded there
+						var targetSubdir = upload._targetFolder.replace(self.fileList.getCurrentDirectory(), '')
+						freeSpace = parseInt(upload.uploader.fileList.getModelForFile(targetSubdir).get('quotaAvailableBytes'))
+					}
 					if (freeSpace >= 0 && selection.totalBytes > freeSpace) {
 						data.textStatus = 'notenoughspace';
 						data.errorThrown = t('files',
 							'Not enough free space, you are uploading {size1} but only {size2} is left', {
-							'size1': humanFileSize(selection.totalBytes),
-							'size2': humanFileSize($('#free_space').val())
+							'size1': OC.Util.humanFileSize(selection.totalBytes),
+							'size2': OC.Util.humanFileSize(freeSpace)
 						});
 					}
 
@@ -1195,9 +1205,9 @@ OC.Uploader.prototype = _.extend({
 						h = t('files', 'Uploading …');
 					}
 					self._setProgressBarText(h, h, t('files', '{loadedSize} of {totalSize} ({bitrate})' , {
-							loadedSize: humanFileSize(data.loaded),
-							totalSize: humanFileSize(total),
-							bitrate: humanFileSize(data.bitrate / 8) + '/s'
+							loadedSize: OC.Util.humanFileSize(data.loaded),
+							totalSize: OC.Util.humanFileSize(total),
+							bitrate: OC.Util.humanFileSize(data.bitrate / 8) + '/s'
 						}));
 					self._setProgressBarValue(progress);
 					self.trigger('progressall', e, data);
@@ -1303,6 +1313,8 @@ OC.Uploader.prototype = _.extend({
 							self.cancelUploads();
 						} else if (status === 409) {
 							OC.Notification.show(message || t('files', 'Target folder does not exist any more'), {type: 'error'});
+						} else if (status === 403) {
+							OC.Notification.show(message || t('files', 'Operation is blocked by access control'), {type: 'error'});
 						} else {
 							OC.Notification.show(message || t('files', 'Error when assembling chunks, status code {status}', {status: status}), {type: 'error'});
 						}

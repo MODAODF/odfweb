@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Jörn Friedrich Dreyer <jfd@butonic.de>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
@@ -24,7 +25,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -83,11 +84,11 @@ class MDB2SchemaManager {
 		$dispatcher = \OC::$server->getEventDispatcher();
 		if ($platform instanceof SqlitePlatform) {
 			return new SQLiteMigrator($this->conn, $random, $config, $dispatcher);
-		} else if ($platform instanceof OraclePlatform) {
+		} elseif ($platform instanceof OraclePlatform) {
 			return new OracleMigrator($this->conn, $random, $config, $dispatcher);
-		} else if ($platform instanceof MySqlPlatform) {
+		} elseif ($platform instanceof MySqlPlatform) {
 			return new MySQLMigrator($this->conn, $random, $config, $dispatcher);
-		} else if ($platform instanceof PostgreSqlPlatform) {
+		} elseif ($platform instanceof PostgreSqlPlatform) {
 			return new PostgreSqlMigrator($this->conn, $random, $config, $dispatcher);
 		} else {
 			return new Migrator($this->conn, $random, $config, $dispatcher);
@@ -144,7 +145,6 @@ class MDB2SchemaManager {
 		$toSchema = new Schema([], [], $this->conn->getSchemaManager()->createSchemaConfig());
 		$fromSchema = $schemaReader->loadSchemaFromFile($file, $toSchema);
 		$toSchema = clone $fromSchema;
-		/** @var $table \Doctrine\DBAL\Schema\Table */
 		foreach ($toSchema->getTables() as $table) {
 			$toSchema->dropTable($table->getName());
 		}

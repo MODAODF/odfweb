@@ -2,9 +2,9 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
- * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -18,7 +18,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -58,7 +58,7 @@ class Delete extends Base {
 	 */
 	protected $userManager;
 
-	function __construct(GlobalStoragesService $globalService, UserStoragesService $userService, IUserSession $userSession, IUserManager $userManager) {
+	public function __construct(GlobalStoragesService $globalService, UserStoragesService $userService, IUserSession $userSession, IUserManager $userManager) {
 		parent::__construct();
 		$this->globalService = $globalService;
 		$this->userService = $userService;
@@ -83,7 +83,7 @@ class Delete extends Base {
 		parent::configure();
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$mountId = $input->getArgument('mount_id');
 		try {
 			$mount = $this->globalService->getStorage($mountId);
@@ -104,10 +104,11 @@ class Delete extends Base {
 			$question = new ConfirmationQuestion('Delete this mount? [y/N] ', false);
 
 			if (!$questionHelper->ask($input, $output, $question)) {
-				return null;
+				return 1;
 			}
 		}
 
 		$this->globalService->removeStorage($mountId);
+		return 0;
 	}
 }

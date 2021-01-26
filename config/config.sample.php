@@ -20,7 +20,7 @@
  *  * use RST syntax
  */
 
-$CONFIG = array(
+$CONFIG = [
 
 
 /**
@@ -65,12 +65,16 @@ $CONFIG = array(
  *   This disallows all other ports on this host
  * - use * as a wildcard, e.g. ubos-raspberry-pi*.local will allow
  *   ubos-raspberry-pi.local and ubos-raspberry-pi-2.local
+ * - the IP address with or without permitted port, e.g. [2001:db8::1]:8080
+ *   Using TLS certificates where commonName=<IP address> is deprecated
  */
 'trusted_domains' =>
-  array (
+   [
     'demo.example.org',
     'otherdomain.example.org',
-  ),
+    '10.111.112.113',
+    '[2001:db8::1]'
+  ],
 
 
 /**
@@ -165,7 +169,7 @@ $CONFIG = array(
  *
  * Defaults to ``en``
  */
-'default_language' => 'zh_TW',
+'default_language' => 'en',
 
 /**
  * With this setting a language can be forced for all users. If a language is
@@ -176,7 +180,7 @@ $CONFIG = array(
  *
  * Defaults to ``false``
  */
-'force_language' => 'zh_TW',
+'force_language' => 'en',
 
 /**
  * This sets the default locale on your Nextcloud server, using ISO_639
@@ -188,7 +192,7 @@ $CONFIG = array(
  *
  * Defaults to ``en``
  */
-'default_locale' => 'zh_TW',
+'default_locale' => 'en_US',
 
 /**
  * With this setting a locale can be forced for all users. If a locale is
@@ -199,18 +203,18 @@ $CONFIG = array(
  *
  * Defaults to ``false``
  */
-'force_locale' => 'zh_TW',
+'force_locale' => 'en_US',
 
 /**
  * Set the default app to open on login. Use the app names as they appear in the
  * URL after clicking them in the Apps menu, such as documents, calendar, and
  * gallery. You can use a comma-separated list of app names, so if the first
  * app is not enabled for a user then Nextcloud will try the second one, and so
- * on. If no enabled apps are found it defaults to the Files app.
+ * on. If no enabled apps are found it defaults to the dashboard app.
  *
- * Defaults to ``files``
+ * Defaults to ``dashboard,files``
  */
-'defaultapp' => 'files',
+'defaultapp' => 'dashboard,files',
 
 /**
  * ``true`` enables the Help menu item in the user menu (top right of the
@@ -248,6 +252,15 @@ $CONFIG = array(
 'session_keepalive' => true,
 
 /**
+ * Enable or disable the automatic logout after session_lifetime, even if session
+ * keepalive is enabled. This will make sure that an inactive browser will be logged out
+ * even if requests to the server might extend the session lifetime.
+ *
+ * Defaults to ``false``
+ */
+'auto_logout' => false,
+
+/**
  * Enforce token authentication for clients, which blocks requests using the user
  * password for enhanced security. Users need to generate tokens in personal settings
  * which can be used as passwords on their clients.
@@ -257,6 +270,18 @@ $CONFIG = array(
 'token_auth_enforced' => false,
 
 /**
+ * The interval at which token activity should be updated.
+ * Increasing this value means that the last activty on the security page gets
+ * more outdated.
+ *
+ * Tokens are still checked every 5 minutes for validity
+ * max value: 300
+ *
+ * Defaults to ``300``
+ */
+'token_auth_activity_update' => 60,
+
+/**
  * Whether the bruteforce protection shipped with Nextcloud should be enabled or not.
  *
  * Disabling this is discouraged for security reasons.
@@ -264,6 +289,11 @@ $CONFIG = array(
  * Defaults to ``true``
  */
 'auth.bruteforce.protection.enabled' => true,
+
+/**
+ * By default WebAuthn is available but it can be explicitly disabled by admins
+ */
+'auth.webauthn.enabled' => true,
 
 /**
  * The directory where the skeleton files are located. These files will be
@@ -357,8 +387,8 @@ $CONFIG = array(
 'mail_smtptimeout' => 10,
 
 /**
- * This depends on ``mail_smtpmode``. Specify when you are using ``ssl`` or
- * ``tls``, or leave empty for no encryption.
+ * This depends on ``mail_smtpmode``. Specify when you are using ``ssl`` for SSL/TLS or
+ * ``tls`` for STARTTLS, or leave empty for no encryption.
  *
  * Defaults to ``''`` (empty string)
  */
@@ -414,7 +444,7 @@ $CONFIG = array(
  * will be passed to underlying Swift mailer implementation.
  * Defaults to an empty array.
  */
-'mail_smtpstreamoptions' => array(),
+'mail_smtpstreamoptions' => [],
 
 /**
  * Which mode is used for sendmail/qmail: ``smtp`` or ``pipe``.
@@ -520,6 +550,12 @@ $CONFIG = array(
 /**
  * The URL of your proxy server, for example ``proxy.example.com:8081``.
  *
+ * Note: Guzzle (the http library used by Nextcloud) is reading the environment
+ * variables HTTP_PROXY (only for cli request), HTTPS_PROXY, and NO_PROXY by default.
+ *
+ * If you configure proxy with Nextcloud any default configuration by Guzzle
+ * is overwritten. Make sure to set ``proxyexclude`` accordingly if necessary.
+ *
  * Defaults to ``''`` (empty string)
  */
 'proxy' => '',
@@ -532,6 +568,23 @@ $CONFIG = array(
  */
 'proxyuserpwd' => '',
 
+/**
+ * List of host names that should not be proxied to.
+ * For example: ``['.mit.edu', 'foo.com']``.
+ *
+ * Hint: Use something like ``explode(',', getenv('NO_PROXY'))`` to sync this
+ * value with the global NO_PROXY option.
+ *
+ * Defaults to empty array.
+ */
+'proxyexclude' => [],
+
+/**
+ * Allow remote servers with local addresses e.g. in federated shares, webcal services and more
+ *
+ * Defaults to false
+ */
+'allow_local_remote_servers' => true,
 
 /**
  * Deleted Items (trash bin)
@@ -566,7 +619,7 @@ $CONFIG = array(
  *     automatically, delete other files anytime if space needed
  * * ``D1, D2``
  *     keep files and folders in the trash bin for at least D1 days and
- *     delete when exceeds D2 days
+ *     delete when exceeds D2 days (note: files will not be deleted automatically if space is needed)
  * * ``disabled``
  *     trash bin auto clean disabled, files and folders will be kept forever
  *
@@ -653,7 +706,6 @@ $CONFIG = array(
  *   - ``daily``
  *   - ``beta``
  *   - ``stable``
- *   - ``production``
  */
 'updater.release.channel' => 'stable',
 
@@ -677,12 +729,12 @@ $CONFIG = array(
  *  - www.eff.org
  *  - www.edri.org
  */
-'connectivity_check_domains' => array(
+'connectivity_check_domains' => [
 	'www.nextcloud.com',
 	'www.startpage.com',
 	'www.eff.org',
 	'www.edri.org'
-),
+],
 
 /**
  * Allows Nextcloud to verify a working .well-known URL redirects. This is done
@@ -816,7 +868,7 @@ $CONFIG = array(
  *
  * Defaults to ``UTC``
  */
-'logtimezone' => 'Asia/Taipei',
+'logtimezone' => 'Europe/Berlin',
 
 /**
  * Append all database queries and parameters to the log file. Use this only for
@@ -825,8 +877,8 @@ $CONFIG = array(
 'log_query' => false,
 
 /**
- * Enables log rotation and limits the total size of logfiles. The default is 0,
- * or no rotation. Specify a size in bytes, for example 104857600 (100 megabytes
+ * Enables log rotation and limits the total size of logfiles. Set it to 0 for
+ * no rotation. Specify a size in bytes, for example 104857600 (100 megabytes
  * = 100 * 1024 * 1024 bytes). A new logfile is created with a new name when the
  * old logfile reaches your limit. If a rotated log file is already present, it
  * will be overwritten.
@@ -871,7 +923,15 @@ $CONFIG = array(
  *
  * Defaults to ``true``
  */
-'appstoreenabled' => false,
+'appstoreenabled' => true,
+
+/**
+ * Enables the installation of apps from a self hosted apps store.
+ * Requires that at least one of the configured apps directories is writeable.
+ *
+ * Defaults to ``https://apps.nextcloud.com/api/v1``
+ */
+'appstoreurl' => 'https://apps.nextcloud.com/api/v1',
 
 /**
  * Use the ``apps_paths`` parameter to set the location of the Apps directory,
@@ -881,13 +941,13 @@ $CONFIG = array(
  * to that folder, starting from the Nextcloud webroot. The key ``writable``
  * indicates if a Web server can write files to that folder.
  */
-'apps_paths' => array(
-	array(
+'apps_paths' => [
+	[
 		'path'=> '/var/www/nextcloud/apps',
 		'url' => '/apps',
 		'writable' => true,
-	),
-),
+	],
+],
 
 /**
  * @see appcodechecker
@@ -965,7 +1025,6 @@ $CONFIG = array(
  *  - OC\Preview\MSOffice2003
  *  - OC\Preview\MSOffice2007
  *  - OC\Preview\MSOfficeDoc
- *  - OC\Preview\OpenDocument
  *  - OC\Preview\PDF
  *  - OC\Preview\Photoshop
  *  - OC\Preview\Postscript
@@ -974,14 +1033,6 @@ $CONFIG = array(
  *  - OC\Preview\TIFF
  *  - OC\Preview\Font
  *
- * The following providers are not available in Microsoft Windows:
- *
- *  - OC\Preview\Movie
- *  - OC\Preview\MSOfficeDoc
- *  - OC\Preview\MSOffice2003
- *  - OC\Preview\MSOffice2007
- *  - OC\Preview\OpenDocument
- *  - OC\Preview\StarOffice
  *
  * Defaults to the following providers:
  *
@@ -994,8 +1045,10 @@ $CONFIG = array(
  *  - OC\Preview\PNG
  *  - OC\Preview\TXT
  *  - OC\Preview\XBitmap
+ *  - OC\Preview\OpenDocument
+ *  - OC\Preview\Krita
  */
-'enabledPreviewProviders' => array(
+'enabledPreviewProviders' => [
 	'OC\Preview\PNG',
 	'OC\Preview\JPEG',
 	'OC\Preview\GIF',
@@ -1004,8 +1057,10 @@ $CONFIG = array(
 	'OC\Preview\XBitmap',
 	'OC\Preview\MP3',
 	'OC\Preview\TXT',
-	'OC\Preview\MarkDown'
-),
+	'OC\Preview\MarkDown',
+	'OC\Preview\OpenDocument',
+	'OC\Preview\Krita',
+],
 
 /**
  * LDAP
@@ -1083,9 +1138,9 @@ $CONFIG = array(
   *
  * Defaults to an empty array.
  */
-'openssl' => array(
+'openssl' => [
 	'config' => '/absolute/location/of/openssl.cnf',
-),
+],
 
 /**
  * Memory caching backend configuration
@@ -1179,18 +1234,18 @@ $CONFIG = array(
 /**
  * Server details for one or more memcached servers to use for memory caching.
  */
-'memcached_servers' => array(
+'memcached_servers' => [
 	// hostname, port and optional weight. Also see:
 	// http://www.php.net/manual/en/memcached.addservers.php
 	// http://www.php.net/manual/en/memcached.addserver.php
-	array('localhost', 11211),
+	['localhost', 11211],
 	//array('other.host.local', 11211),
-),
+],
 
 /**
- * Connection options for memcached, see http://apprize.info/php/scaling/15.html
+ * Connection options for memcached
  */
-'memcached_options' => array(
+'memcached_options' => [
 	// Set timeouts to 50ms
 	\Memcached::OPT_CONNECT_TIMEOUT => 50,
 	\Memcached::OPT_RETRY_TIMEOUT =>   50,
@@ -1209,7 +1264,7 @@ $CONFIG = array(
 
 	// Binary serializer vill be enabled if the igbinary PECL module is available
 	//\Memcached::OPT_SERIALIZER => \Memcached::SERIALIZER_IGBINARY,
-),
+],
 
 
 /**
@@ -1311,6 +1366,23 @@ $CONFIG = array(
 	],
 ],
 
+/**
+ * If this is set to true and a multibucket object store is configured then
+ * newly created previews are put into 256 dedicated buckets.
+ *
+ * Those buckets are named like the mulibucket version but with the postfix
+ * ``-preview-NUMBER`` where NUMBER is between 0 and 255.
+ *
+ * Keep in mind that only previews of files are put in there that don't have
+ * some already. Otherwise the old bucket will be used.
+ *
+ * To migrate existing previews to this new multibucket distribution of previews
+ * use the occ command ``preview:repair``. For now this will only migrate
+ * previews that were generated before Nextcloud 19 in the flat
+ * ``appdata_INSTANCEID/previews/FILEID`` folder structure.
+ */
+'objectstore.multibucket.preview-distribution' => false,
+
 
 /**
  * Sharing
@@ -1340,6 +1412,23 @@ $CONFIG = array(
 'sharing.minSearchStringLength' => 0,
 
 /**
+ * Set to true to enable that internal shares need to be accepted by the users by default.
+ * Users can change this for their account in their personal sharing settings
+ */
+'sharing.enable_share_accept' => false,
+
+/**
+ * Set to true to enforce that internal shares need to be accepted
+ */
+'sharing.force_share_accept' => false,
+
+/**
+ * Set to false to stop sending a mail when users receive a share
+ */
+'sharing.enable_share_mail' => true,
+
+
+/**
  * All other configuration options
  */
 
@@ -1347,10 +1436,10 @@ $CONFIG = array(
  * Additional driver options for the database connection, eg. to enable SSL
  * encryption in MySQL or specify a custom wait timeout on a cheap hoster.
  */
-'dbdriveroptions' => array(
+'dbdriveroptions' => [
 	PDO::MYSQL_ATTR_SSL_CA => '/file/path/to/ca_cert.pem',
 	PDO::MYSQL_ATTR_INIT_COMMAND => 'SET wait_timeout = 28800'
-),
+],
 
 /**
  * sqlite3 journal mode can be specified using this configuration parameter -
@@ -1405,12 +1494,12 @@ $CONFIG = array(
  *  - mysql (MySQL)
  *  - pgsql (PostgreSQL)
  */
-'supportedDatabases' => array(
+'supportedDatabases' => [
 	'sqlite',
 	'mysql',
 	'pgsql',
 	'oci',
-),
+],
 
 /**
  * Override where Nextcloud stores temporary files. Useful in situations where
@@ -1421,6 +1510,46 @@ $CONFIG = array(
  * The Web server user must have write access to this directory.
  */
 'tempdirectory' => '/tmp/nextcloudtemp',
+
+/**
+ * Hashing
+ */
+
+/**
+ * By default Nextcloud will use the Argon2 password hashing if available.
+ * However if for whatever reason you want to stick with the PASSWORD_DEFAULT
+ * of your php version. Then set the setting to true.
+ */
+'hashing_default_password' => false,
+
+/**
+ *
+ * Nextcloud uses the Argon2 algorithm (with PHP >= 7.2) to create hashes by its
+ * own and exposes its configuration options as following. More information can
+ * be found at: https://www.php.net/manual/en/function.password-hash.php
+ */
+
+/**
+ * The number of CPU threads to be used by the algorithm for computing a hash.
+ * The value must be an integer, and the minimum value is 1. Rationally it does
+ * not help to provide a number higher than the available threads on the machine.
+ * Values that undershoot the minimum will be ignored in favor of the minimum.
+ */
+'hashingThreads' => PASSWORD_ARGON2_DEFAULT_THREADS,
+
+/**
+ * The memory in KiB to be used by the algorithm for computing a hash. The value
+ * must be an integer, and the minimum value is 8 times the number of CPU threads.
+ * Values that undershoot the minimum will be ignored in favor of the minimum.
+ */
+'hashingMemoryCost' => PASSWORD_ARGON2_DEFAULT_MEMORY_COST,
+
+/**
+ * The number of iterations that are used by the algorithm for computing a hash.
+ * The value must be an integer, and the minimum value is 1. Values that
+ * undershoot the minimum will be ignored in favor of the minimum.
+ */
+'hashingTimeCost' => PASSWORD_ARGON2_DEFAULT_TIME_COST,
 
 /**
  * The hashing cost used by hashes generated by Nextcloud
@@ -1435,10 +1564,11 @@ $CONFIG = array(
  *
  * Defaults to ``array('.htaccess')``
  */
-'blacklisted_files' => array('.htaccess'),
+'blacklisted_files' => ['.htaccess'],
 
 /**
  * Define a default folder for shared files and folders other than root.
+ * Changes to this value will only have effect on new shares.
  *
  * Defaults to ``/``
  */
@@ -1561,7 +1691,7 @@ $CONFIG = array(
  *
  * Defaults to an empty array.
  */
-'trusted_proxies' => array('203.0.113.45', '198.51.100.128', '192.168.2.0/24'),
+'trusted_proxies' => ['203.0.113.45', '198.51.100.128', '192.168.2.0/24'],
 
 /**
  * Headers that should be trusted as client IP address in combination with
@@ -1573,7 +1703,7 @@ $CONFIG = array(
  *
  * Defaults to ``'HTTP_X_FORWARDED_FOR'``
  */
-'forwarded_for_headers' => array('HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'),
+'forwarded_for_headers' => ['HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR'],
 
 /**
  * max file size for animating gifs on public-sharing-site.
@@ -1694,10 +1824,10 @@ $CONFIG = array(
  *
  * WARNING: only use this if you know what you are doing
  */
-'csrf.optout' => array(
+'csrf.optout' => [
 	'/^WebDAVFS/', // OS X Finder
 	'/^Microsoft-WebDAV-MiniRedir/', // Windows webdav drive
-),
+],
 
 /**
  * By default there is on public pages a link shown that allows users to
@@ -1716,4 +1846,4 @@ $CONFIG = array(
  */
 
 'login_form_autocomplete' => true,
-);
+];

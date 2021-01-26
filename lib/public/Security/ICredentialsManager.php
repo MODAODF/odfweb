@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  *
  * @license AGPL-3.0
@@ -16,7 +17,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -25,7 +26,6 @@ namespace OCP\Security;
 /**
  * Store and retrieve credentials for external services
  *
- * @package OCP\Security
  * @since 8.2.0
  */
 interface ICredentialsManager {
@@ -68,5 +68,4 @@ interface ICredentialsManager {
 	 * @since 8.2.0
 	 */
 	public function erase($userId);
-
 }

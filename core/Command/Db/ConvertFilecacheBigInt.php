@@ -2,7 +2,12 @@
 /**
  * @copyright Copyright (c) 2017 Joas Schilling <coding@schilljs.com>
  *
+ * @author Alecks Gates <alecks.g@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
+ * @author Georg Ehrke <oc.list@georgehrke.com>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,6 +30,7 @@ namespace OC\Core\Command\Db;
 
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Types\Types;
 use OC\DB\SchemaWrapper;
 use OCP\IDBConnection;
 use Symfony\Component\Console\Command\Command;
@@ -58,17 +64,20 @@ class ConvertFilecacheBigInt extends Command {
 			'activity_mq' => ['mail_id'],
 			'authtoken' => ['id'],
 			'bruteforce_attempts' => ['id'],
+			'federated_reshares' => ['share_id'],
 			'filecache' => ['fileid', 'storage', 'parent', 'mimetype', 'mimepart', 'mtime', 'storage_mtime'],
+			'filecache_extended' => ['fileid'],
+			'files_trash' => ['auto_id'],
 			'file_locks' => ['id'],
 			'jobs' => ['id'],
 			'mimetypes' => ['id'],
 			'mounts' => ['id', 'storage_id', 'root_id', 'mount_id'],
+			'share_external' => ['id', 'parent'],
 			'storages' => ['numeric_id'],
 		];
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
-
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$schema = new SchemaWrapper($this->connection);
 		$isSqlite = $this->connection->getDatabasePlatform() instanceof SqlitePlatform;
 		$updates = [];
@@ -85,8 +94,8 @@ class ConvertFilecacheBigInt extends Command {
 				$column = $table->getColumn($columnName);
 				$isAutoIncrement = $column->getAutoincrement();
 				$isAutoIncrementOnSqlite = $isSqlite && $isAutoIncrement;
-				if ($column->getType()->getName() !== Type::BIGINT && !$isAutoIncrementOnSqlite) {
-					$column->setType(Type::getType(Type::BIGINT));
+				if ($column->getType()->getName() !== Types::BIGINT && !$isAutoIncrementOnSqlite) {
+					$column->setType(Type::getType(Types::BIGINT));
 					$column->setOptions(['length' => 20]);
 
 					$updates[] = '* ' . $tableName . '.' . $columnName;

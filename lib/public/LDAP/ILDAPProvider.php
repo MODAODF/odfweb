@@ -2,6 +2,8 @@
 /**
  * @copyright Copyright (c) 2016, Roger Szabo (roger.szabo@web.de)
  *
+ * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
@@ -20,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -29,7 +31,6 @@ namespace OCP\LDAP;
 /**
  * Interface ILDAPProvider
  *
- * @package OCP\LDAP
  * @since 11.0.0
  */
 interface ILDAPProvider {
@@ -75,7 +76,7 @@ interface ILDAPProvider {
 	public function sanitizeDN($dn);
 	
 	/**
-	 * Return a new LDAP connection resource for the specified user. 
+	 * Return a new LDAP connection resource for the specified user.
 	 * @param string $uid user id
 	 * @return resource of the LDAP connection
 	 * @since 11.0.0
@@ -151,10 +152,9 @@ interface ILDAPProvider {
 	/**
 	 * Get the LDAP attribute name for the type of association betweeen users and groups
 	 * @param string $gid group id
-	 * @return string the configuration, one of: 'memberUid', 'uniqueMember', 'member', 'gidNumber'
+	 * @return string the configuration, one of: 'memberUid', 'uniqueMember', 'member', 'gidNumber', ''
 	 * @throws \Exception if group id was not found in LDAP
 	 * @since 13.0.0
 	 */
 	public function getLDAPGroupMemberAssoc($gid);
-
 }

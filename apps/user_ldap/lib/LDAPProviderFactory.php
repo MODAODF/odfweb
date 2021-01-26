@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, Roger Szabo (roger.szabo@web.de)
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Roger Szabo <roger.szabo@web.de>
  * @author root <root@localhost.localdomain>
@@ -19,16 +20,16 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\User_LDAP;
 
-use OCP\LDAP\ILDAPProviderFactory;
-use OCP\IServerContainer;
-use OCA\User_LDAP\User\DeletedUsersIndex;
 use OCA\User_LDAP\Mapping\UserMapping;
+use OCA\User_LDAP\User\DeletedUsersIndex;
+use OCP\IServerContainer;
+use OCP\LDAP\ILDAPProviderFactory;
 
 class LDAPProviderFactory implements ILDAPProviderFactory {
 	/**
@@ -56,7 +57,7 @@ class LDAPProviderFactory implements ILDAPProviderFactory {
 		$dbConnection = $this->serverContainer->getDatabaseConnection();
 		$userMapping = new UserMapping($dbConnection);
 		return new LDAPProvider($this->serverContainer, new Helper($this->serverContainer->getConfig()),
-					new DeletedUsersIndex($this->serverContainer->getConfig(), 
+					new DeletedUsersIndex($this->serverContainer->getConfig(),
 					$dbConnection, $userMapping));
 	}
 }

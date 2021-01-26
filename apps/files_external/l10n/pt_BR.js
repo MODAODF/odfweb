@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Quer realmente excluir este armazenamento externo?",
     "Delete storage?" : "Excluir armazenamento?",
     "Saved" : "Salvo",
-    "Saving..." : "Salvando...",
+    "Saving …" : "Salvando...",
     "Save" : "Salvar",
     "Empty response from the server" : "Resposta vazia do servidor",
     "Couldn't access. Please log out and in again to activate this mount point" : "Não foi possível acessar. Refaça o login para ativar este ponto de montagem",
@@ -84,7 +84,7 @@ OC.L10N.register(
     "Amazon S3" : "Amazon S3",
     "Bucket" : "Cesta",
     "Hostname" : "Nome do Host",
-    "Port" : "Porto",
+    "Port" : "Porta",
     "Region" : "Região",
     "Enable SSL" : "Ativar SSL",
     "Enable Path Style" : "Ativar Estilo do Caminho",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Compartilhar",
     "Show hidden files" : "Mostrar arquivos ocultos",
+    "Verify ACL access when listing files" : "Verifique o acesso da ACL ao listar arquivos",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "Verifique as ACLs de cada arquivo ou pasta dentro de um diretório para filtrar itens nos quais o usuário não tem permissão de leitura. Vem com uma penalidade de desempenho",
     "Timeout" : "Tempo limite",
     "SMB / CIFS using OC login" : "SMB / CIFS usando OC login",
     "Username as share" : "Nome de usuário como compartilhamento",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Adic. armazenamento",
     "Advanced settings" : "Configurações avançadas",
     "Allow users to mount external storage" : "Permitir que usuários montem armazenamento externo",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Credenciais globais podem ser usadas para autenticar com vários armazenamentos externos que possuem as mesmas credenciais."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Credenciais globais podem ser usadas para autenticar com vários armazenamentos externos que possuem as mesmas credenciais.",
+    "Saving..." : "Salvando..."
 },
 "nplurals=2; plural=(n > 1);");

@@ -2,9 +2,12 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
- * @author Thomas Citharel <tcit@tcit.fr>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  *
  * @license AGPL-3.0
@@ -19,7 +22,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -43,9 +46,9 @@ class Backend {
 	/** @var string */
 	private $resourceType;
 
-	const ACCESS_OWNER = 1;
-	const ACCESS_READ_WRITE = 2;
-	const ACCESS_READ = 3;
+	public const ACCESS_OWNER = 1;
+	public const ACCESS_READ_WRITE = 2;
+	public const ACCESS_READ = 3;
 
 	/**
 	 * @param IDBConnection $db
@@ -68,13 +71,13 @@ class Backend {
 	 * @param string[] $remove
 	 */
 	public function updateShares(IShareable $shareable, array $add, array $remove) {
-		foreach($add as $element) {
+		foreach ($add as $element) {
 			$principal = $this->principalBackend->findByUri($element['href'], '');
 			if ($principal !== '') {
 				$this->shareWith($shareable, $element);
 			}
 		}
-		foreach($remove as $element) {
+		foreach ($remove as $element) {
 			$principal = $this->principalBackend->findByUri($element, '');
 			if ($principal !== '') {
 				$this->unshare($shareable, $element);
@@ -104,6 +107,7 @@ class Backend {
 			return;
 		}
 
+		$principal[2] = urldecode($principal[2]);
 		if (($principal[1] === 'users' && !$this->userManager->userExists($principal[2])) ||
 			($principal[1] === 'groups' && !$this->groupManager->groupExists($principal[2]))) {
 			// User or group does not exist
@@ -193,7 +197,7 @@ class Backend {
 			->execute();
 
 		$shares = [];
-		while($row = $result->fetch()) {
+		while ($row = $result->fetch()) {
 			$p = $this->principalBackend->getPrincipalByPath($row['principaluri']);
 			$shares[]= [
 				'href' => "principal:${row['principaluri']}",
@@ -216,7 +220,6 @@ class Backend {
 	 * @return array
 	 */
 	public function applyShareAcl($resourceId, $acl) {
-
 		$shares = $this->getShares($resourceId);
 		foreach ($shares as $share) {
 			$acl[] = [
@@ -230,7 +233,7 @@ class Backend {
 					'principal' => $share['{' . \OCA\DAV\DAV\Sharing\Plugin::NS_OWNCLOUD . '}principal'],
 					'protected' => true,
 				];
-			} else if ($this->resourceType === 'calendar') {
+			} elseif ($this->resourceType === 'calendar') {
 				// Allow changing the properties of read only calendars,
 				// so users can change the visibility.
 				$acl[] = [

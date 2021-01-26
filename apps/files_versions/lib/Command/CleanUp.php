@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  *
  * @license AGPL-3.0
  *
@@ -16,12 +18,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCA\Files_Versions\Command;
-
 
 use OCP\Files\IRootFolder;
 use OCP\IUserBackend;
@@ -43,7 +44,7 @@ class CleanUp extends Command {
 	 * @param IRootFolder $rootFolder
 	 * @param IUserManager $userManager
 	 */
-	function __construct(IRootFolder $rootFolder, IUserManager $userManager) {
+	public function __construct(IRootFolder $rootFolder, IUserManager $userManager) {
 		parent::__construct();
 		$this->userManager = $userManager;
 		$this->rootFolder = $rootFolder;
@@ -61,8 +62,7 @@ class CleanUp extends Command {
 	}
 
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
-
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$users = $input->getArgument('user_id');
 		if (!empty($users)) {
 			foreach ($users as $user) {
@@ -71,6 +71,7 @@ class CleanUp extends Command {
 					$this->deleteVersions($user);
 				} else {
 					$output->writeln("<error>Unknown user $user</error>");
+					return 1;
 				}
 			}
 		} else {
@@ -96,6 +97,7 @@ class CleanUp extends Command {
 				} while (count($users) >= $limit);
 			}
 		}
+		return 0;
 	}
 
 
@@ -111,5 +113,4 @@ class CleanUp extends Command {
 			$this->rootFolder->get('/' . $user . '/files_versions')->delete();
 		}
 	}
-
 }

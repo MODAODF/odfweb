@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Möchtest Du wirklich diesen externen Speicher löschen?",
     "Delete storage?" : "Speicher löschen?",
     "Saved" : "Gespeichert",
-    "Saving..." : "Speichere…",
+    "Saving …" : "Speichern …",
     "Save" : "Speichern",
     "Empty response from the server" : "Leere Antwort vom Server erhalten",
     "Couldn't access. Please log out and in again to activate this mount point" : "Zugriff nicht möglich. Bitte abmelden und erneut anmelden, um diesen Endpunkt zu aktivieren.",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Share",
     "Show hidden files" : "Versteckte Dateien anzeigen",
+    "Verify ACL access when listing files" : "Überprüft den ACL-Zugriff beim Auflisten von Dateien",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "Überprüft die ACLs jeder Datei oder jedes Ordners in einem Verzeichnis, um Elemente herauszufiltern, für die der Benutzer keine Leseberechtigung hat. Dies führt zu Leistungseinbußen",
     "Timeout" : "Zeitüberschreitung",
     "SMB / CIFS using OC login" : "SMB / CIFS mit OC-Anmeldung",
     "Username as share" : "Benutzername als Freigabe",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Speicher hinzufügen",
     "Advanced settings" : "Erweiterte Einstellungen",
     "Allow users to mount external storage" : "Benutzern erlauben, externen Speicher einzubinden",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale Zugangsdaten können für die Authentifizierung für mehrere externe Speicher verwendet werden, solange sie identische Zugangsdaten benötigen."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Globale Zugangsdaten können für die Authentifizierung für mehrere externe Speicher verwendet werden, solange sie identische Zugangsdaten benötigen.",
+    "Saving..." : "Speichere…"
 },
 "nplurals=2; plural=(n != 1);");

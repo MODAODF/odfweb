@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Biztosan törlöd ezt a külső tárolót?",
     "Delete storage?" : "Tároló törlése?",
     "Saved" : "Elmentve",
-    "Saving..." : "Mentés...",
+    "Saving …" : "Mentés ...",
     "Save" : "Mentés",
     "Empty response from the server" : "Üres válasz a szervertől",
     "Couldn't access. Please log out and in again to activate this mount point" : "Nem hozzáférhető. Kérjük lépj ki és be ismét a csatolási pont aktiválásához",
@@ -52,7 +52,7 @@ OC.L10N.register(
     "Unsatisfied authentication mechanism parameters" : "Elégtelen hitelesítési mechanizmus paraméterek",
     "Insufficient data: %s" : "Nem elegendő adat: %s",
     "%s" : "%s",
-    "Storage with ID \"%d\" is not user editable" : "A(z) \"%d\" azonosítójú tároló nem szerkeszthető a felhasználók által",
+    "Storage with ID \"%d\" is not user editable" : "A(z) „%d” azonosítójú tárolót a felhasználók nem szerkeszthetik",
     "Access key" : "Hozzáférési kulcs",
     "Secret key" : "Titkos kulcs",
     "Builtin" : "Beépített",
@@ -82,7 +82,7 @@ OC.L10N.register(
     "Kerberos ticket" : "Kerbeos jegy",
     "Amazon S3" : "Amazon S3",
     "Bucket" : "Bucket",
-    "Hostname" : "Hosztnév",
+    "Hostname" : "Gépnév",
     "Port" : "Port",
     "Region" : "Megye",
     "Enable SSL" : "SSL engedélyezése",
@@ -104,6 +104,7 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Megosztás",
     "Show hidden files" : "Rejtett fájlok megjelenítése",
+    "Timeout" : "Időtúllépés",
     "SMB / CIFS using OC login" : "SMB / CIFS OC belépéssel",
     "Username as share" : "Felhasználónév és megosztás",
     "OpenStack Object Storage" : "OpenStack Object Storage",
@@ -125,6 +126,7 @@ OC.L10N.register(
     "Click to recheck the configuration" : "Kattints ide a konfiguráció újraellenőrzéséhez",
     "Add storage" : "Tároló becsatolása",
     "Advanced settings" : "Haladó beállítások",
-    "Allow users to mount external storage" : "Külső tárolók csatolásának  engedélyezése a felhasználók részére"
+    "Allow users to mount external storage" : "Külső tárolók csatolásának  engedélyezése a felhasználók részére",
+    "Saving..." : "Mentés..."
 },
 "nplurals=2; plural=(n != 1);");

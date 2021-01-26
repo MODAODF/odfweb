@@ -3,7 +3,10 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -29,10 +32,9 @@ use Sabre\DAV\PropFind;
 use Sabre\DAV\ServerPlugin;
 
 class CommentPropertiesPlugin extends ServerPlugin {
-
-	const PROPERTY_NAME_HREF   = '{http://owncloud.org/ns}comments-href';
-	const PROPERTY_NAME_COUNT  = '{http://owncloud.org/ns}comments-count';
-	const PROPERTY_NAME_UNREAD = '{http://owncloud.org/ns}comments-unread';
+	public const PROPERTY_NAME_HREF   = '{http://owncloud.org/ns}comments-href';
+	public const PROPERTY_NAME_COUNT  = '{http://owncloud.org/ns}comments-count';
+	public const PROPERTY_NAME_UNREAD = '{http://owncloud.org/ns}comments-unread';
 
 	/** @var  \Sabre\DAV\Server */
 	protected $server;
@@ -63,9 +65,9 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	 * @param \Sabre\DAV\Server $server
 	 * @return void
 	 */
-	function initialize(\Sabre\DAV\Server $server) {
+	public function initialize(\Sabre\DAV\Server $server) {
 		$this->server = $server;
-		$this->server->on('propFind', array($this, 'handleGetProperties'));
+		$this->server->on('propFind', [$this, 'handleGetProperties']);
 	}
 
 	/**
@@ -96,15 +98,15 @@ class CommentPropertiesPlugin extends ServerPlugin {
 			}
 		}
 
-		$propFind->handle(self::PROPERTY_NAME_COUNT, function() use ($node) {
+		$propFind->handle(self::PROPERTY_NAME_COUNT, function () use ($node) {
 			return $this->commentsManager->getNumberOfCommentsForObject('files', (string)$node->getId());
 		});
 
-		$propFind->handle(self::PROPERTY_NAME_HREF, function() use ($node) {
+		$propFind->handle(self::PROPERTY_NAME_HREF, function () use ($node) {
 			return $this->getCommentsLink($node);
 		});
 
-		$propFind->handle(self::PROPERTY_NAME_UNREAD, function() use ($node) {
+		$propFind->handle(self::PROPERTY_NAME_UNREAD, function () use ($node) {
 			if (isset($this->cachedUnreadCount[$node->getId()])) {
 				return $this->cachedUnreadCount[$node->getId()];
 			} else {
@@ -131,7 +133,7 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	public function getCommentsLink(Node $node) {
 		$href =  $this->server->getBaseUri();
 		$entryPoint = strpos($href, '/remote.php/');
-		if($entryPoint === false) {
+		if ($entryPoint === false) {
 			// in case we end up somewhere else, unexpectedly.
 			return null;
 		}
@@ -149,7 +151,7 @@ class CommentPropertiesPlugin extends ServerPlugin {
 	 */
 	public function getUnreadCount(Node $node) {
 		$user = $this->userSession->getUser();
-		if(is_null($user)) {
+		if (is_null($user)) {
 			return null;
 		}
 
@@ -157,5 +159,4 @@ class CommentPropertiesPlugin extends ServerPlugin {
 
 		return $this->commentsManager->getNumberOfCommentsForObject('files', (string)$node->getId(), $lastRead);
 	}
-
 }

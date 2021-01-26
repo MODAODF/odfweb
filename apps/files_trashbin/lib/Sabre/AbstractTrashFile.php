@@ -1,7 +1,12 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Robin Appelman <robin@icewind.nl>
+ *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Robin Appelman <robin@icewind.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -16,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +30,7 @@ namespace OCA\Files_Trashbin\Sabre;
 use Sabre\DAV\Exception\Forbidden;
 use Sabre\DAV\IFile;
 
-abstract class AbstractTrashFile extends AbstractTrash implements IFile , ITrash{
+abstract class AbstractTrashFile extends AbstractTrash implements IFile, ITrash {
 	public function put($data) {
 		throw new Forbidden();
 	}

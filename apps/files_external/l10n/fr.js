@@ -25,7 +25,7 @@ OC.L10N.register(
     "Are you sure you want to delete this external storage?" : "Êtes-vous sûr de vouloir supprimer ce stockage externe ?",
     "Delete storage?" : "Supprimer ce support de stockage ?",
     "Saved" : "Enregistré",
-    "Saving..." : "Enregistrement...",
+    "Saving …" : "Enregistrement ...",
     "Save" : "Enregistrer",
     "Empty response from the server" : "Réponse du serveur vide",
     "Couldn't access. Please log out and in again to activate this mount point" : "Impossible d'accéder. Veuillez vous déconnecter et vous reconnecter pour activer ce point de montage",
@@ -105,6 +105,8 @@ OC.L10N.register(
     "SMB / CIFS" : "SMB / CIFS",
     "Share" : "Partage",
     "Show hidden files" : "Afficher les fichiers masqués",
+    "Verify ACL access when listing files" : "Vérifier l'accès à l'ACL lors de l'affichage de la liste des fichiers",
+    "Check the ACL's of each file or folder inside a directory to filter out items where the user has no read permissions, comes with a performance penalty" : "Contrôler les ACL de chaque fichier ou dossier à l'intérieur d'un répertoire afin de filtrer les éléments pour lesquels l'utilisateur n'a pas d'accès en lecture, ceci engendre une dégradation des performances",
     "Timeout" : "Délai d'attente",
     "SMB / CIFS using OC login" : "SMB / CIFS en utilisant les identifiants OC",
     "Username as share" : "Nom d'utilisateur comme nom de partage",
@@ -132,6 +134,7 @@ OC.L10N.register(
     "Add storage" : "Ajouter un support de stockage",
     "Advanced settings" : "Paramètres avancés",
     "Allow users to mount external storage" : "Autoriser les utilisateurs à monter des espaces de stockage externes",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Les identifiants globaux peuvent être utilisés pour s'authentifier auprès de multiples stockages externes qui ont les mêmes identifiants."
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Les identifiants globaux peuvent être utilisés pour s'authentifier auprès de multiples stockages externes qui ont les mêmes identifiants.",
+    "Saving..." : "Enregistrement..."
 },
 "nplurals=2; plural=(n > 1);");

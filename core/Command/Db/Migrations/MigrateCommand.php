@@ -16,12 +16,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OC\Core\Command\Db\Migrations;
-
 
 use OC\DB\MigrationService;
 use OC\Migration\ConsoleOutput;
@@ -56,12 +55,13 @@ class MigrateCommand extends Command implements CompletionAwareInterface {
 		parent::configure();
 	}
 
-	public function execute(InputInterface $input, OutputInterface $output) {
+	public function execute(InputInterface $input, OutputInterface $output): int {
 		$appName = $input->getArgument('app');
 		$ms = new MigrationService($appName, $this->connection, new ConsoleOutput($output));
 		$version = $input->getArgument('version');
 
 		$ms->migrate($version);
+		return 0;
 	}
 
 	/**
@@ -96,5 +96,4 @@ class MigrateCommand extends Command implements CompletionAwareInterface {
 
 		return [];
 	}
-
 }

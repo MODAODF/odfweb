@@ -21,7 +21,6 @@
 
 namespace OCA\Notifications;
 
-
 use OCA\Notifications\Exceptions\NotificationNotFoundException;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
@@ -84,27 +83,51 @@ class Handler {
 	 * Delete the notifications matching the given Notification
 	 *
 	 * @param INotification $notification
+	 * @return array A Map with all deleted notifications [user => [notifications]]
 	 */
-	public function delete(INotification $notification) {
+	public function delete(INotification $notification): array {
 		$sql = $this->connection->getQueryBuilder();
-		$sql->delete('notifications');
+		$sql->select('*')
+			->from('notifications');
+
 		$this->sqlWhere($sql, $notification);
-		$sql->execute();
+		$statement = $sql->execute();
+
+		$deleted = [];
+		$notifications = [];
+		while ($row = $statement->fetch()) {
+			if (!isset($deleted[$row['user']])) {
+				$deleted[$row['user']] = [];
+			}
+
+			$deleted[$row['user']][] = (int) $row['notification_id'];
+			$notifications[(int) $row['notification_id']] = $this->notificationFromRow($row);
+		}
+		$statement->closeCursor();
+
+		foreach ($deleted as $user => $notificationIds) {
+			foreach ($notificationIds as $notificationId) {
+				$this->deleteById($notificationId, $user, $notifications[$notificationId]);
+			}
+		}
+
+		return $deleted;
 	}
 
 	/**
 	 * Delete the notification of a given user
 	 *
 	 * @param string $user
+	 * @return bool
 	 */
-	public function deleteByUser(string $user) {
+	public function deleteByUser(string $user): bool {
 		$notification = $this->manager->createNotification();
 		try {
 			$notification->setUser($user);
 		} catch (\InvalidArgumentException $e) {
-			return;
+			return false;
 		}
-		$this->delete($notification);
+		return !empty($this->delete($notification));
 	}
 
 	/**
@@ -112,13 +135,22 @@ class Handler {
 	 *
 	 * @param int $id
 	 * @param string $user
+	 * @param INotification|null $notification
+	 * @return bool
+	 * @throws NotificationNotFoundException
 	 */
-	public function deleteById(int $id, string $user) {
+	public function deleteById(int $id, string $user, ?INotification $notification = null): bool {
+		if (!$notification instanceof INotification) {
+			$notification = $this->getById($id, $user);
+		}
+
+		$this->manager->dismissNotification($notification);
+
 		$sql = $this->connection->getQueryBuilder();
 		$sql->delete('notifications')
 			->where($sql->expr()->eq('notification_id', $sql->createNamedParameter($id)))
 			->andWhere($sql->expr()->eq('user', $sql->createNamedParameter($user)));
-		$sql->execute();
+		return (bool) $sql->execute();
 	}
 
 	/**
@@ -275,7 +307,7 @@ class Handler {
 			->setObject($row['object_type'], $row['object_id'])
 			->setSubject($row['subject'], (array) json_decode($row['subject_parameters'], true));
 
-		if ($row['message'] !== '') {
+		if ($row['message'] !== '' && $row['message'] !== null) {
 			$notification->setMessage($row['message'], (array) json_decode($row['message_parameters'], true));
 		}
 		if ($row['link'] !== '' && $row['link'] !== null) {

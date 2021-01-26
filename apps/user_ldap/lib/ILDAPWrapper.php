@@ -23,7 +23,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -60,7 +60,7 @@ interface ILDAPWrapper {
 	 * @param string $cookie structure sent by LDAP server
 	 * @return bool true on success, false otherwise
 	 */
-	public function controlPagedResult($link, $pageSize, $isCritical, $cookie);
+	public function controlPagedResult($link, $pageSize, $isCritical);
 
 	/**
 	 * Retrieve the LDAP pagination cookie
@@ -212,5 +212,4 @@ interface ILDAPWrapper {
 	 * @return bool true if it is a resource, false otherwise
 	 */
 	public function isResource($resource);
-
 }

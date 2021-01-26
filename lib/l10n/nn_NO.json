@@ -12,7 +12,6 @@
     "Settings" : "Instillingar",
     "Log out" : "Logg ut",
     "Users" : "Brukarar",
-    "Sharing" : "Deling",
     "Open »%s«" : "Opna »%s«",
     "Sunday" : "Søndag",
     "Monday" : "Måndag",
@@ -62,9 +61,6 @@
     "A valid username must be provided" : "Du må oppgje eit gyldig brukarnamn",
     "A valid password must be provided" : "Du må oppgje eit gyldig passord",
     "Authentication error" : "Feil i autentisering",
-    "Create" : "Lag",
-    "Delete" : "Ta bort",
-    "Share" : "Del",
-    "Unlimited" : "Ubegrensa"
+    "Sharing" : "Deling"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

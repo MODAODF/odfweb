@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Julius Härtl <jus@bitgrid.net>
  * @author Lukas Reschke <lukas@statuscode.ch>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -19,7 +20,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -55,11 +56,7 @@ class Jail extends Wrapper {
 	}
 
 	public function getUnjailedPath($path) {
-		if ($path === '') {
-			return $this->rootPath;
-		} else {
-			return Filesystem::normalizePath($this->rootPath . '/' . $path);
-		}
+		return trim(Filesystem::normalizePath($this->rootPath . '/' . $path), '/');
 	}
 
 	/**
@@ -537,5 +534,9 @@ class Jail extends Wrapper {
 			fclose($target);
 			return $count;
 		}
+	}
+
+	public function getDirectoryContent($directory): \Traversable {
+		return $this->getWrapperStorage()->getDirectoryContent($this->getUnjailedPath($directory));
 	}
 }

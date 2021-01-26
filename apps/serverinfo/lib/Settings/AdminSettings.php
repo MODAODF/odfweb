@@ -22,20 +22,22 @@
 
 namespace OCA\ServerInfo\Settings;
 
-
-use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IL10N;
-use OCP\IURLGenerator;
-use OCP\Settings\ISettings;
 use OCA\ServerInfo\DatabaseStatistics;
+use OCA\ServerInfo\Os;
 use OCA\ServerInfo\PhpStatistics;
 use OCA\ServerInfo\SessionStatistics;
 use OCA\ServerInfo\ShareStatistics;
 use OCA\ServerInfo\StorageStatistics;
 use OCA\ServerInfo\SystemStatistics;
+use OCP\AppFramework\Http\TemplateResponse;
+use OCP\IL10N;
+use OCP\IURLGenerator;
+use OCP\Settings\ISettings;
 
 class AdminSettings implements ISettings {
 
+	/** @var Os */
+	private $os;
 
 	/** @var IL10N */
 	private $l;
@@ -73,7 +75,8 @@ class AdminSettings implements ISettings {
 	 * @param SessionStatistics $sessionStatistics
 	 * @param SystemStatistics $systemStatistics
 	 */
-	public function __construct(IL10N $l,
+	public function __construct(Os $os,
+								IL10N $l,
 								IURLGenerator $urlGenerator,
 								StorageStatistics $storageStatistics,
 								PhpStatistics $phpStatistics,
@@ -82,6 +85,7 @@ class AdminSettings implements ISettings {
 								SessionStatistics $sessionStatistics,
 								SystemStatistics $systemStatistics
 	) {
+		$this->os = $os;
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
 		$this->storageStatistics = $storageStatistics;
@@ -98,13 +102,20 @@ class AdminSettings implements ISettings {
 	public function getForm() {
 		$monitoringEndPoint = $this->urlGenerator->getAbsoluteURL('ocs/v2.php/apps/serverinfo/api/v1/info');
 		$params = [
-				'ocs' => $monitoringEndPoint,
-				'storage' => $this->storageStatistics->getStorageStatistics(),
-				'shares' => $this->shareStatistics->getShareStatistics(),
-				'php' => $this->phpStatistics->getPhpStatistics(),
-				'database' => $this->databaseStatistics->getDatabaseStatistics(),
-				'activeUsers' => $this->sessionStatistics->getSessionStatistics(),
-				'system' => $this->systemStatistics->getSystemStatistics()
+			'hostname' => $this->os->getHostname(),
+			'osname' => $this->os->getOSName(),
+			'memory' => $this->os->getMemory(),
+			'cpu' => $this->os->getCpuName(),
+			'diskinfo' => $this->os->getDiskInfo(),
+			'networkinfo' => $this->os->getNetworkInfo(),
+			'networkinterfaces' => $this->os->getNetworkInterfaces(),
+			'ocs' => $monitoringEndPoint,
+			'storage' => $this->storageStatistics->getStorageStatistics(),
+			'shares' => $this->shareStatistics->getShareStatistics(),
+			'php' => $this->phpStatistics->getPhpStatistics(),
+			'database' => $this->databaseStatistics->getDatabaseStatistics(),
+			'activeUsers' => $this->sessionStatistics->getSessionStatistics(),
+			'system' => $this->systemStatistics->getSystemStatistics()
 		];
 
 		return new TemplateResponse('serverinfo', 'settings-admin', $params);
@@ -127,5 +138,4 @@ class AdminSettings implements ISettings {
 	public function getPriority() {
 		return 0;
 	}
-
 }

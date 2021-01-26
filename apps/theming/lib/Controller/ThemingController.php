@@ -5,13 +5,20 @@
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
  * @author Bjoern Schiessle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Daniel Calviño Sánchez <danxuliu@gmail.com>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Jan-Christoph Borchardt <hey@jancborchardt.net>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Julius Haertl <jus@bitgrid.net>
  * @author Julius Härtl <jus@bitgrid.net>
+ * @author Kyle Fazzari <kyrofa@ubuntu.com>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author rakekniven <mark.ziegler@rakekniven.de>
  * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
+ * @author Thomas Citharel <nextcloud@tcit.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -26,7 +33,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -35,24 +42,20 @@ namespace OCA\Theming\Controller;
 use OC\Template\SCSSCacher;
 use OCA\Theming\ImageManager;
 use OCA\Theming\ThemingDefaults;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\DataDownloadResponse;
-use OCP\AppFramework\Http\FileDisplayResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\FileDisplayResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
-use OCP\AppFramework\Utility\ITimeFactory;
-use OCP\Files\File;
 use OCP\Files\IAppData;
 use OCP\Files\NotFoundException;
 use OCP\Files\NotPermittedException;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCA\Theming\Util;
 use OCP\ITempManager;
 use OCP\IURLGenerator;
-use OCP\App\IAppManager;
 
 /**
  * Class ThemingController
@@ -64,8 +67,6 @@ use OCP\App\IAppManager;
 class ThemingController extends Controller {
 	/** @var ThemingDefaults */
 	private $themingDefaults;
-	/** @var Util */
-	private $util;
 	/** @var IL10N */
 	private $l10n;
 	/** @var IConfig */
@@ -90,7 +91,6 @@ class ThemingController extends Controller {
 	 * @param IRequest $request
 	 * @param IConfig $config
 	 * @param ThemingDefaults $themingDefaults
-	 * @param Util $util
 	 * @param IL10N $l
 	 * @param ITempManager $tempManager
 	 * @param IAppData $appData
@@ -104,7 +104,6 @@ class ThemingController extends Controller {
 		IRequest $request,
 		IConfig $config,
 		ThemingDefaults $themingDefaults,
-		Util $util,
 		IL10N $l,
 		ITempManager $tempManager,
 		IAppData $appData,
@@ -116,7 +115,6 @@ class ThemingController extends Controller {
 		parent::__construct($appName, $request);
 
 		$this->themingDefaults = $themingDefaults;
-		$this->util = $util;
 		$this->l10n = $l;
 		$this->config = $config;
 		$this->tempManager = $tempManager;
@@ -135,67 +133,55 @@ class ThemingController extends Controller {
 	 */
 	public function updateStylesheet($setting, $value) {
 		$value = trim($value);
+		$error = null;
 		switch ($setting) {
 			case 'name':
 				if (strlen($value) > 250) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given name is too long'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given name is too long');
 				}
 				break;
 			case 'url':
 				if (strlen($value) > 500) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given web address is too long'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given web address is too long');
+				}
+				if (!$this->isValidUrl($value)) {
+					$error = $this->l10n->t('The given web address is not a valid URL');
 				}
 				break;
 			case 'imprintUrl':
 				if (strlen($value) > 500) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given legal notice address is too long'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given legal notice address is too long');
+				}
+				if (!$this->isValidUrl($value)) {
+					$error = $this->l10n->t('The given legal notice address is not a valid URL');
 				}
 				break;
 			case 'privacyUrl':
 				if (strlen($value) > 500) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given privacy policy address is too long'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given privacy policy address is too long');
+				}
+				if (!$this->isValidUrl($value)) {
+					$error = $this->l10n->t('The given privacy policy address is not a valid URL');
 				}
 				break;
 			case 'slogan':
 				if (strlen($value) > 500) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given slogan is too long'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given slogan is too long');
 				}
 				break;
 			case 'color':
 				if (!preg_match('/^\#([0-9a-f]{3}|[0-9a-f]{6})$/i', $value)) {
-					return new DataResponse([
-						'data' => [
-							'message' => $this->l10n->t('The given color is invalid'),
-						],
-						'status' => 'error'
-					]);
+					$error = $this->l10n->t('The given color is invalid');
 				}
 				break;
+		}
+		if ($error !== null) {
+			return new DataResponse([
+				'data' => [
+					'message' => $error,
+				],
+				'status' => 'error'
+			], Http::STATUS_BAD_REQUEST);
 		}
 
 		$this->themingDefaults->set($setting, $value);
@@ -216,13 +202,18 @@ class ThemingController extends Controller {
 	}
 
 	/**
+	 * Check that a string is a valid http/https url
+	 */
+	private function isValidUrl(string $url): bool {
+		return ((strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) &&
+			filter_var($url, FILTER_VALIDATE_URL) !== false);
+	}
+
+	/**
 	 * @return DataResponse
 	 * @throws NotPermittedException
 	 */
 	public function uploadImage(): DataResponse {
-		// logo / background
-		// new: favicon logo-header
-		//
 		$key = $this->request->getParam('key');
 		$image = $this->request->getUploadedFile('image');
 		$error = null;
@@ -255,23 +246,14 @@ class ThemingController extends Controller {
 			);
 		}
 
-		$name = '';
 		try {
-			$folder = $this->appData->getFolder('images');
-		} catch (NotFoundException $e) {
-			$folder = $this->appData->newFolder('images');
-		}
-
-		$this->imageManager->delete($key);
-
-		$target = $folder->newFile($key);
-		$supportedFormats = $this->getSupportedUploadImageFormats($key);
-		$detectedMimeType = mime_content_type($image['tmp_name']);
-		if (!in_array($image['type'], $supportedFormats) || !in_array($detectedMimeType, $supportedFormats)) {
+			$mime = $this->imageManager->updateImage($key, $image['tmp_name']);
+			$this->themingDefaults->set($key . 'Mime', $mime);
+		} catch (\Exception $e) {
 			return new DataResponse(
 				[
 					'data' => [
-						'message' => $this->l10n->t('Unsupported image type'),
+						'message' => $e->getMessage()
 					],
 					'status' => 'failure',
 				],
@@ -279,29 +261,7 @@ class ThemingController extends Controller {
 			);
 		}
 
-		$resizeKeys = ['background'];
-		if (in_array($key, $resizeKeys, true)) {
-			// Optimize the image since some people may upload images that will be
-			// either to big or are not progressive rendering.
-			$newImage = @imagecreatefromstring(file_get_contents($image['tmp_name'], 'r'));
-
-			$tmpFile = $this->tempManager->getTemporaryFile();
-			$newWidth = imagesx($newImage) < 4096 ? imagesx($newImage) : 4096;
-			$newHeight = imagesy($newImage) / (imagesx($newImage) / $newWidth);
-			$outputImage = imagescale($newImage, $newWidth, $newHeight);
-
-			imageinterlace($outputImage, 1);
-			imagejpeg($outputImage, $tmpFile, 75);
-			imagedestroy($outputImage);
-
-			$target->putContent(file_get_contents($tmpFile, 'r'));
-		} else {
-			$target->putContent(file_get_contents($image['tmp_name'], 'r'));
-		}
 		$name = $image['name'];
-
-		$this->themingDefaults->set($key.'Mime', $image['type']);
-
 		$cssCached = $this->scssCacher->process(\OC::$SERVERROOT, 'core/css/css-variables.scss', 'core');
 
 		return new DataResponse(
@@ -319,24 +279,6 @@ class ThemingController extends Controller {
 	}
 
 	/**
-	 * Returns a list of supported mime types for image uploads.
-	 * "favicon" images are only allowed to be SVG when imagemagick with SVG support is available.
-	 *
-	 * @param string $key The image key, e.g. "favicon"
-	 * @return array
-	 */
-	private function getSupportedUploadImageFormats(string $key): array {
-		$supportedFormats = ['image/jpeg', 'image/png', 'image/gif',];
-
-		if ($key !== 'favicon' || $this->imageManager->shouldReplaceIcons() === true) {
-			$supportedFormats[] = 'image/svg+xml';
-			$supportedFormats[] = 'image/svg';
-		}
-
-		return $supportedFormats;
-	}
-
-	/**
 	 * Revert setting to default value
 	 *
 	 * @param string $setting setting which should be reverted
@@ -347,11 +289,6 @@ class ThemingController extends Controller {
 		$value = $this->themingDefaults->undo($setting);
 		// reprocess server scss for preview
 		$cssCached = $this->scssCacher->process(\OC::$SERVERROOT, 'core/css/css-variables.scss', 'core');
-
-		if (strpos($setting, 'Mime') !== -1) {
-			$imageKey = str_replace('Mime', '', $setting);
-			$this->imageManager->delete($imageKey);
-		}
 
 		return new DataResponse(
 			[
@@ -415,7 +352,7 @@ class ThemingController extends Controller {
 		 * since we need to add the cacheBuster value to the url
 		 */
 		$cssCached = $this->scssCacher->process($appPath, 'css/theming.scss', 'theming');
-		if(!$cssCached) {
+		if (!$cssCached) {
 			return new NotFoundResponse();
 		}
 
@@ -427,32 +364,6 @@ class ThemingController extends Controller {
 		} catch (NotFoundException $e) {
 			return new NotFoundResponse();
 		}
-	}
-
-	/**
-	 * @NoCSRFRequired
-	 * @PublicPage
-	 * @NoSameSiteCookieRequired
-	 *
-	 * @return DataDownloadResponse
-	 */
-	public function getJavascript() {
-		$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
-		$responseJS = '(function() {
-	OCA.Theming = {
-		name: ' . json_encode($this->themingDefaults->getName()) . ',
-		url: ' . json_encode($this->themingDefaults->getBaseUrl()) . ',
-		slogan: ' . json_encode($this->themingDefaults->getSlogan()) . ',
-		color: ' . json_encode($this->themingDefaults->getColorPrimary()) . ',
-		imprintUrl: ' . json_encode($this->themingDefaults->getImprintUrl()) . ',
-		privacyUrl: ' . json_encode($this->themingDefaults->getPrivacyUrl()) . ',
-		inverted: ' . json_encode($this->util->invertTextColor($this->themingDefaults->getColorPrimary())) . ',
-		cacheBuster: ' . json_encode($cacheBusterValue) . '
-	};
-})();';
-		$response = new DataDownloadResponse($responseJS, 'javascript', 'text/javascript');
-		$response->cacheFor(3600);
-		return $response;
 	}
 
 	/**

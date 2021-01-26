@@ -7,7 +7,7 @@
 		<?php } ?>
 		<?php if (!empty($_['appsToUpgrade'])) { ?>
 		<div class="infogroup">
-			<span><?php p($l->t('These apps will be updated:')); ?></span>
+			<span><?php p($l->t('The following apps will be updated:')); ?></span>
 			<ul class="content appList">
 				<?php foreach ($_['appsToUpgrade'] as $appInfo) { ?>
 				<li><?php p($appInfo['name']) ?> (<?php p($appInfo['id']) ?>)</li>
@@ -27,7 +27,7 @@
 		<?php } ?>
 		<?php if (!empty($_['oldTheme'])) { ?>
 		<div class="infogroup">
-			<?php p($l->t('The theme %s has been disabled.', array($_['oldTheme']))) ?>
+			<?php p($l->t('The theme %s has been disabled.', [$_['oldTheme']])) ?>
 		</div>
 		<?php } ?>
 		<div class="infogroup bold">
@@ -48,7 +48,7 @@
 		<p id="update-progress-message-error" class="hidden"></p>
 		<ul id="update-progress-message-warnings" class="hidden"></ul>
 		<p id="update-progress-message"></p>
-		<a class="update-show-detailed"><?php p($l->t( 'Detailed logs' )); ?> <span class="icon-caret-white"></span></a>
+		<a class="update-show-detailed"><?php p($l->t('Detailed logs')); ?> <span class="icon-caret-white"></span></a>
 		<div id="update-progress-detailed" class="hidden"></div>
 	</div>
 </div>

@@ -1,7 +1,6 @@
 OC.L10N.register(
     "systemtags",
     {
-    "Tags" : "Etykiety",
     "Tag name is empty" : "Nazwa etykiety jest pusta",
     "Update" : "Uaktualnij",
     "Create" : "Utwórz",
@@ -43,6 +42,7 @@ OC.L10N.register(
     "%s (restricted)" : "%s (ograniczony)",
     "%s (invisible)" : "%s (niewidoczny)",
     "<strong>System tags</strong> for a file have been modified" : "<strong>Etykieta systemowa</strong> dla pliku została zmieniona",
+    "Tags" : "Etykiety",
     "Collaborative tags" : "Wspólne etykiety",
     "Collaborative tagging functionality which shares tags among users." : "Wspólna funkcja tagowania, która udostępnia etykiety użytkownikom.",
     "Collaborative tagging functionality which shares tags among users. Great for teams.\n\t(If you are a provider with a multi-tenancy installation, it is advised to deactivate this app as tags are shared.)" : "Wspólna funkcja tagowania, która udostępnia etykiety użytkownikom. Idealne dla zespołów.\n\t(Jeśli jesteś dostawcą instalacji dla wielu odbiorców, zaleca się dezaktywację tej aplikacji, ponieważ etykiety są udostępniane.)",
@@ -51,7 +51,7 @@ OC.L10N.register(
     "No tags found" : "Nie znaleziono etykiet",
     "Please select tags to filter by" : "Wybierz etykiety do filtrowania",
     "No files found for the selected tags" : "Nie znaleziono plików dla wybranych etykiet",
-    "Collaborative tags are available for all users. Restricted tags are visible to users but cannot be assigned by them. Invisible tags are for internal use, since users cannot see or assign them." : "Wspólne tagowanie jest dostępne dla wszystkich użytkowników. Ograniczone etykiety są widoczne dla użytkowników, ale nie mogą być przez nich przypisywane. Etykiety niewidoczne są przeznaczone do użytku wewnętrznego, ponieważ użytkownicy nie mogą ich zobaczyć ani przypisać.",
+    "Collaborative tags are available for all users. Restricted tags are visible to users but cannot be assigned by them. Invisible tags are for internal use, since users cannot see or assign them." : "Wspólne etykietowanie jest dostępne dla wszystkich użytkowników. Ograniczone etykiety są widoczne dla użytkowników, ale nie mogą być przez nich przypisywane. Etykiety niewidoczne są przeznaczone do użytku wewnętrznego, ponieważ użytkownicy nie mogą ich zobaczyć ani przypisać.",
     "Select tag …" : "Wybierz etykietę…",
     "Create a new tag" : "Utwórz nową etykietę",
     "Name" : "Nazwa",

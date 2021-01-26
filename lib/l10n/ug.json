@@ -7,7 +7,6 @@
     "Settings" : "تەڭشەكلەر",
     "Log out" : "تىزىمدىن چىق",
     "Users" : "ئىشلەتكۈچىلەر",
-    "Sharing" : "ھەمبەھىر",
     "Sunday" : "يەكشەنبە",
     "Monday" : "دۈشەنبە",
     "Tuesday" : "سەيشەنبە",
@@ -49,9 +48,6 @@
     "A valid username must be provided" : "چوقۇم ئىناۋەتلىك ئىشلەتكۈچى ئىسمىدىن بىرنى تەمىنلەش كېرەك",
     "A valid password must be provided" : "چوقۇم ئىناۋەتلىك ئىم تەمىنلەش كېرەك",
     "Authentication error" : "سالاھىيەت دەلىللەش خاتالىقى",
-    "Create" : "قۇر",
-    "Delete" : "ئۆچۈر",
-    "Share" : "ھەمبەھىر",
-    "Unlimited" : "چەكسىز"
-},"pluralForm" :"nplurals=1; plural=0;"
+    "Sharing" : "ھەمبەھىر"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

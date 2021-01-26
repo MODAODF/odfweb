@@ -26,15 +26,20 @@ style('activity', 'settings');
 
 <form id="activity_notifications" class="section">
 
-	<h2><?php p($l->t('Activity')); ?></h2>
+	<h2><?php p($l->t('Notifications')); ?></h2>
 	<p class="settings-hint">
 		<?php if ($_['email_enabled']) { ?>
-			<?php p($l->t('Choose for which activities you want to get an email notification, and which should show up in the activity app stream.')); ?>
+			<?php p($l->t('Choose for which activities you want to get an email or push notification.')); ?>
 		<?php } else { ?>
-			<?php p($l->t('Choose which activities you want to see in your stream.')); ?>
+			<?php p($l->t('Choose for which activities you want to get a push notification.')); ?>
 		<?php } ?>
 	</p>
 
 	<?php print_unescaped($this->inc('settings/form')); ?>
 
+	<h2><?php p($l->t('Activity')); ?></h2>
+
+	<input id="activity_email_enabled" name="activity_digest" type="checkbox" class="checkbox"
+		   value="1" <?php if ($_['activity_digest_enabled']) { print_unescaped('checked="checked"'); } ?> />
+	<label for="activity_email_enabled"><?php p($l->t('Send daily activity summary in the morning')); ?></label>
 </form>

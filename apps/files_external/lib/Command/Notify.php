@@ -3,6 +3,8 @@
  * @copyright Copyright (c) 2016 Robin Appelman <robin@icewind.nl>
  *
  * @author Ari Selseng <ari@selseng.net>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -19,7 +21,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -39,6 +41,7 @@ use OCP\Files\Storage\IStorage;
 use OCP\Files\StorageNotAvailableException;
 use OCP\IDBConnection;
 use OCP\ILogger;
+use OCP\IUserManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,12 +54,20 @@ class Notify extends Base {
 	private $connection;
 	/** @var ILogger */
 	private $logger;
+	/** @var IUserManager */
+	private $userManager;
 
-	function __construct(GlobalStoragesService $globalService, IDBConnection $connection, ILogger $logger) {
+	public function __construct(
+		GlobalStoragesService $globalService,
+		IDBConnection $connection,
+		ILogger $logger,
+		IUserManager $userManager
+	) {
 		parent::__construct();
 		$this->globalService = $globalService;
 		$this->connection = $connection;
 		$this->logger = $logger;
+		$this->userManager = $userManager;
 	}
 
 	protected function configure() {
@@ -83,39 +94,77 @@ class Notify extends Base {
 				InputOption::VALUE_REQUIRED,
 				'The directory in the storage to listen for updates in',
 				'/'
+			)->addOption(
+				'no-self-check',
+				'',
+				InputOption::VALUE_NONE,
+				'Disable self check on startup'
 			);
 		parent::configure();
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	private function getUserOption(InputInterface $input): ?string {
+		if ($input->getOption('user')) {
+			return (string)$input->getOption('user');
+		} elseif (isset($_ENV['NOTIFY_USER'])) {
+			return (string)$_ENV['NOTIFY_USER'];
+		} elseif (isset($_SERVER['NOTIFY_USER'])) {
+			return (string)$_SERVER['NOTIFY_USER'];
+		} else {
+			return null;
+		}
+	}
+
+	private function getPasswordOption(InputInterface $input): ?string {
+		if ($input->getOption('password')) {
+			return (string)$input->getOption('password');
+		} elseif (isset($_ENV['NOTIFY_PASSWORD'])) {
+			return (string)$_ENV['NOTIFY_PASSWORD'];
+		} elseif (isset($_SERVER['NOTIFY_PASSWORD'])) {
+			return (string)$_SERVER['NOTIFY_PASSWORD'];
+		} else {
+			return null;
+		}
+	}
+
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$mount = $this->globalService->getStorage($input->getArgument('mount_id'));
 		if (is_null($mount)) {
 			$output->writeln('<error>Mount not found</error>');
 			return 1;
 		}
 		$noAuth = false;
+
+		$userOption = $this->getUserOption($input);
+		$passwordOption = $this->getPasswordOption($input);
+
+		// if only the user is provided, we get the user object to pass along to the auth backend
+		// this allows using saved user credentials
+		$user = ($userOption && !$passwordOption) ? $this->userManager->get($userOption) : null;
+
 		try {
 			$authBackend = $mount->getAuthMechanism();
-			$authBackend->manipulateStorageConfig($mount);
+			$authBackend->manipulateStorageConfig($mount, $user);
 		} catch (InsufficientDataForMeaningfulAnswerException $e) {
 			$noAuth = true;
 		} catch (StorageNotAvailableException $e) {
 			$noAuth = true;
 		}
 
-		if ($input->getOption('user')) {
-			$mount->setBackendOption('user', $input->getOption('user'));
-		} else if (isset($_ENV['NOTIFY_USER'])) {
-			$mount->setBackendOption('user', $_ENV['NOTIFY_USER']);
-		} else if (isset($_SERVER['NOTIFY_USER'])) {
-			$mount->setBackendOption('user', $_SERVER['NOTIFY_USER']);
+		if ($userOption) {
+			$mount->setBackendOption('user', $userOption);
 		}
-		if ($input->getOption('password')) {
-			$mount->setBackendOption('password', $input->getOption('password'));
-		} else if (isset($_ENV['NOTIFY_PASSWORD'])) {
-			$mount->setBackendOption('password', $_ENV['NOTIFY_PASSWORD']);
-		} else if (isset($_SERVER['NOTIFY_PASSWORD'])) {
-			$mount->setBackendOption('password', $_SERVER['NOTIFY_PASSWORD']);
+		if ($passwordOption) {
+			$mount->setBackendOption('password', $passwordOption);
+		}
+
+		try {
+			$backend = $mount->getBackend();
+			$backend->manipulateStorageConfig($mount, $user);
+		} catch (InsufficientDataForMeaningfulAnswerException $e) {
+			$noAuth = true;
+		} catch (StorageNotAvailableException $e) {
+			$noAuth = true;
 		}
 
 		try {
@@ -136,7 +185,11 @@ class Notify extends Base {
 
 		$path = trim($input->getOption('path'), '/');
 		$notifyHandler = $storage->notify($path);
-		$this->selfTest($storage, $notifyHandler, $verbose, $output);
+
+		if (!$input->getOption('no-self-check')) {
+			$this->selfTest($storage, $notifyHandler, $verbose, $output);
+		}
+
 		$notifyHandler->listen(function (IChange $change) use ($mount, $verbose, $output) {
 			if ($verbose) {
 				$this->logUpdate($change, $output);
@@ -146,6 +199,7 @@ class Notify extends Base {
 			}
 			$this->markParentAsOutdated($mount->getId(), $change->getPath(), $output);
 		});
+		return 0;
 	}
 
 	private function createStorage(StorageConfig $mount) {
@@ -208,7 +262,7 @@ class Notify extends Base {
 	/**
 	 * @param int $mountId
 	 * @return array
-	*/
+	 */
 	private function getStorageIds($mountId) {
 		$qb = $this->connection->getQueryBuilder();
 		return $qb
@@ -223,7 +277,7 @@ class Notify extends Base {
 	 * @param array $storageIds
 	 * @param string $parent
 	 * @return int
-	*/
+	 */
 	private function updateParent($storageIds, $parent) {
 		$pathHash = md5(trim(\OC_Util::normalizeUnicode($parent), '/'));
 		$qb = $this->connection->getQueryBuilder();
@@ -237,7 +291,7 @@ class Notify extends Base {
 
 	/**
 	 * @return \OCP\IDBConnection
-	*/
+	 */
 	private function reconnectToDatabase(IDBConnection $connection, OutputInterface $output) {
 		try {
 			$connection->close();
@@ -280,16 +334,16 @@ class Notify extends Base {
 		foreach ($changes as $change) {
 			if ($change->getPath() === '/.nc_test_file.txt' || $change->getPath() === '.nc_test_file.txt') {
 				$foundRootChange = true;
-			} else if ($change->getPath() === '/.nc_test_folder/subfile.txt' || $change->getPath() === '.nc_test_folder/subfile.txt') {
+			} elseif ($change->getPath() === '/.nc_test_folder/subfile.txt' || $change->getPath() === '.nc_test_folder/subfile.txt') {
 				$foundSubfolderChange = true;
 			}
 		}
 
 		if ($foundRootChange && $foundSubfolderChange && $verbose) {
 			$output->writeln('<info>Self-test successful</info>');
-		} else if ($foundRootChange && !$foundSubfolderChange) {
+		} elseif ($foundRootChange && !$foundSubfolderChange) {
 			$output->writeln('<error>Error while running self-test, change is subfolder not detected</error>');
-		} else if (!$foundRootChange) {
+		} elseif (!$foundRootChange) {
 			$output->writeln('<error>Error while running self-test, no changes detected</error>');
 		}
 	}

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2017 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,27 +18,26 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 namespace OCA\Comments;
 
-
-use OCP\IServerContainer;
+use OCP\IConfig;
 
 class JSSettingsHelper {
-	/** @var IServerContainer */
+	/** @var IConfig */
 	private $c;
 
-	public function __construct(IServerContainer $c) {
+	public function __construct(IConfig $c) {
 		$this->c = $c;
 	}
 
 	public function extend(array $settings) {
 		$appConfig = json_decode($settings['array']['oc_appconfig'], true);
 
-		$value = (int)$this->c->getConfig()->getAppValue('comments', 'maxAutoCompleteResults', 10);
+		$value = (int)$this->c->getAppValue('comments', 'maxAutoCompleteResults', 10);
 		$appConfig['comments']['maxAutoCompleteResults'] = $value;
 
 		$settings['array']['oc_appconfig'] = json_encode($appConfig);

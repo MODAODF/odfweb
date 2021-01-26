@@ -1,8 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2019, Roeland Jago Douma <roeland@famdouma.nl>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
@@ -18,7 +21,7 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -69,7 +72,17 @@ class InitialStateService implements IInitialStateService {
 	private function invokeLazyStateCallbacks(): void {
 		foreach ($this->lazyStates as $app => $lazyStates) {
 			foreach ($lazyStates as $key => $lazyState) {
+				$startTime = microtime(true);
 				$this->provideInitialState($app, $key, $lazyState());
+				$endTime = microtime(true);
+				$duration = $endTime - $startTime;
+				if ($duration > 1) {
+					$this->logger->warning('Lazy initial state provider for {key} took {duration} seconds.', [
+						'app' => $app,
+						'key' => $key,
+						'duration' => round($duration, 2),
+					]);
+				}
 			}
 		}
 		$this->lazyStates = [];
@@ -86,5 +99,4 @@ class InitialStateService implements IInitialStateService {
 		}
 		return $appStates;
 	}
-
 }

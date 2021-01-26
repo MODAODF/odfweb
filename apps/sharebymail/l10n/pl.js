@@ -29,7 +29,7 @@ OC.L10N.register(
     "Failed to send share by email" : "Nie udało się wysłać linku udostępnienia e-mailem",
     "%1$s shared »%2$s« with you" : "%1$s udostępnił »%2$s«",
     "%1$s shared »%2$s« with you." : "%1$s udostępnił »%2$s«.",
-    "Click the button below to open it." : "Kliknij przycisk poniżej aby przejść do udostępnionego zasobu.",
+    "Click the button below to open it." : "Kliknij przycisk poniżej, aby go otworzyć.",
     "Open »%s«" : "Otwórz »%s«",
     "%1$s via %2$s" : "%1$s przez %2$s",
     "%1$s shared »%2$s« with you.\nYou should have already received a separate mail with a link to access it.\n" : "%1$s udostępnił »%2$s«.\nPowinieneś już otrzymać oddzielną wiadomość zawierającą link do udostępnionego zasobu.\n",
@@ -43,13 +43,12 @@ OC.L10N.register(
     "You just shared »%1$s« with %2$s. The share was already sent to the recipient. Due to the security policies defined by the administrator of %3$s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Właśnie udostępniłeś »%1$s« z %2$s. Udostępnienie zostało już wysłane do odbiorcy. Ze względu na polityki bezpieczeństwa określone przez administratora %3$s, każda akcja musi być chroniona hasłem i nie wolno wysyłać hasła bezpośrednio do odbiorcy. Dlatego musisz ręcznie przesłać hasło do odbiorcy.",
     "Password to access »%1$s« shared by you with %2$s" : "Hasło dostępu do »%1$s« udostępnione przez %2$s",
     "This is the password:" : "To jest hasło do zasobu:",
-    "You can choose a different password at any time in the share dialog." : "Hasło współdzielenia możesz zmienić w dowolnym momencie w oknie ustawień współdzielenia.",
+    "You can choose a different password at any time in the share dialog." : "W dowolnym momencie możesz zmienić hasło w oknie udostępnienia.",
     "Could not find share" : "Nie można odnaleźć udostępnionego zasobu",
     "Share by mail" : "Udostępnij e-mailem",
     "Share provider which allows you to share files by mail" : "Wskaż dostawcę, który umożliwia udostępnianie plików pocztą",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Umożliwia użytkownikom udostępnianie spersonalizowanego linku do pliku lub katalogu poprzez umieszczenie go w wiadomości e-mail.",
     "Send password by mail" : "Wyślij hasło e-mailem",
-    "Enforce password protection" : "Wymuś zabezpieczenie hasłem",
-    "Password to access »%1$s« shared with %2$s" : "Hasło dostępu do %1$s, udostępnionego dla %2$s"
+    "Enforce password protection" : "Wymuś zabezpieczenie hasłem"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

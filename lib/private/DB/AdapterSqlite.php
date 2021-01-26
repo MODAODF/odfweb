@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Bart Visscher <bartv@thisnet.nl>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
@@ -20,10 +21,9 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 namespace OC\DB;
 
@@ -44,10 +44,10 @@ class AdapterSqlite extends Adapter {
 
 	public function fixupStatement($statement) {
 		$statement = preg_replace('/`(\w+)` ILIKE \?/', 'LOWER($1) LIKE LOWER(?)', $statement);
-		$statement = str_replace( '`', '"', $statement );
-		$statement = str_ireplace( 'NOW()', 'datetime(\'now\')', $statement );
+		$statement = str_replace('`', '"', $statement);
+		$statement = str_ireplace('NOW()', 'datetime(\'now\')', $statement);
 		$statement = str_ireplace('GREATEST(', 'MAX(', $statement);
-		$statement = str_ireplace( 'UNIX_TIMESTAMP()', 'strftime(\'%s\',\'now\')', $statement );
+		$statement = str_ireplace('UNIX_TIMESTAMP()', 'strftime(\'%s\',\'now\')', $statement);
 		return $statement;
 	}
 
@@ -75,7 +75,7 @@ class AdapterSqlite extends Adapter {
 			. " WHERE NOT EXISTS (SELECT 1 FROM `$table` WHERE ";
 
 		$inserts = array_values($input);
-		foreach($compare as $key) {
+		foreach ($compare as $key) {
 			$query .= '`' . $key . '`';
 			if (is_null($input[$key])) {
 				$query .= ' IS NULL AND ';

@@ -5,6 +5,7 @@
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
  * @author Lukas Reschke <lukas@statuscode.ch>
+ * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
@@ -20,13 +21,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OCA\FederatedFileSharing\BackgroundJob;
-
 
 use OC\BackgroundJob\Job;
 use OC\BackgroundJob\JobList;
@@ -80,7 +79,6 @@ class RetryJob extends Job {
 				\OC::$server->getCloudFederationFactory()
 			);
 		}
-
 	}
 
 	/**
@@ -90,7 +88,6 @@ class RetryJob extends Job {
 	 * @param ILogger|null $logger
 	 */
 	public function execute($jobList, ILogger $logger = null) {
-
 		if ($this->shouldRun($this->argument)) {
 			parent::execute($jobList, $logger);
 			$jobList->remove($this, $this->argument);
@@ -145,5 +142,4 @@ class RetryJob extends Job {
 		$lastRun = (int)$argument['lastRun'];
 		return ((time() - $lastRun) > $this->interval);
 	}
-
 }

@@ -1,5 +1,7 @@
 .DS_Store
 bin
+*/**/phpstan.neon
+.php_cs.dist
 # ignore demo files
 james-heinrich/getid3/demos
 james-heinrich/getid3/helperapps
@@ -11,6 +13,7 @@ doctrine/annotations/.travis.yml
 doctrine/cache/tests
 doctrine/cache/.travis.yml
 doctrine/cache/composer.json
+doctrine/cache/README.md
 doctrine/collections/tests
 doctrine/collections/.travis.yml
 doctrine/collections/README.md
@@ -21,11 +24,13 @@ doctrine/common/composer.json
 doctrine/dbal/tests
 doctrine/dbal/docs
 doctrine/dbal/run-all.sh
+doctrine/dbal/.doctrine-project.json
 doctrine/dbal/.travis.yml
 doctrine/dbal/.gitignore
 doctrine/dbal/.gitattributes
 doctrine/dbal/.gitmodules
 doctrine/dbal/build.*
+doctrine/dbal/phpcs.xml.dist
 doctrine/dbal/phpunit.xml.dist
 doctrine/inflector/tests
 doctrine/lexer/composer.json
@@ -53,6 +58,18 @@ phpseclib/phpseclib/README.md
 phpseclib/phpseclib/composer.json
 phpseclib/phpseclib/composer.lock
 phpseclib/phpseclib/phpunit.xml.dist
+
+php-http/guzzle6-adapter/CHANGELOG.md
+php-http/guzzle6-adapter/README.md
+
+php-http/httplug/CHANGELOG.md
+php-http/httplug/README.md
+
+php-http/promise/CHANGELOG.md
+php-http/promise/README.md
+
+psr/http-client/CHANGELOG.md
+psr/http-client/README.md
 
 php-opencloud/openstack/doc
 php-opencloud/openstack/tests
@@ -114,6 +131,8 @@ icewind/streams/tests
 icewind/streams/README.md
 icewind/streams/LICENCE
 icewind/streams/composer.json
+icewind/searchdav/.github/
+icewind/searchdav/.scrutinizer.yml
 icewind/searchdav/tests
 icewind/searchdav/README.md
 icewind/searchdav/composer.json
@@ -192,14 +211,13 @@ nikic/php-parser/grammar/tokens.y
 nikic/php-parser/phpunit.xml.dist
 
 
-interfasys/lognormalizer/.gitignore
-interfasys/lognormalizer/.travis.yml
-interfasys/lognormalizer/.scrutinizer.yml
-interfasys/lognormalizer/CHANGELOG.md
-interfasys/lognormalizer/README.md
-interfasys/lognormalizer/composer.json
-interfasys/lognormalizer/phpunit.xml
-interfasys/lognormalizer/tests
+nextcloud/lognormalizer/.gitignore
+nextcloud/lognormalizer/.travis.yml
+nextcloud/lognormalizer/CHANGELOG.md
+nextcloud/lognormalizer/README.md
+nextcloud/lognormalizer/composer.json
+nextcloud/lognormalizer/phpunit.xml
+nextcloud/lognormalizer/tests
 
 deepdiver1975/tarstreamer/.gitignore
 deepdiver1975/tarstreamer/.travis.yml
@@ -215,7 +233,9 @@ sabre/dav/tests
 sabre/event/tests
 sabre/http/examples
 sabre/http/tests
+sabre/uri/.gitattributes
 sabre/uri/tests
+sabre/vobject/CHANGELOG.md
 sabre/vobject/tests
 sabre/xml/tests
 
@@ -239,4 +259,6 @@ rackspace/php-opencloud/samples
 
 mtdowling/jmespath.php/tests
 
-leafo/scssphp/example
+scssphp/scssphp/example
+
+mikey179/vfsstream

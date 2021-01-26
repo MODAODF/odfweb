@@ -46,7 +46,7 @@
 	<repository>https://github.com/nextcloud/gallery.git</repository>
 
 	<dependencies>
-		<nextcloud min-version="16" max-version="16"/>
+		<nextcloud min-version="16" max-version="20"/>
 	</dependencies>
 
 	<documentation>

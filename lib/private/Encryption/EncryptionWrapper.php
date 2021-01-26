@@ -3,7 +3,8 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Björn Schießle <bjoern@schiessle.org>
- * @author Joas Schilling <coding@schilljs.com>
+ * @author Robin Appelman <robin@icewind.nl>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -17,19 +18,17 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OC\Encryption;
 
-
-use OC\Memcache\ArrayCache;
 use OC\Files\Filesystem;
 use OC\Files\Storage\Wrapper\Encryption;
-use OCP\Files\Mount\IMountPoint;
 use OC\Files\View;
+use OC\Memcache\ArrayCache;
+use OCP\Files\Mount\IMountPoint;
 use OCP\Files\Storage;
 use OCP\ILogger;
 
@@ -83,7 +82,6 @@ class EncryptionWrapper {
 		];
 
 		if (!$storage->instanceOfStorage(Storage\IDisableEncryptionStorage::class)) {
-
 			$user = \OC::$server->getUserSession()->getUser();
 			$mountManager = Filesystem::getMountManager();
 			$uid = $user ? $user->getUID() : null;
@@ -120,5 +118,4 @@ class EncryptionWrapper {
 			return $storage;
 		}
 	}
-
 }

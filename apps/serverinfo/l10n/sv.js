@@ -31,7 +31,6 @@ OC.L10N.register(
     "Memory" : "Minne",
     "Server time" : "Servertid",
     "Uptime" : "Upptid",
-    "Time Servers" : "Tidservrar",
     "Load" : "Last",
     "Disk" : "Lagring",
     "Mount" : "Montera",
@@ -65,17 +64,9 @@ OC.L10N.register(
     "Size:" : "Storlek:",
     "External monitoring tool" : "Externt övervakningsverktyg",
     "You can connect an external monitoring tool by using this end point:" : "Du kan ansluta ett externt övervakningsverktyg genom att använda denna adress:",
+    "Appending \"?format=json\" at the end of the URL gives you the result in JSON." : "Lägg till \"?format=json\" i slutet av webbadressen för att få resultatet i JSON.",
+    "Time Servers" : "Tidservrar",
     "Did you know?" : "Visste du?",
-    "Appending \"?format=json\" at the end of the URL gives you the result in JSON format!" : "Lägg till \"?format=json\" i slutet av webbadressen för att få resultatet i JSON-format!",
-    "Last 24 hours" : "Senaste 24 timmarna",
-    "Last 1 hour" : "Senaste timmen",
-    "Last 5 mins" : "Senaste 5 minuterna",
-    "CPU load" : "CPU-användning",
-    "Memory usage" : "Minnesanvändning",
-    "Storage" : "Lagring",
-    "Users:" : "Användare:",
-    "Nextcloud" : "Nextcloud",
-    "Apps installed:" : "Installerade appar:",
-    "Apps updates available:" : "Tillgängliga appuppdateringar"
+    "Appending \"?format=json\" at the end of the URL gives you the result in JSON format!" : "Lägg till \"?format=json\" i slutet av webbadressen för att få resultatet i JSON-format!"
 },
 "nplurals=2; plural=(n != 1);");

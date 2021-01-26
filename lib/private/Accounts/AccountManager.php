@@ -5,7 +5,12 @@
  *
  * @author Bjoern Schiessle <bjoern@schiessle.org>
  * @author Björn Schießle <bjoern@schiessle.org>
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Morris Jobke <hey@morrisjobke.de>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license AGPL-3.0
  *
@@ -19,21 +24,23 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
-
 namespace OC\Accounts;
 
+use OCA\Settings\BackgroundJobs\VerifyUserData;
 use OCP\Accounts\IAccount;
 use OCP\Accounts\IAccountManager;
 use OCP\BackgroundJob\IJobList;
 use OCP\IDBConnection;
+use OCP\ILogger;
 use OCP\IUser;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use OC\Settings\BackgroundJobs\VerifyUserData;
+use function json_decode;
+use function json_last_error;
 
 /**
  * Class AccountManager
@@ -57,6 +64,9 @@ class AccountManager implements IAccountManager {
 	/** @var IJobList */
 	private $jobList;
 
+	/** @var ILogger */
+	private $logger;
+
 	/**
 	 * AccountManager constructor.
 	 *
@@ -66,10 +76,12 @@ class AccountManager implements IAccountManager {
 	 */
 	public function __construct(IDBConnection $connection,
 								EventDispatcherInterface $eventDispatcher,
-								IJobList $jobList) {
+								IJobList $jobList,
+								ILogger $logger) {
 		$this->connection = $connection;
 		$this->eventDispatcher = $eventDispatcher;
 		$this->jobList = $jobList;
+		$this->logger = $logger;
 	}
 
 	/**
@@ -122,19 +134,26 @@ class AccountManager implements IAccountManager {
 	public function getUser(IUser $user) {
 		$uid = $user->getUID();
 		$query = $this->connection->getQueryBuilder();
-		$query->select('data')->from($this->table)
+		$query->select('data')
+			->from($this->table)
 			->where($query->expr()->eq('uid', $query->createParameter('uid')))
 			->setParameter('uid', $uid);
-		$query->execute();
-		$result = $query->execute()->fetchAll();
+		$result = $query->execute();
+		$accountData = $result->fetchAll();
+		$result->closeCursor();
 
-		if (empty($result)) {
+		if (empty($accountData)) {
 			$userData = $this->buildDefaultUserRecord($user);
 			$this->insertNewUser($user, $userData);
 			return $userData;
 		}
 
-		$userDataArray = json_decode($result[0]['data'], true);
+		$userDataArray = json_decode($accountData[0]['data'], true);
+		$jsonError = json_last_error();
+		if ($userDataArray === null || $userDataArray === [] || $jsonError !== JSON_ERROR_NONE) {
+			$this->logger->critical("User data of $uid contained invalid JSON (error $jsonError), hence falling back to a default user record");
+			return $this->buildDefaultUserRecord($user);
+		}
 
 		$userDataArray = $this->addMissingDefaultValues($userDataArray);
 
@@ -174,7 +193,6 @@ class AccountManager implements IAccountManager {
 	 * @return array
 	 */
 	protected function addMissingDefaultValues(array $userData) {
-
 		foreach ($userData as $key => $value) {
 			if (!isset($userData[$key]['verified'])) {
 				$userData[$key]['verified'] = self::NOT_VERIFIED;
@@ -199,45 +217,44 @@ class AccountManager implements IAccountManager {
 		$emailVerified = isset($oldData[self::PROPERTY_EMAIL]['verified']) && $oldData[self::PROPERTY_EMAIL]['verified'] === self::VERIFIED;
 
 		// keep old verification status if we don't have a new one
-		if(!isset($newData[self::PROPERTY_TWITTER]['verified'])) {
+		if (!isset($newData[self::PROPERTY_TWITTER]['verified'])) {
 			// keep old verification status if value didn't changed and an old value exists
 			$keepOldStatus = $newData[self::PROPERTY_TWITTER]['value'] === $oldData[self::PROPERTY_TWITTER]['value'] && isset($oldData[self::PROPERTY_TWITTER]['verified']);
 			$newData[self::PROPERTY_TWITTER]['verified'] = $keepOldStatus ? $oldData[self::PROPERTY_TWITTER]['verified'] : self::NOT_VERIFIED;
 		}
 
-		if(!isset($newData[self::PROPERTY_WEBSITE]['verified'])) {
+		if (!isset($newData[self::PROPERTY_WEBSITE]['verified'])) {
 			// keep old verification status if value didn't changed and an old value exists
 			$keepOldStatus = $newData[self::PROPERTY_WEBSITE]['value'] === $oldData[self::PROPERTY_WEBSITE]['value'] && isset($oldData[self::PROPERTY_WEBSITE]['verified']);
 			$newData[self::PROPERTY_WEBSITE]['verified'] = $keepOldStatus ? $oldData[self::PROPERTY_WEBSITE]['verified'] : self::NOT_VERIFIED;
 		}
 
-		if(!isset($newData[self::PROPERTY_EMAIL]['verified'])) {
+		if (!isset($newData[self::PROPERTY_EMAIL]['verified'])) {
 			// keep old verification status if value didn't changed and an old value exists
 			$keepOldStatus = $newData[self::PROPERTY_EMAIL]['value'] === $oldData[self::PROPERTY_EMAIL]['value'] && isset($oldData[self::PROPERTY_EMAIL]['verified']);
 			$newData[self::PROPERTY_EMAIL]['verified'] = $keepOldStatus ? $oldData[self::PROPERTY_EMAIL]['verified'] : self::VERIFICATION_IN_PROGRESS;
 		}
 
 		// reset verification status if a value from a previously verified data was changed
-		if($twitterVerified &&
+		if ($twitterVerified &&
 			$oldData[self::PROPERTY_TWITTER]['value'] !== $newData[self::PROPERTY_TWITTER]['value']
 		) {
 			$newData[self::PROPERTY_TWITTER]['verified'] = self::NOT_VERIFIED;
 		}
 
-		if($websiteVerified &&
+		if ($websiteVerified &&
 			$oldData[self::PROPERTY_WEBSITE]['value'] !== $newData[self::PROPERTY_WEBSITE]['value']
 		) {
 			$newData[self::PROPERTY_WEBSITE]['verified'] = self::NOT_VERIFIED;
 		}
 
-		if($emailVerified &&
+		if ($emailVerified &&
 			$oldData[self::PROPERTY_EMAIL]['value'] !== $newData[self::PROPERTY_EMAIL]['value']
 		) {
 			$newData[self::PROPERTY_EMAIL]['verified'] = self::NOT_VERIFIED;
 		}
 
 		return $newData;
-
 	}
 
 	/**
@@ -329,7 +346,7 @@ class AccountManager implements IAccountManager {
 
 	private function parseAccountData(IUser $user, $data): Account {
 		$account = new Account($user);
-		foreach($data as $property => $accountData) {
+		foreach ($data as $property => $accountData) {
 			$account->setProperty($property, $accountData['value'] ?? '', $accountData['scope'] ?? self::VISIBILITY_PRIVATE, $accountData['verified'] ?? self::NOT_VERIFIED);
 		}
 		return $account;
@@ -338,5 +355,4 @@ class AccountManager implements IAccountManager {
 	public function getAccount(IUser $user): IAccount {
 		return $this->parseAccountData($user, $this->getUser($user));
 	}
-
 }

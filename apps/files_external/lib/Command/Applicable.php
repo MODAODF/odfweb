@@ -2,6 +2,7 @@
 /**
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
  * @author Joas Schilling <coding@schilljs.com>
  * @author Robin Appelman <robin@icewind.nl>
  * @author Roeland Jago Douma <roeland@famdouma.nl>
@@ -18,7 +19,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
@@ -51,7 +52,7 @@ class Applicable extends Base {
 	 */
 	private $groupManager;
 
-	function __construct(
+	public function __construct(
 		GlobalStoragesService $globalService,
 		IUserManager $userManager,
 		IGroupManager $groupManager
@@ -99,7 +100,7 @@ class Applicable extends Base {
 		parent::configure();
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$mountId = $input->getArgument('mount_id');
 		try {
 			$mount = $this->globalService->getStorage($mountId);
@@ -153,5 +154,6 @@ class Applicable extends Base {
 			'users' => $applicableUsers,
 			'groups' => $applicableGroups
 		]);
+		return 0;
 	}
 }

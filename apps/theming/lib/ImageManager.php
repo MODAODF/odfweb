@@ -2,7 +2,12 @@
 /**
  * @copyright Copyright (c) 2016 Julius Härtl <jus@bitgrid.net>
  *
+ * @author Christoph Wurst <christoph@winzerhof-wurst.at>
+ * @author Daniel Kesselberg <mail@danielkesselberg.de>
  * @author Julius Haertl <jus@bitgrid.net>
+ * @author Julius Härtl <jus@bitgrid.net>
+ * @author Michael Weimann <mail@michael-weimann.eu>
+ * @author Roeland Jago Douma <roeland@famdouma.nl>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -17,21 +22,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-
 namespace OCA\Theming;
 
+use OCP\Files\IAppData;
+use OCP\Files\NotFoundException;
+use OCP\Files\NotPermittedException;
 use OCP\Files\SimpleFS\ISimpleFile;
 use OCP\Files\SimpleFS\ISimpleFolder;
 use OCP\ICacheFactory;
 use OCP\IConfig;
-use OCP\Files\IAppData;
-use OCP\Files\NotFoundException;
-use OCP\Files\NotPermittedException;
 use OCP\ILogger;
+use OCP\ITempManager;
 use OCP\IURLGenerator;
 
 class ImageManager {
@@ -48,27 +53,22 @@ class ImageManager {
 	private $cacheFactory;
 	/** @var ILogger */
 	private $logger;
+	/** @var ITempManager */
+	private $tempManager;
 
-	/**
-	 * ImageManager constructor.
-	 *
-	 * @param IConfig $config
-	 * @param IAppData $appData
-	 * @param IURLGenerator $urlGenerator
-	 * @param ICacheFactory $cacheFactory
-	 * @param ILogger $logger
-	 */
 	public function __construct(IConfig $config,
 								IAppData $appData,
 								IURLGenerator $urlGenerator,
 								ICacheFactory $cacheFactory,
-								ILogger $logger
+								ILogger $logger,
+								ITempManager $tempManager
 	) {
 		$this->config = $config;
 		$this->appData = $appData;
 		$this->urlGenerator = $urlGenerator;
 		$this->cacheFactory = $cacheFactory;
 		$this->logger = $logger;
+		$this->tempManager = $tempManager;
 	}
 
 	public function getImageUrl(string $key, bool $useSvg = true): string {
@@ -207,6 +207,66 @@ class ImageManager {
 		}
 	}
 
+	public function updateImage(string $key, string $tmpFile) {
+		$this->delete($key);
+
+		try {
+			$folder = $this->appData->getFolder('images');
+		} catch (NotFoundException $e) {
+			$folder = $this->appData->newFolder('images');
+		}
+
+		$target = $folder->newFile($key);
+		$supportedFormats = $this->getSupportedUploadImageFormats($key);
+		$detectedMimeType = mime_content_type($tmpFile);
+		if (!in_array($detectedMimeType, $supportedFormats, true)) {
+			throw new \Exception('Unsupported image type');
+		}
+
+		if ($key === 'background' && strpos($detectedMimeType, 'image/svg') === false) {
+			// Optimize the image since some people may upload images that will be
+			// either to big or are not progressive rendering.
+			$newImage = @imagecreatefromstring(file_get_contents($tmpFile));
+
+			// Preserve transparency
+			imagesavealpha($newImage, true);
+			imagealphablending($newImage, true);
+
+			$tmpFile = $this->tempManager->getTemporaryFile();
+			$newWidth = (int)(imagesx($newImage) < 4096 ? imagesx($newImage) : 4096);
+			$newHeight = (int)(imagesy($newImage) / (imagesx($newImage) / $newWidth));
+			$outputImage = imagescale($newImage, $newWidth, $newHeight);
+
+			imageinterlace($outputImage, 1);
+			imagepng($outputImage, $tmpFile, 8);
+			imagedestroy($outputImage);
+
+			$target->putContent(file_get_contents($tmpFile));
+		} else {
+			$target->putContent(file_get_contents($tmpFile));
+		}
+
+		return $detectedMimeType;
+	}
+
+	/**
+	 * Returns a list of supported mime types for image uploads.
+	 * "favicon" images are only allowed to be SVG when imagemagick with SVG support is available.
+	 *
+	 * @param string $key The image key, e.g. "favicon"
+	 * @return array
+	 */
+	private function getSupportedUploadImageFormats(string $key): array {
+		$supportedFormats = ['image/jpeg', 'image/png', 'image/gif'];
+
+		if ($key !== 'favicon' || $this->shouldReplaceIcons() === true) {
+			$supportedFormats[] = 'image/svg+xml';
+			$supportedFormats[] = 'image/svg';
+		}
+
+		return $supportedFormats;
+	}
+
 	/**
 	 * remove cached files that are not required any longer
 	 *
@@ -231,11 +291,11 @@ class ImageManager {
 	 */
 	public function shouldReplaceIcons() {
 		$cache = $this->cacheFactory->createDistributed('theming-' . $this->urlGenerator->getBaseUrl());
-		if($value = $cache->get('shouldReplaceIcons')) {
+		if ($value = $cache->get('shouldReplaceIcons')) {
 			return (bool)$value;
 		}
 		$value = false;
-		if(extension_loaded('imagick')) {
+		if (extension_loaded('imagick')) {
 			if (count(\Imagick::queryFormats('SVG')) >= 1) {
 				$value = true;
 			}

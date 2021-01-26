@@ -17,29 +17,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License, version 3,
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
 
 namespace OCP\Share;
 
 use OC\Share20\Exception\ProviderException;
-use OCP\IServerContainer;
 
 /**
  * Interface IProviderFactory
  *
- * @package OC\Share20
  * @since 9.0.0
  */
 interface IProviderFactory {
-
-	/**
-	 * IProviderFactory constructor.
-	 * @param IServerContainer $serverContainer
-	 * @since 9.0.0
-	 */
-	public function __construct(IServerContainer $serverContainer);
 
 	/**
 	 * @param string $id

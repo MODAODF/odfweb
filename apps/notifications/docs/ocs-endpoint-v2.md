@@ -25,7 +25,9 @@ In order to find out if notifications is installed/enabled on the server you can
             "delete",
             "delete-all",
             "icons",
-            "rich-strings"
+            "rich-strings",
+            "action-web",
+            "user-status"
           ]
         }
       }
@@ -102,6 +104,13 @@ Status | Explanation
 `204 No Content` | please slow down the polling to once per hour, since there are no apps that can generate notifications
 `304 Not Modified` | The provided `If-None-Match` matches the ETag, response body is empty
 
+### Headers
+
+Status | Explanation
+---|---
+`ETag` | See https://tools.ietf.org/html/rfc7232#section-2.3
+`X-Nextcloud-User-Status` | Only available with the `user-status` capability. The user status (`away`, `dnd`, `offline`, `online`) should be taken into account and in case of `dnd` no notifications should be directly shown.
+
 ### Specification
 
 Optional elements are still set in the array, the value is just empty:
@@ -138,7 +147,7 @@ Field name | Type | Value description
 ---------- | ---- | -----------------
 label | string | Translated short label of the action/button that should be presented to the user
 link | string | A link that should be followed when the action is performed/clicked
-type | string | HTTP method that should be used for the request against the link: GET, POST, DELETE
+type | string | HTTP method that should be used for the request against the link: GET, POST, DELETE, PUT or WEB. In case of WEB a redirect should happen instead.
 primary | bool | If the action is the primary action for the notification or not
 
 

@@ -29,46 +29,92 @@
 		sharesChart;
 
 	$(document).ready(function () {
+		var rambox = document.getElementById('rambox');
+		rambox.style.backgroundColor = OCA.Theming ? OCA.Theming.color : 'rgb(54, 129, 195)';
 
-		var updateTimer = setInterval(updateInfo, 1000);
+		var swapbox = document.getElementById('swapbox');
+		swapbox.style.backgroundColor = 'rgba(100, 100, 100, 0.8)';
 
-		resizeSystemCharts();
-		updateActiveUsersStatistics();
-		updateShareStatistics();
+		initDiskCharts();
 
 		setHumanReadableSizeToElement("databaseSize");
 		setHumanReadableSizeToElement("phpMemLimit");
 		setHumanReadableSizeToElement("phpUploadMaxSize");
 		setHumanReadableSizeToElement("systemDiskFreeSpace");
 
-		$('#ocsEndPoint span.icon-info').tooltip({placement: 'top'});
 		initMonitoringLinkToClipboard();
-		$("#monitoring-endpoint-url").on('click', function() {
+		$("#monitoring-endpoint-url").on('click', function () {
 			$(this).select();
 		});
 
 		function updateInfo() {
-			var url = OC.generateUrl('/apps/serverinfo/update');
+			const url = OC.generateUrl('/apps/serverinfo/update')
 
-			$.get(url).success(function (response) {
-				updateCPUStatistics(response.system.cpuload);
-				updateMemoryStatistics(response.system.mem_total, response.system.mem_free, response.system.swap_total, response.system.swap_free);
-			});
+			$.get(url).success(function(response) {
+				updateCPUStatistics(response.system.cpuload)
+				updateMemoryStatistics(response.system.mem_total, response.system.mem_free, response.system.swap_total, response.system.swap_free)
+			}).complete(function() {
+				setTimeout(updateInfo, 300)
+			})
 		}
+
+		setTimeout(updateInfo, 0)
+	});
+
+	$(window).load(function(){
+		resizeSystemCharts();
 	});
 
 	$(window).resize(function () {
 		resizeSystemCharts();
 	});
 
-	function updateCPUStatistics (cpuload) {
+	function getThemedPrimaryColor() {
+		return OCA.Theming ? OCA.Theming.color : 'rgb(54, 129, 195)';
+	}
+
+	function getThemedPassiveColor() {
+		return OCA.Theming && OCA.Theming.inverted ? 'rgb(55, 55, 55)' : 'rgb(200, 200, 200)';
+	}
+
+	/**
+	 * Reset all canvas widths on window resize so canvas is responsive
+	 */
+	function resizeSystemCharts() {
+		var cpuCanvas = $("#cpuloadcanvas"),
+			cpuCanvasWidth = cpuCanvas.parents('.infobox').width() - 30,
+			memCanvas = $("#memorycanvas"),
+			memCanvasWidth = memCanvas.parents('.infobox').width() - 30,
+			activeUsersCanvas = $("#activeuserscanvas"),
+			activeUsersCanvasWidth = activeUsersCanvas.parents('.infobox').width() - 30,
+			shareCanvas = $("#sharecanvas"),
+			shareCanvasWidth = shareCanvas.parents('.infobox').width() - 30;
+
+		// We have to set css width AND attribute width
+		cpuCanvas.width(cpuCanvasWidth);
+		cpuCanvas.attr('width', cpuCanvasWidth);
+		memCanvas.width(memCanvasWidth);
+		memCanvas.attr('width', memCanvasWidth);
+		activeUsersCanvas.width(activeUsersCanvasWidth);
+		activeUsersCanvas.attr('width', activeUsersCanvasWidth);
+		shareCanvas.width(shareCanvasWidth);
+		shareCanvas.attr('width', shareCanvasWidth);
+
+		updateShareStatistics();
+		updateActiveUsersStatistics();
+	}
+
+	function updateCPUStatistics(cpuload) {
+		var $cpuFooterInfo = $('#cpuFooterInfo');
+		var $cpuLoadCanvas = $('#cpuloadcanvas');
+
 		if (cpuload === 'N/A') {
-			$('#cpuFooterInfo').text(t('serverinfo', 'CPU info not available'));
-			$('#cpuloadcanvas').addClass('hidden');
+			$cpuFooterInfo.text(t('serverinfo', 'CPU info not available'));
+			$cpuLoadCanvas.addClass('hidden');
 			return;
 
-		} else if ($("#cpuloadcanvas").hasClass('hidden')) {
-			$("#cpuloadcanvas").removeClass('hidden');
+		} else if ($cpuLoadCanvas.hasClass('hidden')) {
+			$cpuLoadCanvas.removeClass('hidden');
 		}
 
 		var cpu1 = cpuload[0],
@@ -77,29 +123,37 @@
 
 		if (typeof cpuLoadChart === 'undefined') {
 			cpuLoadChart = new SmoothieChart(
-			{
-				millisPerPixel: 250,
-				minValue: 0,
-				grid: { fillStyle: 'rgba(0,0,0,0.03)', strokeStyle: 'transparent' },
-				labels: { fillStyle: 'rgba(0,0,0,0.4)', fontSize: 12 }
-			});
+				{
+					millisPerPixel: 100,
+					minValue: 0,
+					grid: {fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'transparent'},
+					labels: {fillStyle: 'rgba(0,0,0,0.4)', fontSize: 12},
+					responsive: true
+				});
 			cpuLoadChart.streamTo(document.getElementById("cpuloadcanvas"), 1000/*delay*/);
 			cpuLoadLine = new TimeSeries();
-			cpuLoadChart.addTimeSeries(cpuLoadLine, { lineWidth: 1, strokeStyle: 'rgb(0, 0, 255)', fillStyle: 'rgba(0, 0, 255, 0.2)' });
+			cpuLoadChart.addTimeSeries(cpuLoadLine, {
+				lineWidth: 1,
+				strokeStyle: getThemedPassiveColor(),
+				fillStyle: getThemedPrimaryColor()
+			});
 		}
 
-		$('#cpuFooterInfo').text(t('serverinfo', 'Load average')+": "+cpu1+" ("+t('serverinfo', 'Last minute')+")");
+		$cpuFooterInfo.text(t('serverinfo', 'Load average') + ": " + cpu1 + " (" + t('serverinfo', 'Last minute') + ")");
 		cpuLoadLine.append(new Date().getTime(), cpu1);
 	}
 
-	function updateMemoryStatistics (memTotal, memFree, swapTotal, swapFree) {
+	function updateMemoryStatistics(memTotal, memFree, swapTotal, swapFree) {
+		var $memFooterInfo = $('#memFooterInfo');
+		var $memoryCanvas = $('#memorycanvas');
+
 		if (memTotal === 'N/A' || memFree === 'N/A') {
-			$('#memFooterInfo').text(t('serverinfo', 'Memory info not available'));
-			$('#memorycanvas').addClass('hidden');
+			$memFooterInfo.text(t('serverinfo', 'Memory info not available'));
+			$memoryCanvas.addClass('hidden');
 			return;
 
-		} else if ($("#memorycanvas").hasClass('hidden')) {
-			$("#memorycanvas").removeClass('hidden');
+		} else if ($memoryCanvas.hasClass('hidden')) {
+			$memoryCanvas.removeClass('hidden');
 		}
 
 		var memTotalBytes = memTotal * 1024,
@@ -112,41 +166,58 @@
 			swapTotalGB = swapTotal / (1024 * 1024),
 			swapUsageGB = (swapTotal - swapFree) / (1024 * 1024);
 
+		var maxValueOfChart = swapTotalGB;
 		if (memTotalGB > swapTotalGB) {
-			var maxValueOfChart = memTotalGB;
-		} else {
-			var maxValueOfChart = swapTotalGB;
+			maxValueOfChart = memTotalGB;
 		}
 
 		if (typeof memoryUsageChart === 'undefined') {
 			memoryUsageChart = new SmoothieChart(
-			{
-				millisPerPixel: 250,
-				maxValue: maxValueOfChart,
-				minValue: 0,
-				grid: { fillStyle: 'rgba(0,0,0,0.03)', strokeStyle: 'transparent' },
-				labels: { fillStyle: 'rgba(0,0,0,0.4)', fontSize: 12 }
-			});
+				{
+					millisPerPixel: 100,
+					maxValue: maxValueOfChart,
+					minValue: 0,
+					grid: {fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'transparent'},
+					labels: {fillStyle: 'rgba(0,0,0,0.4)', fontSize: 12},
+					responsive: true
+				});
 			memoryUsageChart.streamTo(document.getElementById("memorycanvas"), 1000/*delay*/);
 			memoryUsageLine = new TimeSeries();
-			memoryUsageChart.addTimeSeries(memoryUsageLine, {lineWidth:1, strokeStyle:'rgb(0, 255, 0)', fillStyle:'rgba(0, 255, 0, 0.2)'});
+			memoryUsageChart.addTimeSeries(memoryUsageLine, {
+				lineWidth: 1,
+				strokeStyle: getThemedPassiveColor(),
+				fillStyle: getThemedPrimaryColor()
+			});
 			swapUsageLine = new TimeSeries();
-			memoryUsageChart.addTimeSeries(swapUsageLine, {lineWidth:1, strokeStyle:'rgb(255, 0, 0)', fillStyle:'rgba(255, 0, 0, 0.2)'});
+			memoryUsageChart.addTimeSeries(swapUsageLine, {
+				lineWidth: 1,
+				strokeStyle: 'rgb(100, 100, 100)',
+				fillStyle: 'rgba(100, 100, 100, 0.2)'
+			});
 		}
 
-		$('#memFooterInfo').text("RAM: "+t('serverinfo', 'Total')+": "+OC.Util.humanFileSize(memTotalBytes)+" - "+t('serverinfo', 'Current usage')+": "+OC.Util.humanFileSize(memUsageBytes));
+		$memFooterInfo
+			.text("RAM: " + t('serverinfo', 'Total') + ": " + OC.Util.humanFileSize(memTotalBytes) + " - " + t('serverinfo', 'Current usage') + ": " + OC.Util.humanFileSize(memUsageBytes));
 		memoryUsageLine.append(new Date().getTime(), memUsageGB);
-		$('#swapFooterInfo').text("SWAP: "+t('serverinfo', 'Total')+": "+OC.Util.humanFileSize(swapTotalBytes)+" - "+t('serverinfo', 'Current usage')+": "+OC.Util.humanFileSize(swapUsageBytes));
+		$('#swapFooterInfo')
+			.text("SWAP: " + t('serverinfo', 'Total') + ": " + OC.Util.humanFileSize(swapTotalBytes) + " - " + t('serverinfo', 'Current usage') + ": " + OC.Util.humanFileSize(swapUsageBytes));
 		swapUsageLine.append(new Date().getTime(), swapUsageGB);
 	}
 
-	function updateShareStatistics () {
+	function updateShareStatistics() {
 
 		var shares = $('#sharecanvas').data('shares'),
-			shares_data = [shares.num_shares_user, shares.num_shares_groups, shares.num_shares_link, shares.num_shares_mail, shares.num_fed_shares_sent, shares.num_fed_shares_received, shares.num_shares_room],
+			sharesData = [shares.num_shares_user,
+				shares.num_shares_groups,
+				shares.num_shares_link,
+				shares.num_shares_mail,
+				shares.num_fed_shares_sent,
+				shares.num_fed_shares_received,
+				shares.num_shares_room
+			],
 			stepSize = 0;
 
-		if (Math.max.apply(null, shares_data) < 10) {
+		if (Math.max.apply(null, sharesData) < 10) {
 			stepSize = 1;
 		}
 
@@ -167,7 +238,7 @@
 					],
 					datasets: [{
 						label: " ",
-						data: shares_data,
+						data: sharesData,
 						backgroundColor: [
 							'rgba(0, 76, 153, 0.2)',
 							'rgba(51, 153, 255, 0.2)',
@@ -190,7 +261,7 @@
 					}]
 				},
 				options: {
-					legend: { display:false },
+					legend: {display: false},
 					scales: {
 						yAxes: [{
 							ticks: {
@@ -206,13 +277,13 @@
 		sharesChart.update();
 	}
 
-	function updateActiveUsersStatistics () {
+	function updateActiveUsersStatistics() {
 
 		var activeUsers = $('#activeuserscanvas').data('users'),
-			activeUsers_data = [activeUsers.last24hours, activeUsers.last1hour, activeUsers.last5minutes],
+			activeUsersData = [activeUsers.last24hours, activeUsers.last1hour, activeUsers.last5minutes],
 			stepSize = 0;
 
-		if (Math.max.apply(null, activeUsers_data) < 10) {
+		if (Math.max.apply(null, activeUsersData) < 10) {
 			stepSize = 1;
 		}
 
@@ -223,24 +294,24 @@
 				type: 'line',
 				data: {
 					labels: [
-						t('serverinfo', 'Last 24 hours'),
-						t('serverinfo', 'Last 1 hour'),
-						t('serverinfo', 'Last 5 mins')
+						t('serverinfo', '24 hours'),
+						t('serverinfo', '1 hour'),
+						t('serverinfo', '5 mins')
 					],
 					datasets: [{
 						label: " ",
-						data: activeUsers_data,
+						data: activeUsersData,
 						fill: false,
-						borderColor: [ 'rgba(0, 0, 255, 1)' ],
+						borderColor: [getThemedPrimaryColor()],
 						borderWidth: 1,
 						borderDashOffset: 0.0,
 						borderJoinStyle: 'miter',
-						pointBorderColor: 'rgba(0, 0, 255, 1)',
-						pointBackgroundColor: "#fff",
+						pointBorderColor: getThemedPrimaryColor(),
+						pointBackgroundColor: getThemedPassiveColor(),
 						pointBorderWidth: 1,
 						pointHoverRadius: 5,
-						pointHoverBackgroundColor: "rgba(0,0,255,0.6)",
-						pointHoverBorderColor: "rgba(0, 0, 255, 1)",
+						pointHoverBackgroundColor: getThemedPrimaryColor(),
+						pointHoverBorderColor: getThemedPrimaryColor(),
 						pointHoverBorderWidth: 1,
 						pointRadius: 5,
 						pointHitRadius: 10,
@@ -248,7 +319,7 @@
 					}]
 				},
 				options: {
-					legend: { display:false },
+					legend: {display: false},
 					scales: {
 						yAxes: [{
 							ticks: {
@@ -262,30 +333,12 @@
 		}
 	}
 
-	function setHumanReadableSizeToElement (elementId) {
+	function setHumanReadableSizeToElement(elementId) {
 		var maxUploadSize = parseInt($('#' + elementId).text());
 
 		if ($.isNumeric(maxUploadSize)) {
 			$('#' + elementId).text(OC.Util.humanFileSize(maxUploadSize));
 		}
-	}
-
-	function resizeSystemCharts () {
-
-		var cpu_canvas = document.getElementById("cpuloadcanvas"),
-			mem_canvas = document.getElementById("memorycanvas");
-
-		var newWidth = $('#cpuSection').width();
-			newHeight = newWidth / 4
-
-		if (newWidth <= 100) newWidth = 100;
-		if (newHeight > 150) newHeight = 150;
-
-		cpuloadcanvas.width = newWidth;
-		cpuloadcanvas.height = newHeight;
-
-		mem_canvas.width = newWidth;
-		mem_canvas.height = newHeight;
 	}
 
 	function initMonitoringLinkToClipboard() {
@@ -295,14 +348,14 @@
 
 		// Clipboard!
 		var clipboard = new Clipboard('.clipboardButton');
-		clipboard.on('success', function(e) {
+		clipboard.on('success', function (e) {
 			var $input = $(e.trigger);
 			$input.tooltip('hide')
 				.attr('data-original-title', t('core', 'Copied!'))
 				.tooltip('fixTitle')
 				.tooltip({placement: 'bottom', trigger: 'manual'})
 				.tooltip('show');
-			_.delay(function() {
+			_.delay(function () {
 				$input.tooltip('hide')
 					.attr('data-original-title', t('core', 'Copy'))
 					.tooltip('fixTitle');
@@ -330,6 +383,72 @@
 					.tooltip('fixTitle');
 			}, 3000);
 		});
+	}
+
+	function initDiskCharts() {
+		$.ajax({
+			url: OC.linkToOCS('apps/serverinfo/api/v1/', 2) + 'diskdata?format=json',
+			method: "GET",
+			success: function (response) {
+				var diskdata = response.ocs.data;
+				var diskcharts = document.querySelectorAll(".DiskChart");
+				var i;
+				for (i = 0; i < diskcharts.length; i++) {
+					var chartdata = {
+						labels: ["Used GB", "Available GB"],
+						datasets: [
+							{
+								backgroundColor: [
+									getThemedPrimaryColor(),
+									getThemedPassiveColor(),
+								],
+								borderWidth: 0,
+								data: diskdata[i]
+							}
+						]
+					};
+					var ctx = diskcharts[i];
+					var barGraph = new Chart(ctx, {
+						type: 'doughnut',
+						data: chartdata,
+						options: {
+							legend: {
+								display: false,
+							},
+							tooltips: {
+								enabled: true,
+							},
+							cutoutPercentage: 60,
+						}
+					});
+				}
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		});
+
+		var interval = 1000;  // 1000 = 1 second, 3000 = 3 seconds
+		function doAjax() {
+			$.ajax({
+				url: OC.linkToOCS('apps/serverinfo/api/v1/', 2) + 'basicdata?format=json',
+				method: "GET",
+				success: function (response) {
+					var data = response.ocs.data;
+					document.getElementById("servertime").innerHTML = data.servertime;
+					document.getElementById("uptime").innerHTML = data.uptime;
+					document.getElementById("timeservers").innerHTML = data.timeservers;
+				},
+				error: function (data) {
+					console.log(data);
+				},
+				complete: function (data) {
+					setTimeout(doAjax, interval);
+				}
+			});
+		}
+
+		setTimeout(doAjax, interval);
 	}
 
 })(jQuery, OC);

@@ -11,7 +11,6 @@ class ComposerStaticInit98fe9b281934250b3a93f69a5ce843b3
         array (
             'Icewind\\Streams\\Tests\\' => 22,
             'Icewind\\Streams\\' => 16,
-            'Icewind\\SMB\\Test\\' => 17,
             'Icewind\\SMB\\' => 12,
         ),
     );
@@ -25,10 +24,6 @@ class ComposerStaticInit98fe9b281934250b3a93f69a5ce843b3
         array (
             0 => __DIR__ . '/..' . '/icewind/streams/src',
         ),
-        'Icewind\\SMB\\Test\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/icewind/smb/tests',
-        ),
         'Icewind\\SMB\\' => 
         array (
             0 => __DIR__ . '/..' . '/icewind/smb/src',
@@ -36,6 +31,7 @@ class ComposerStaticInit98fe9b281934250b3a93f69a5ce843b3
     );
 
     public static $classMap = array (
+        'Icewind\\SMB\\ACL' => __DIR__ . '/..' . '/icewind/smb/src/ACL.php',
         'Icewind\\SMB\\AbstractServer' => __DIR__ . '/..' . '/icewind/smb/src/AbstractServer.php',
         'Icewind\\SMB\\AbstractShare' => __DIR__ . '/..' . '/icewind/smb/src/AbstractShare.php',
         'Icewind\\SMB\\AnonymousAuth' => __DIR__ . '/..' . '/icewind/smb/src/AnonymousAuth.php',
@@ -45,8 +41,10 @@ class ComposerStaticInit98fe9b281934250b3a93f69a5ce843b3
         'Icewind\\SMB\\Exception\\AlreadyExistsException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/AlreadyExistsException.php',
         'Icewind\\SMB\\Exception\\AuthenticationException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/AuthenticationException.php',
         'Icewind\\SMB\\Exception\\ConnectException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/ConnectException.php',
+        'Icewind\\SMB\\Exception\\ConnectionAbortedException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/ConnectionAbortedException.php',
         'Icewind\\SMB\\Exception\\ConnectionException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/ConnectionException.php',
         'Icewind\\SMB\\Exception\\ConnectionRefusedException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/ConnectionRefusedException.php',
+        'Icewind\\SMB\\Exception\\ConnectionResetException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/ConnectionResetException.php',
         'Icewind\\SMB\\Exception\\DependencyException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/DependencyException.php',
         'Icewind\\SMB\\Exception\\Exception' => __DIR__ . '/..' . '/icewind/smb/src/Exception/Exception.php',
         'Icewind\\SMB\\Exception\\FileInUseException' => __DIR__ . '/..' . '/icewind/smb/src/Exception/FileInUseException.php',

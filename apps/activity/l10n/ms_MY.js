@@ -24,11 +24,8 @@ OC.L10N.register(
     "Hello %s" : "Hai %s",
     "Hello %s," : "Hai %s,",
     "Mail" : "Mel",
-    "Stream" : "Strim",
     "Activity feed" : "Suapan aktiviti",
-    "Send activity emails" : "Hantar emel aktiviti",
     "Default settings" : "Tetapan lalai",
-    "Send emails:" : "Hantar email:",
     "As soon as possible" : "Secepat yang boleh",
     "Hourly" : "Setiap jam",
     "Daily" : "Setiap hari",
@@ -36,7 +33,8 @@ OC.L10N.register(
     "Settings" : "Tetapan",
     "RSS feed" : "Suapan RSS",
     "No more events to load" : "Tiada aktiviti untuk memuat",
-    ", " : ",",
-    "Files" : "Fail"
+    "Stream" : "Strim",
+    "Send activity emails" : "Hantar emel aktiviti",
+    "Send emails:" : "Hantar email:"
 },
 "nplurals=1; plural=0;");
