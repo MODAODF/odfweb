@@ -6,6 +6,7 @@ use OCP\IRequest;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Controller;
 use OCP\IConfig;
 use OCP\IUserManager;
@@ -57,6 +58,9 @@ class PageController extends Controller {
 		$this->getNdcodfwebVersion();
 	}
 
+	/**
+	 * 取得目前使用的 odfweb 版號
+	 */
 	private function getOdfwebVersion() {
 		$version_odfweb = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
 		if ($version_odfweb) {
@@ -66,6 +70,9 @@ class PageController extends Controller {
 		}
 	}
 
+	/**
+	 * 取得目前使用的 ndcodfweb 版號
+	 */
 	private function getNdcodfwebVersion() {
 		$wopi_url = $this->config->getAppValue('richdocuments', 'wopi_url');
 		if ($wopi_url) {
@@ -85,6 +92,10 @@ class PageController extends Controller {
 
 	/**
 	 * @NoCSRFRequired
+	 *
+	 * 版號資訊頁面
+	 *
+	 * @return TemplateResponse
 	 */
 	public function index() {
 
@@ -108,13 +119,17 @@ class PageController extends Controller {
 			$parameters['lastCheckTime'] = $lastCheckTime;
 		}
 
+		$this->updateCSP();
 		return new TemplateResponse('ndcversionstatus', 'index', $parameters);
 	}
 
 	/**
 	 * @NoCSRFRequired
 	 *
+	 * 檢查結果頁面
+	 *
 	 * @param srting $updateInfo Get version result from odf.nat.gov.tw ex: odfweb=0&ndcodfweb=1
+	 * @return RedirectResponse|TemplateResponse
 	 */
 	public function result($updateInfo) {
 		if (!$updateInfo) {
@@ -169,9 +184,12 @@ class PageController extends Controller {
 	}
 
 	/**
-	 * @return DataResponse
+	 *
+	 * 將檢查結果寄給管理員
 	 *
 	 * @param array $data
+	 * @return DataRespons
+	 * @throws \RuntimeException
 	 */
 	public function sendMail($content) {
 
@@ -244,5 +262,15 @@ class PageController extends Controller {
 				'result' => false
 			]);
 		}
+	}
+
+	/**
+	 * 設定 ContentSecurityPolicy
+	 */
+	private function updateCSP() {
+		$cspManager = \OC::$server->getContentSecurityPolicyManager();
+		$csp = new ContentSecurityPolicy();
+		$csp->addAllowedFormActionDomain(self::RedirectUrl);
+		$cspManager->addDefaultPolicy($csp);
 	}
 }
