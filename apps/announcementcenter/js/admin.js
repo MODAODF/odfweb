@@ -20,7 +20,7 @@
  *
  */
 
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
 	var $announcementCenter = $('#announcementcenter'),
 		$adminGroup = $announcementCenter.find('.admin_groups');
 

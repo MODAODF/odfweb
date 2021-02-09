@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * @copyright Copyright (c) 2016, Joas Schilling <coding@schilljs.com>
@@ -27,17 +28,20 @@ namespace OCA\AnnouncementCenter;
 use OC\BackgroundJob\QueuedJob;
 use OCA\AnnouncementCenter\Model\Announcement;
 use OCA\AnnouncementCenter\Model\AnnouncementDoesNotExistException;
+use OCA\Guests\UserBackend;
 use OCP\Activity\IEvent;
 use OCP\Activity\IManager as IActivityManager;
+use OCP\IConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
-use OCP\IURLGenerator;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Notification\IManager as INotificationManager;
 use OCP\Notification\INotification;
 
 class BackgroundJob extends QueuedJob {
+	/** @var IConfig */
+	protected $config;
 	/** @var INotificationManager */
 	protected $notificationManager;
 
@@ -46,9 +50,6 @@ class BackgroundJob extends QueuedJob {
 
 	/** @var IGroupManager */
 	private $groupManager;
-
-	/** @var IURLGenerator */
-	private $urlGenerator;
 
 	/** @var Manager */
 	private $manager;
@@ -59,18 +60,21 @@ class BackgroundJob extends QueuedJob {
 	/** @var array */
 	protected $notifiedUsers = [];
 
+	/** @var bool */
+	protected $enabledForGuestsUsers;
+
 	public function __construct(
+		IConfig $config,
 		IUserManager $userManager,
 		IGroupManager $groupManager,
 		IActivityManager $activityManager,
 		INotificationManager $notificationManager,
-		IURLGenerator $urlGenerator,
 		Manager $manager) {
+		$this->config = $config;
 		$this->userManager = $userManager;
 		$this->groupManager = $groupManager;
 		$this->activityManager = $activityManager;
 		$this->notificationManager = $notificationManager;
-		$this->urlGenerator = $urlGenerator;
 		$this->manager = $manager;
 	}
 
@@ -86,6 +90,9 @@ class BackgroundJob extends QueuedJob {
 			return;
 		}
 
+		$guestsWhiteList = $this->config->getAppValue('guests', 'whitelist', null);
+		$this->enabledForGuestsUsers = $guestsWhiteList !== null && strpos($guestsWhiteList, 'announcementcenter') !== false;
+
 		$this->createPublicity($announcement, $arguments);
 	}
 
@@ -93,7 +100,7 @@ class BackgroundJob extends QueuedJob {
 	 * @param Announcement $announcement
 	 * @param array $publicity
 	 */
-	public function createPublicity(Announcement $announcement, array $publicity): void {
+	protected function createPublicity(Announcement $announcement, array $publicity): void {
 		$event = $this->activityManager->generateEvent();
 		$event->setApp('announcementcenter')
 			->setType('announcementcenter')
@@ -109,7 +116,7 @@ class BackgroundJob extends QueuedJob {
 		$notification = $this->notificationManager->createNotification();
 		$notification->setApp('announcementcenter')
 			->setDateTime($dateTime)
-			->setObject('announcement', $announcement->getId())
+			->setObject('announcement', (string)$announcement->getId())
 			->setSubject('announced', [$announcement->getUser()]);
 
 		$groups = $this->manager->getGroups($announcement);
@@ -127,7 +134,11 @@ class BackgroundJob extends QueuedJob {
 	 * @param array $publicity
 	 */
 	protected function createPublicityEveryone(string $authorId, IEvent $event, INotification $notification, array $publicity) {
-		$this->userManager->callForAllUsers(function(IUser $user) use ($authorId, $event, $notification, $publicity) {
+		$this->userManager->callForSeenUsers(function (IUser $user) use ($authorId, $event, $notification, $publicity) {
+			if (!$this->enabledForGuestsUsers && $user->getBackend() instanceof UserBackend) {
+				return;
+			}
+
 			if (!empty($publicity['activities'])) {
 				$event->setAffectedUser($user->getUID());
 				$this->activityManager->publish($event);
@@ -156,6 +167,10 @@ class BackgroundJob extends QueuedJob {
 
 			$users = $group->getUsers();
 			foreach ($users as $user) {
+				if (!$this->enabledForGuestsUsers && $user->getBackend() instanceof UserBackend) {
+					continue;
+				}
+
 				$uid = $user->getUID();
 				if (isset($this->notifiedUsers[$uid]) || $user->getLastLogin() === 0) {
 					continue;

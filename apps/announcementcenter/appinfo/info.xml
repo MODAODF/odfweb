@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<info>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>announcementcenter</id>
 	<name>Announcement center</name>
 	<summary><![CDATA[This app allows admins to post announcements.]]></summary>
@@ -12,9 +13,9 @@
 👪 Group permissions
 
 🔔 Notifications (Requires the notifications app to be enabled)]]></description>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<licence>agpl</licence>
-	<author>Sharon Wu</author>
+	<author>Joas Schilling</author>
 	<namespace>AnnouncementCenter</namespace>
 
 	<types>
@@ -23,8 +24,14 @@
 
 	<category>tools</category>
 
+	<website>https://github.com/nextcloud/announcementcenter</website>
+	<bugs>https://github.com/nextcloud/announcementcenter/issues</bugs>
+	<repository>https://github.com/nextcloud/announcementcenter.git</repository>
+
+	<screenshot>https://github.com/nextcloud/announcementcenter/raw/master/docs/AnnouncementCenterFrontpage.png</screenshot>
+
 	<dependencies>
-		<nextcloud min-version="16" max-version="16" />
+		<nextcloud min-version="20" max-version="20" />
 	</dependencies>
 
 	<repair-steps>

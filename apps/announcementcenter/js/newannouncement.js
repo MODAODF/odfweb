@@ -1,7 +1,7 @@
 $.ajax({
     type: 'GET',
     url: OC.webroot + '/ocs/v2.php/apps/notifications/api/v2/notifications',
-   dataType : 'json',
+    dataType : 'json',
 }).done(function(resp) {
     if(resp.ocs.meta.statuscode == 200) {
         var data = resp.ocs.data;

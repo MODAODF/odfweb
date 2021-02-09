@@ -8,7 +8,7 @@
  *
  */
 
-/* global Handlebars, escapeHTML */
+/* global Handlebars */
 
 (function(OC, OCA) {
 
@@ -157,22 +157,22 @@
 					return '<li>' +
 						'<span class="avatar-name-wrapper">' +
 							'<span class="avatar" ' +
-									'data-username="' + escapeHTML(item.id) + '" ' + // for avatars
-									'data-user="' + escapeHTML(item.id) + '" ' + // for contactsmenu
-									'data-user-display-name="' + escapeHTML(item.label) + '">' +
+									'data-username="' + _.escape(item.id) + '" ' + // for avatars
+									'data-user="' + _.escape(item.id) + '" ' + // for contactsmenu
+									'data-user-display-name="' + _.escape(item.label) + '">' +
 							'</span>' +
-							'<strong>' + escapeHTML(item.label) + '</strong>' +
+							'<strong>' + _.escape(item.label) + '</strong>' +
 						'</span></li>';
 				},
 				insertTpl: function (item) {
 					return '' +
 						'<span class="avatar-name-wrapper">' +
 							'<span class="avatar" ' +
-									'data-username="' + escapeHTML(item.id) + '" ' + // for avatars
-									'data-user="' + escapeHTML(item.id) + '" ' + // for contactsmenu
-									'data-user-display-name="' + escapeHTML(item.label) + '">' +
+									'data-username="' + _.escape(item.id) + '" ' + // for avatars
+									'data-user="' + _.escape(item.id) + '" ' + // for contactsmenu
+									'data-user-display-name="' + _.escape(item.label) + '">' +
 							'</span>' +
-							'<strong>' + escapeHTML(item.label) + '</strong>' +
+							'<strong>' + _.escape(item.label) + '</strong>' +
 						'</span>';
 				},
 				searchKey: "label"
@@ -407,7 +407,7 @@
 		 * converts newlines to <br> tags.
 		 */
 		_formatMessage: function(message, mentions, editMode) {
-			message = escapeHTML(message).replace(/\n/g, '<br/>');
+			message = _.escape(message).replace(/\n/g, '<br/>');
 
 			for(var i in mentions) {
 				if(!mentions.hasOwnProperty(i)) {
@@ -758,4 +758,3 @@
 		}
 	});
 })(OC, OCA);
-
