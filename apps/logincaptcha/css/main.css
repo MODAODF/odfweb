@@ -1,0 +1,22 @@
+#captcha-wrapper {
+	display: flex;
+	align-items: center;
+}
+#captcha-wrapper input {
+    width: 145px;
+}
+
+#captcha-wrapper a {
+	/* cursor: pointer; */
+	width: 95px;
+	height: 46px;
+	border: 1px solid #808080;
+	border-radius: 3px;
+	background-color: white;
+	display: flex;
+    align-items: center;
+}
+
+#captcha-wrapper img {
+	display:none;
+}
