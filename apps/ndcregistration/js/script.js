@@ -1,5 +1,5 @@
 /* global $ OC */
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
     $('#goback').click(function() {
         var myhome = OC.generateUrl('/apps/ndcregistration');
         window.location = myhome;

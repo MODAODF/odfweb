@@ -1,5 +1,5 @@
 /* global $ OC */
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
     $('#captcha').click(function() {
         var captchaUrl = OC.generateUrl('/apps/ndcregistration/captcha');
         var dd = new Date();

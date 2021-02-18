@@ -53,7 +53,7 @@ function readLogTxt() {
 	})
 }
 
-$(document).ready(function () {
+window.addEventListener('DOMContentLoaded', function() {
 	var msgEl = $('#uploadMessage');
 	var errMsg = $('#errorMessages');
 	var msgResponse = {

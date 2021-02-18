@@ -1,4 +1,4 @@
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
   function saveSettings() {
     OC.msg.startSaving('#registration_settings_msg');
     $.ajax({

@@ -9,8 +9,7 @@
 namespace OCA\NdcRegistration\Controller;
 
 use \OCP\IRequest;
-use \OCP\AppFramework\Http\TemplateResponse;
-use \OCP\AppFramework\Http\DataResponse;
+use \OCP\AppFramework\Http\DataDisplayResponse;
 use \OCP\AppFramework\Http;
 use \OCP\AppFramework\Controller;
 use \OCP\IL10N;
@@ -43,10 +42,11 @@ class CaptchaController extends Controller {
 	 */
     public function imageCode() {
         $this->session->remove(SELF::CAPTCHA_NAME);
-        // mime type
-        header("Content-type: image/png");
+        $data = $this->createCaptcha(5, 120, 30);
 
-        $this->createCaptcha(5, 120, 30);
+        $resp = new DataDisplayResponse($data);
+        $resp->addHeader('Content-type', 'image/png; charset=utf-8');
+        return $resp;
     }
 
     /**
@@ -91,8 +91,12 @@ class CaptchaController extends Controller {
             $strx += rand(10, 30);
         }
 
+        ob_start();
         imagepng($image);
         imagedestroy($image);
+        $data = ob_get_contents();
+        ob_end_clean();
+        return $data;
     }
 }
 ?>
