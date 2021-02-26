@@ -1,4 +1,4 @@
-$(document).ready(function() {
+window.addEventListener('DOMContentLoaded', function() {
 	var appName = "odfwebupgrade";
     var msgEl = $('.msg')
     var msgResponse = {

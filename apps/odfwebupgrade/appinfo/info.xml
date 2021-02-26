@@ -12,7 +12,7 @@
     <category>tools</category>
     <bugs>http://www.ossii.com.tw</bugs>
     <dependencies>
-        <nextcloud min-version="15" max-version="16"/>
+        <nextcloud min-version="15" max-version="20"/>
     </dependencies>
 
 	<settings>
