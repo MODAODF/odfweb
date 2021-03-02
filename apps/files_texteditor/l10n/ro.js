@@ -1,7 +1,7 @@
 OC.L10N.register(
     "files_texteditor",
     {
-    "saving..." : "se salvează...",
+    "Saving…" : "Se salvează...",
     "saved!" : "salvat!",
     "failed!" : "eșuat!",
     "Saved" : "Salvat",
@@ -15,6 +15,7 @@ OC.L10N.register(
     "Invalid file path supplied." : "A fost furnizată o cale invalidă.",
     "The file is locked." : "Fișierul este blocat.",
     "An internal server error occurred." : "A apărut o eroare internp a serverului.",
+    "saving..." : "se salvează...",
     "Cannot save file as it has been modified since opening" : "Nu se poate salva fișierul, a fost modificat de la deschidere.",
     "Insufficient permissions" : "Permisiuni insuficiente",
     "File path not supplied" : "Calea fișierului nu este oferită"
