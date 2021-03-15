@@ -23,19 +23,25 @@
 
 namespace OCA\NdcRegistration\AppInfo;
 
+use OCA\NdcRegistration\Capabilities;
+use OCA\NdcRegistration\NdcRegistrationLoginOption;
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 
-class Application extends App {
-	public function __construct(array $urlParams = []) {
-		parent::__construct('ndcregistration', $urlParams);
+class Application extends App implements IBootstrap {
+	public const APP_ID = 'ndcregistration';
 
-		$container = $this->getContainer();
-		$container->registerService('OC\Authentication\Token\IProvider', function ($c) {
-			return \OC::$server->query('OC\Authentication\Token\IProvider');
-		});
+	public function __construct() {
+		parent::__construct(self::APP_ID);
+	}
 
-		if (interface_exists('\OCP\Capabilities\IPublicCapability')) {
-			$container->registerCapability(\OCA\NdcRegistration\Capabilities::class);
-		}
+	public function register(IRegistrationContext $context): void {
+		$context->registerAlternativeLogin(NdcRegistrationLoginOption::class);
+		$context->registerCapability(Capabilities::class);
+	}
+
+	public function boot(IBootContext $context): void {
 	}
 }

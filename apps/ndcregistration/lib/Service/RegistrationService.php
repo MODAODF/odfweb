@@ -340,7 +340,7 @@ class RegistrationService {
 		$user->setQuota($user_storage_capacity.'G');
 
 		// disable user if this is requested by config
-		$admin_approval_required = $this->config->getAppValue($this->appName, 'admin_approval_required', "no");
+		$admin_approval_required = $this->config->getAppValue($this->appName, 'admin_approval_required', "yes");
 		if ($admin_approval_required === "yes") {
 			$user->setEnabled(false);
 		}

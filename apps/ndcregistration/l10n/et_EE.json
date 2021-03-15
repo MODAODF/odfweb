@@ -1,0 +1,10 @@
+{ "translations": {
+    "Saved" : "Salvestatud",
+    "None" : "Pole",
+    "Email" : "Epost",
+    "Username" : "Kasutajanimi",
+    "Password" : "Parool",
+    "Create account" : "Loo konto",
+    "Verify" : "Kontrolli"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

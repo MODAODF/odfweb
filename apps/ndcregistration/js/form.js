@@ -11,7 +11,7 @@ function togglePasswordTextFieldVisibility() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     passwordTextField = $("#password");
     confpasswordTextField = $("#confpassword");
     $("#show").change(togglePasswordTextFieldVisibility);

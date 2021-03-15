@@ -23,7 +23,7 @@
     "Default group that all registered users belong" : "新使用者屬群組",
     "User preset storage capacity" : "使用者儲存空間配額",
     "Allowed mail address domains for registration" : "允許註冊的電子郵件網域名稱",
-    "Enter a semicolon-separated list of allowed domains. Example: owncloud.com;github.com" : "可以輸入多個域名，各與名間以分號「;」隔開。例如：ossii.com.tw;gmail.com",
+    "Enter a semicolon-separated list of allowed domains. Example: owncloud.com;github.com" : "可以輸入多個域名，各域名間以分號「;」隔開。例如：ossii.com.tw;gmail.com",
     "Require admin approval?" : "新註冊者需管理者審核啟用",
     "Automatic account activation" : "自動啟用帳號",
     "You will receive an email with a verification link" : "您將會收到要求驗證的電子郵件",

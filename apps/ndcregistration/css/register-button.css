@@ -1,0 +1,12 @@
+#alternative-logins .button.register-button {
+	color: var(--color-primary-element);
+}
+
+#alternative-logins .register-button:only-child {
+	width: 220px;
+	margin-left: 70px !important;
+}
+
+#alternative-logins .register-button.hidden {
+	display: none;
+}
