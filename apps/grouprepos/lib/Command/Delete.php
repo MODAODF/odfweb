@@ -46,7 +46,7 @@ class Delete extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:delete')
-			->setDescription('Delete group folder')
+			->setDescription('Delete group repo')
 			->addArgument('folder_id', InputArgument::REQUIRED, 'Id of the folder to rename')
 			->addOption('force', 'f', InputOption::VALUE_NONE, 'Skip confirmation');
 		parent::configure();
@@ -57,7 +57,7 @@ class Delete extends Base {
 		$folder = $this->folderManager->getFolder($folderId, $this->rootFolder->getMountPoint()->getNumericStorageId());
 		if ($folder) {
 			$helper = $this->getHelper('question');
-			$question = new ConfirmationQuestion('Are you sure you want to delete the group folder' . $folder['mount_point'] . ' and all files within, this can not be undone (y/N).', false);
+			$question = new ConfirmationQuestion('Are you sure you want to delete the group repo' . $folder['mount_point'] . ' and all files within, this can not be undone (y/N).', false);
 			if ($input->getOption('force') || $helper->ask($input, $output, $question)) {
 				$folder = $this->mountProvider->getFolder($folderId);
 				$this->folderManager->removeFolder($folderId);

@@ -23,7 +23,6 @@ namespace OCA\GroupRepos\Controller;
 
 use OCA\GroupRepos\Folder\FolderManager;
 use OCA\GroupRepos\Mount\MountProvider;
-use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCSController;

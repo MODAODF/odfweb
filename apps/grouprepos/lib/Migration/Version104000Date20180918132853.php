@@ -19,9 +19,8 @@ class Version104000Date20180918132853 extends SimpleMigrationStep
 		return 'Add group_repos_trash table';
 	}
 
-	public function description(): string
-	{
-		return 'Adds table to store trashbin information for group folders';
+	public function description(): string {
+		return 'Adds table to store trashbin information for group repos';
 	}
 
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
@@ -53,15 +52,9 @@ class Version104000Date20180918132853 extends SimpleMigrationStep
 				'length' => 6,
 			]);
 			$table->setPrimaryKey(['trash_id']);
-			if (!$table->hasIndex('groups_repo_trash_folder')) {
 				$table->addIndex(['folder_id'], 'groups_repo_trash_folder');
-			}
-			if (!$table->hasIndex('groups_repo_name')) {
 				$table->addIndex(['folder_id', 'name'], 'groups_repo_name');
-			}
-			if (!$table->hasIndex('groups_repo_trash_unique')) {
 				$table->addUniqueIndex(['folder_id', 'name', 'deleted_time'], 'groups_repo_trash_unique');
-			}
 		}
 
 		return $schema;

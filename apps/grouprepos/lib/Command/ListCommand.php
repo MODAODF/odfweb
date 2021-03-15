@@ -50,7 +50,7 @@ class ListCommand extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:list')
-			->setDescription('List the configured group folders');
+			->setDescription('List the configured group repos');
 		parent::configure();
 	}
 

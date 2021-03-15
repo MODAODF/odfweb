@@ -48,7 +48,7 @@ class Scan extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:scan')
-			->setDescription('Scan a group folder for outside changes')
+			->setDescription('Scan a group repo for outside changes')
 			->addArgument('folder_id', InputArgument::REQUIRED, 'Id of the folder to configure');
 		parent::configure();
 	}

@@ -19,9 +19,8 @@ class Version201000Date20190111132839 extends SimpleMigrationStep
 		return 'Add grouprepos_acl table';
 	}
 
-	public function description(): string
-	{
-		return 'Adds table to store ACL information for group folders';
+	public function description(): string {
+		return 'Adds table to store ACL information for group repos';
 	}
 
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
@@ -54,15 +53,9 @@ class Version201000Date20190111132839 extends SimpleMigrationStep
 				'notnull' => true,
 			]);
 			$table->setPrimaryKey(['acl_id']);
-			if (!$table->hasIndex('groups_repo_acl_file')) {
 				$table->addIndex(['fileid'], 'groups_repo_acl_file');
-			}
-			if (!$table->hasIndex('groups_repo_acl_mapping')) {
 				$table->addIndex(['mapping_type', 'mapping_id'], 'groups_repo_acl_mapping');
-			}
-			if (!$table->hasIndex('groups_repo_acl_unique')) {
 				$table->addUniqueIndex(['fileid', 'mapping_type', 'mapping_id'], 'groups_repo_acl_unique');
-			}
 		}
 
 		return $schema;

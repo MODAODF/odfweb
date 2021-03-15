@@ -59,15 +59,9 @@ class Version103000Date20180806161724 extends SimpleMigrationStep
 				'length' => 64,
 			]);
 			$table->setPrimaryKey(['applicable_id']);
-			if (!$table->hasIndex('groups_repo')) {
 				$table->addIndex(['folder_id'], 'groups_repo');
-			}
-			if (!$table->hasIndex('groups_repo_value')) {
 				$table->addIndex(['group_id'], 'groups_repo_value');
-			}
-			if (!$table->hasIndex('groups_repo_group')) {
 				$table->addUniqueIndex(['folder_id', 'group_id'], 'groups_repo_group');
-			}
 		}
 
 		if ($schema->hasTable('group_repos_applicable')) {

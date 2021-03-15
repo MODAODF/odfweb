@@ -52,6 +52,6 @@ class GroupMountPoint extends MountPoint {
 	}
 
 	public function getSourcePath(): string {
-		return '/__groupreposs/' . $this->getFolderId();
+		return '/__grouprepos/' . $this->getFolderId();
 	}
 }

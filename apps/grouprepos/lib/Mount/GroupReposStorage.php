@@ -22,6 +22,7 @@
 namespace OCA\GroupRepos\Mount;
 
 
+use OC\Files\Cache\Scanner;
 use OC\Files\Storage\Wrapper\Quota;
 use OCP\Files\Cache\ICacheEntry;
 use OCP\IUser;
@@ -79,5 +80,15 @@ class GroupReposStorage extends Quota {
 
 		$this->cache = new RootEntryCache(parent::getCache($path, $storage), $this->rootEntry);
 		return $this->cache;
+	}
+
+	public function getScanner($path = '', $storage = null) {
+		if (!$storage) {
+			$storage = $this;
+		}
+		if (!isset($storage->scanner)) {
+			$storage->scanner = new Scanner($storage);
+		}
+		return $storage->scanner;
 	}
 }

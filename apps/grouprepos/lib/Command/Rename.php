@@ -41,7 +41,7 @@ class Rename extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:rename')
-			->setDescription('Rename group folder')
+			->setDescription('Rename group repo')
 			->addArgument('folder_id', InputArgument::REQUIRED, 'Id of the folder to rename')
 			->addArgument('name', InputArgument::REQUIRED, 'New value name of the folder');
 		parent::configure();

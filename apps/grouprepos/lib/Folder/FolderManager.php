@@ -21,7 +21,6 @@
 
 namespace OCA\GroupRepos\Folder;
 
-use ClassesWithParents\D;
 use OC\Files\Cache\Cache;
 use OCA\GroupRepos\Mount\GroupReposStorage;
 use OCP\Constants;
@@ -81,13 +80,13 @@ class FolderManager {
 		return $folderMap;
 	}
 
-	private function getGroupfolderRootId(int $rootStorageId): int {
+	private function getGrouprepoRootId(int $rootStorageId): int {
 		$query = $this->connection->getQueryBuilder();
 
 		$query->select('fileid')
 			->from('filecache')
 			->where($query->expr()->eq('storage', $query->createNamedParameter($rootStorageId)))
-			->andWhere($query->expr()->eq('path_hash', $query->createNamedParameter(md5('__groupreposs'))));
+			->andWhere($query->expr()->eq('path_hash', $query->createNamedParameter(md5('__grouprepos'))));
 
 		return (int)$query->execute()->fetchColumn();
 	}
@@ -96,7 +95,7 @@ class FolderManager {
 		return $query->leftJoin('f', 'filecache', 'c', $query->expr()->andX(
 			// concat with empty string to work around missing cast to string
 			$query->expr()->eq('name', $query->func()->concat('f.folder_id', $query->expr()->literal(""))),
-			$query->expr()->eq('parent', $query->createNamedParameter($this->getGroupfolderRootId($rootStorageId)))
+			$query->expr()->eq('parent', $query->createNamedParameter($this->getGrouprepoRootId($rootStorageId)))
 		));
 	}
 
@@ -112,9 +111,12 @@ class FolderManager {
 
 		$rows = $query->execute()->fetchAll();
 
+		$folderMappings = $this->getAllFolderMappings();
+
 		$folderMap = [];
 		foreach ($rows as $row) {
 			$id = (int)$row['folder_id'];
+			$mappings = $folderMappings[$id] ?? [];
 			$folderMap[$id] = [
 				'id' => $id,
 				'mount_point' => $row['mount_point'],
@@ -123,19 +125,35 @@ class FolderManager {
 				'quota' => $row['quota'],
 				'size' => $row['size'] ? $row['size'] : 0,
 				'acl' => (bool)$row['acl'],
-				'manage' => $this->getManageAcl($id)
+				'manage' => $this->getManageAcl($mappings)
 			];
 		}
 
 		return $folderMap;
 	}
 
-	private function getManageAcl($folderId) {
+	private function getAllFolderMappings() {
 		$query = $this->connection->getQueryBuilder();
 		$query->select('*')
-			->from('group_repos_manage')
-			->where($query->expr()->eq('folder_id', $query->createNamedParameter($folderId)));
-		$result =  $query->execute()->fetchAll();
+			->from('group_repos_manage');
+		$rows = $query->execute()->fetchAll();
+
+		$folderMap = [];
+		foreach ($rows as $row) {
+			$id = (int)$row['folder_id'];
+			
+			if (!isset($folderMap[$id])) {
+				$folderMap[$id] = [$row];
+			}
+			else {
+				$folderMap[$id][] = $row;
+			}
+		}
+
+		return $folderMap;
+	}
+
+	private function getManageAcl($mappings) {
 		return array_filter(array_map(function ($entry) {
 			if ($entry['mapping_type'] === 'user') {
 				$user = \OC::$server->getUserManager()->get($entry['mapping_id']);
@@ -157,7 +175,7 @@ class FolderManager {
 				'id' => $group->getGID(),
 				'displayname' => $group->getDisplayName()
 			];
-		}, $result), function($element) { return $element !== null; });
+		}, $mappings), function($element) { return $element !== null; });
 	}
 
 	public function getFolder($id, $rootStorageId) {
@@ -170,7 +188,9 @@ class FolderManager {
 			->where($query->expr()->eq('folder_id', $query->createNamedParameter($id, IQueryBuilder::PARAM_INT)));
 		$this->joinQueryWithFileCache($query, $rootStorageId);
 
-		$row = $query->execute()->fetch();
+		$result = $query->execute();
+		$row = $result->fetch();
+		$result->closeCursor();
 
 		return $row ? [
 			'id' => $id,
@@ -230,7 +250,7 @@ class FolderManager {
 	}
 
 	private function getGroups($id): array {
-		$groups = $this->getAllApplicable()[$id];
+		$groups = $this->getAllApplicable()[$id] ?? [];
 		return array_map(function ($gid) {
 			$group = $this->groupManager->get($gid);
 			return [
@@ -372,6 +392,43 @@ class FolderManager {
 		}, $result);
 	}
 
+	/**
+	 * @param string[] $groupId
+	 * @param int $rootStorageId
+	 * @return array[]
+	 */
+	public function getFoldersForGroups(array $groupIds, $rootStorageId = 0): array {
+		$query = $this->connection->getQueryBuilder();
+
+		$query->select(
+			'f.folder_id', 'mount_point', 'quota', 'acl',
+			'fileid', 'storage', 'path', 'name', 'mimetype', 'mimepart', 'size', 'mtime', 'storage_mtime', 'etag', 'encrypted', 'parent'
+		)
+			->selectAlias('a.permissions', 'group_permissions')
+			->selectAlias('c.permissions', 'permissions')
+			->from('group_repos', 'f')
+			->innerJoin(
+				'f',
+				'group_repos_groups',
+				'a',
+				$query->expr()->eq('f.folder_id', 'a.folder_id')
+			)
+			->where($query->expr()->in('a.group_id', $query->createNamedParameter($groupIds, IQueryBuilder::PARAM_STR_ARRAY)));
+		$this->joinQueryWithFileCache($query, $rootStorageId);
+
+		$result = $query->execute()->fetchAll();
+		return array_map(function ($folder) {
+			return [
+				'folder_id' => (int)$folder['folder_id'],
+				'mount_point' => $folder['mount_point'],
+				'permissions' => (int)$folder['group_permissions'],
+				'quota' => (int)$folder['quota'],
+				'acl' => (bool)$folder['acl'],
+				'rootCacheEntry' => (isset($folder['fileid'])) ? Cache::cacheEntryFromData($folder, $this->mimeTypeLoader) : null
+			];
+		}, $result);
+	}
+
 	public function createFolder($mountPoint) {
 		$query = $this->connection->getQueryBuilder();
 
@@ -381,7 +438,7 @@ class FolderManager {
 			]);
 		$query->execute();
 
-		return $this->connection->lastInsertId('group_repos');
+		return $query->getLastInsertId();
 	}
 
 	public function setMountPoint($folderId, $mountPoint) {
@@ -532,9 +589,7 @@ class FolderManager {
 	 */
 	public function getFoldersForUser(IUser $user, $rootStorageId = 0) {
 		$groups = $this->groupManager->getUserGroupIds($user);
-		$folders = array_reduce($groups, function ($folders, $groupId) use ($rootStorageId) {
-			return array_merge($folders, $this->getFoldersForGroup($groupId, $rootStorageId));
-		}, []);
+		$folders = $this->getFoldersForGroups($groups, $rootStorageId);
 
 		$mergedFolders = [];
 		foreach ($folders as $folder) {

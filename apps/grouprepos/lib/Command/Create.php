@@ -42,7 +42,7 @@ class Create  extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:create')
-			->setDescription('Create a new group folder')
+			->setDescription('Create a new group repo')
 			->addArgument('name', InputArgument::REQUIRED, 'Name of the new folder');
 		parent::configure();
 	}

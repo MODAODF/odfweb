@@ -55,7 +55,7 @@ class Group extends Base {
 	protected function configure() {
 		$this
 			->setName('grouprepos:group')
-			->setDescription('Edit the groups that have access to a group folder')
+			->setDescription('Edit the groups that have access to a group repo')
 			->addArgument('folder_id', InputArgument::REQUIRED, 'Id of the folder to configure')
 			->addArgument('group', InputArgument::REQUIRED, 'The group to configure')
 			->addArgument('permissions', InputArgument::OPTIONAL | InputArgument::IS_ARRAY, 'The permissions to set for the group, leave empty for read only')

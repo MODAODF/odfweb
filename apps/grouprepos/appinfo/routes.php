@@ -34,7 +34,8 @@ return ['routes' => [
 	[
 		'name' => 'Folder#removeGroup',
 		'url' => '/folders/{id}/groups/{group}',
-		'verb' => 'DELETE'
+		'verb' => 'DELETE',
+		'requirements' => ['group' => '.+']
 	],
 	[
 		'name' => 'Folder#addUser',
@@ -49,7 +50,8 @@ return ['routes' => [
 	[
 		'name' => 'Folder#setPermissions',
 		'url' => '/folders/{id}/groups/{group}',
-		'verb' => 'POST'
+		'verb' => 'POST',
+		'requirements' => ['group' => '.+']
 	],
 	[
 		'name' => 'Folder#setPermissionsForUser',

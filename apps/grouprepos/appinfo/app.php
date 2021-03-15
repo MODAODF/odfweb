@@ -2,7 +2,7 @@
 
 use OCA\GroupRepos\AppInfo\Application;
 
-$app = new Application();
+$app = \OC::$server->query(Application::class);
 $app->register();
 $l = \OC::$server->getL10N('grouprepos');
 
