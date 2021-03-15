@@ -21,7 +21,6 @@
 
 namespace OCA\TemplateRepo\ACL;
 
-
 use OCP\IUser;
 
 class ACLManagerFactory {

@@ -34,7 +34,8 @@ return ['routes' => [
 	[
 		'name' => 'Folder#removeGroup',
 		'url' => '/folders/{id}/groups/{group}',
-		'verb' => 'DELETE'
+		'verb' => 'DELETE',
+		'requirements' => ['group' => '.+']
 	],
 	[
 		'name' => 'Folder#addUser',
@@ -49,12 +50,42 @@ return ['routes' => [
 	[
 		'name' => 'Folder#setPermissions',
 		'url' => '/folders/{id}/groups/{group}',
-		'verb' => 'POST'
+		'verb' => 'POST',
+		'requirements' => ['group' => '.+']
 	],
 	[
 		'name' => 'Folder#setPermissionsForUser',
 		'url' => '/folders/{id}/users/{user}',
 		'verb' => 'POST'
+	],
+	[
+		'name' => 'Folder#getFolderList',
+		'url' => '/folderlist',
+	],
+	[
+		'name' => 'Folder#setManageACL',
+		'url' => '/folders/{id}/manageACL',
+		'verb' => 'POST'
+	],
+	[
+		'name' => 'Folder#setQuota',
+		'url' => '/folders/{id}/quota',
+		'verb' => 'POST'
+	],
+	[
+		'name' => 'Folder#setACL',
+		'url' => '/folders/{id}/acl',
+		'verb' => 'POST'
+	],
+	[
+		'name' => 'Folder#renameFolder',
+		'url' => '/folders/{id}/mountpoint',
+		'verb' => 'POST'
+	],
+	[
+		'name' => 'Folder#aclMappingSearch',
+		'url' => '/folders/{id}/search',
+		'verb' => 'GET'
 	],
 	[
 		'name' => 'Folder#setAPIServer',

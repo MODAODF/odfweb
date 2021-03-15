@@ -24,7 +24,6 @@ namespace OCA\TemplateRepo\Controller;
 
 use OCA\TemplateRepo\Folder\FolderManager;
 use OCA\TemplateRepo\Mount\MountProvider;
-use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\OCSController;
@@ -285,8 +284,7 @@ class FolderController extends OCSController
 		]);
 	}
 
-	/**
-	 * @param int $id
+	/* @param int $id
 	 * @param string $apiserver
 	 * @return DataResponse
 	 */

@@ -9,8 +9,8 @@ Folders can be configured from *Template Repo* in the admin settings.
 
 After a folder is created, the admin can give access to the folder to one or more groups, control their write/sharing permissions and assign a quota for the folder.
 
-Note: encrypting the contents of group folders is currently not supported.]]></description>
-	<version>1.0.9</version>
+Note: encrypting the contents of template_repo is currently not supported.]]></description>
+	<version>2.0.0</version>
 	<licence>agpl</licence>
 	<author>Tommy.Wu</author>
 	<namespace>TemplateRepo</namespace>
@@ -22,7 +22,7 @@ Note: encrypting the contents of group folders is currently not supported.]]></d
 	<category>files</category>
 
 	<dependencies>
-		<nextcloud min-version="16" max-version="16" />
+		<nextcloud min-version="20" max-version="20" />
 	</dependencies>
 
 	<background-jobs>
@@ -39,6 +39,7 @@ Note: encrypting the contents of group folders is currently not supported.]]></d
 		<command>OCA\TemplateRepo\Command\Rename</command>
 		<command>OCA\TemplateRepo\Command\Delete</command>
 		<command>OCA\TemplateRepo\Command\Scan</command>
+		<command>OCA\TemplateRepo\Command\Trashbin\Cleanup</command>
 	</commands>
 
 	<settings>

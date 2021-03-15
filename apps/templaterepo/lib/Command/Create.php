@@ -42,7 +42,7 @@ class Create  extends Base {
 	protected function configure() {
 		$this
 			->setName('templaterepo:create')
-			->setDescription('Create a new group folder')
+			->setDescription('Create a new template repo')
 			->addArgument('name', InputArgument::REQUIRED, 'Name of the new folder');
 		parent::configure();
 	}

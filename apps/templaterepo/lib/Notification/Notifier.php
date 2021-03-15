@@ -3,17 +3,42 @@
 namespace OCA\TemplateRepo\Notification;
 
 use OCP\Notification\INotifier;
+use OCP\L10N\IFactory;
+use OCP\Notification\INotification;
+
 
 class Notifier implements INotifier
 {
-    protected $factory;
-    protected $url;
+    /** @var IFactory */
+	protected $l10nFactory;
 
-    public function __construct()
+    public function __construct(IFactory $l10nFactory)
     {
+		$this->l10nFactory = $l10nFactory;
+
     }
 
-    public function prepare(\OCP\Notification\INotification $notification, $languageCode)
+    /**
+	 * Identifier of the notifier, only use [a-z0-9_]
+	 *
+	 * @return string
+	 * @since 17.0.0
+	 */
+	public function getID(): string {
+		return 'templaterepo';
+    }
+    
+    /**
+	 * Human readable name describing the notifier
+	 *
+	 * @return string
+	 * @since 17.0.0
+	 */
+	public function getName(): string {
+		return $this->l10nFactory->get('templaterepo')->t('Template repo');
+	}
+
+    public function prepare(INotification $notification, string $languageCode) : INotification
     {
         if ($notification->getApp() !== 'templaterepo') {
             // Not my app => throw

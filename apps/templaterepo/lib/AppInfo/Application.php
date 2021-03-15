@@ -27,9 +27,11 @@ use OCA\TemplateRepo\ACL\ACLManagerFactory;
 use OCA\TemplateRepo\ACL\RuleManager;
 use OCA\TemplateRepo\ACL\UserMapping\IUserMappingManager;
 use OCA\TemplateRepo\ACL\UserMapping\UserMappingManager;
+use OCA\TemplateRepo\CacheListener;
 use OCA\TemplateRepo\Command\ExpireGroupVersions;
 use OCA\TemplateRepo\Command\ExpireGroupVersionsPlaceholder;
 use OCA\TemplateRepo\Folder\FolderManager;
+use OCA\TemplateRepo\Helper\LazyFolder;
 use OCA\TemplateRepo\Mount\MountProvider;
 use OCA\TemplateRepo\Trash\TrashBackend;
 use OCA\TemplateRepo\Trash\TrashManager;
@@ -60,17 +62,11 @@ class Application extends App
 
 		$container = $this->getContainer();
 
-		$container->registerService('TemplateRepoApp', function (IAppContainer $c) {
-			try {
-				return $c->getServer()->getRootFolder()->get('__templaterepo');
-			} catch (NotFoundException $e) {
-				return $c->getServer()->getRootFolder()->newFolder('__templaterepo');
-			}
-		});
+		$container->registerAlias('GroupAppFolder', LazyFolder::class);
 
 		$container->registerService(MountProvider::class, function (IAppContainer $c) {
 			$rootProvider = function () use ($c) {
-				return $c->query('TemplateRepoApp');
+				return $c->query('GroupAppFolder');
 			};
 
 			return new MountProvider(
@@ -88,7 +84,7 @@ class Application extends App
 			return new TrashBackend(
 				$c->query(FolderManager::class),
 				$c->query(TrashManager::class),
-				$c->query('TemplateRepoApp'),
+				$c->query('GroupAppFolder'),
 				$c->query(MountProvider::class),
 				$c->query(ACLManagerFactory::class)
 			);
@@ -96,7 +92,7 @@ class Application extends App
 
 		$container->registerService(VersionsBackend::class, function (IAppContainer $c) {
 			return new VersionsBackend(
-				$c->query('TemplateRepoApp'),
+				$c->query('GroupAppFolder'),
 				$c->query(MountProvider::class),
 				$c->query(ITimeFactory::class)
 			);
@@ -147,6 +143,11 @@ class Application extends App
 			$this->getFolderManager()->deleteGroup($group->getGID());
 		});
 
+		/** @var CacheListener $cacheListener */
+		$cacheListener = $container->query(CacheListener::class);
+		$cacheListener->listen();
+		/** @var IGroupManager|Manager $groupManager */
+		/** 註冊檔案 upload 同步 */
 		$rootfolder = $this->getContainer()->getServer()->getRootFolder();
 
 		/** 禁止透過創造產生子資料夾 */
@@ -199,27 +200,28 @@ class Application extends App
 			}
 		});
 
+
 		/** 註冊檔案 upload 同步 */
-		#$rootfolder->listen('\OC\Files', 'postCreate', function ($k) {
-		#	$fileInfo = $k->getFileInfo();
-		#	if (
-		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
-		#		$fileInfo->getData()->getData()['type'] == "file"
-		#	) {
-		#		$this->uploadFile($fileInfo);
-		#	}
-		#});
+		$rootfolder->listen('\OC\Files', 'postCreate', function ($k) {
+			$fileInfo = $k->getFileInfo();
+			if (
+				$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
+				$fileInfo->getData()->getData()['type'] == "file"
+			) {
+				$this->uploadFile($fileInfo);
+			}
+		});
 
 		/** 註冊檔案 delete 同步 */
-		#$rootfolder->listen('\OC\Files', 'postDelete', function ($k) {
-		#	$fileInfo = $k->getFileInfo();
-		#	if (
-		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
-		#		$fileInfo->getData()->getData()['type'] == "file"
-		#	) {
-		#		$this->deleteFile($fileInfo);
-		#	}
-		#});
+		$rootfolder->listen('\OC\Files', 'postDelete', function ($k) {
+			$fileInfo = $k->getFileInfo();
+			if (
+				$fileInfo->getMountPoint()->getMountType() == "templaterepo" &&
+				$fileInfo->getData()->getData()['type'] == "file"
+			) {
+				$this->deleteFile($fileInfo);
+			}
+		});
 
 		/*	Update 可以註冊的 Hook (非官方提供的 Hook, 必須自己接)
 				OC_Filesystem:
@@ -235,26 +237,21 @@ class Application extends App
 
 			**這裡採用 post_update**
 		*/
-		#Util::connectHook('OC_Filesystem', 'post_update', $this, 'postUpdate');
-		#/** 註冊檔案 update 同步 */
-		#$rootfolder->listen('\OC\Files', 'postUpdate', function ($k) {
-		#	$fileInfo = $k;
-		#	if (
-		#		$fileInfo->getMountPoint()->getMountType() == "templaterepo"
-		#	) {
-		#		$this->updateFile($fileInfo);
-		#	}
-		#});
+		Util::connectHook('OC_Filesystem', 'post_update', $this, 'postUpdate');
+
+		/** 註冊檔案 update 同步 */
+		$rootfolder->listen('\OC\Files', 'postUpdate', function ($k) {
+			$fileInfo = $k;
+			if (
+				$fileInfo->getMountPoint()->getMountType() == "templaterepo"
+			) {
+				$this->updateFile($fileInfo);
+			}
+		});
 
 		// 註冊檔案上傳提醒
-		#$this->getContainer()->getServer()->getNotificationManager()->registerNotifier(
-		#	function () {
-		#		return $this->getContainer()->query(Notifier::class);
-		#	},
-		#	function () {
-		#		return ['id' => 'templaterepo', 'name' => "templaterepo"];
-		#	}
-		#);
+		$manager = \OC::$server->getNotificationManager();
+		$manager->registerNotifierService(Notifier::class);
 	}
 
 	/**

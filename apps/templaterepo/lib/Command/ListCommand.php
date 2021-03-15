@@ -50,7 +50,7 @@ class ListCommand extends Base {
 	protected function configure() {
 		$this
 			->setName('templaterepo:list')
-			->setDescription('List the configured group folders');
+			->setDescription('List the configured template_repo');
 		parent::configure();
 	}
 

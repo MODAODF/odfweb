@@ -167,7 +167,6 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
         this.api.setPermissionsForUser(folder.id, user, newPermissions);
     }
 
-
     setQuota(folder: Folder, quota: number) {
         const folders = this.state.folders;
         folder.quota = quota;
@@ -281,7 +280,6 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
                             size={folder.size}
                             onChange={this.setQuota.bind(this, folder)} />
                     </td>
-                    {/* 暫時拿掉
                     <td className="server">
                         {this.state.editingAPIServer === id ?
                             <SubmitInput
@@ -309,7 +307,6 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
                             onClick={this.syncFolder.bind(this, folder)}
                             title={t('templaterepo', 'SyncServer')} />
                     </td>
-                    */}
                     <td className="remove">
                         <a className="icon icon-delete icon-visible"
                             onClick={this.deleteFolder.bind(this, folder)}
@@ -345,14 +342,12 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
                             <SortArrow name='quota' value={this.state.sort}
                                 direction={this.state.sortOrder} />
                         </th>
-                        {/* 暫時拿掉
                         <th>
                             {t('templaterepo', 'APIServer')}
                         </th>
                         <th>
                             同步
                         </th>
-                        */}
                         <th>
                             刪除
                         </th>

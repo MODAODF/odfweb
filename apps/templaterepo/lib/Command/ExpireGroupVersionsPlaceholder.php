@@ -33,11 +33,11 @@ class ExpireGroupVersionsPlaceholder extends Base {
 	protected function configure() {
 		$this
 			->setName('templaterepo:expire')
-			->setDescription('Trigger expiry of versions for files stored in group folders');
+			->setDescription('Trigger expiry of versions for files stored in template_repo');
 		parent::configure();
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$output->writeln('<error>groupfolder version handling is only supported with Nextcloud 15 and up</error>');
+		$output->writeln('<error>templaterepo version handling is only supported with Nextcloud 15 and up</error>');
 	}
 }

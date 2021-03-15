@@ -43,7 +43,7 @@ class Quota extends Base {
 	protected function configure() {
 		$this
 			->setName('templaterepo:quota')
-			->setDescription('Edit the quota of a configured group folder')
+			->setDescription('Edit the quota of a configured template repo')
 			->addArgument('folder_id', InputArgument::REQUIRED, 'Id of the folder to configure')
 			->addArgument('quota', InputArgument::REQUIRED, 'New value for the quota of the folder');
 		parent::configure();
