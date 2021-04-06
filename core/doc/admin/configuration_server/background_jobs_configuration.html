@@ -256,7 +256,7 @@ access your server using the Internet. For example:</p>
 </div>
 </div>
 <div class="section" id="cron">
-<h3>Cron<a class="headerlink" href="#cron" title="Permalink to this headline">¶</a></h3>
+<span id="system-cron-configuration-label"></span><h3>Cron<a class="headerlink" href="#cron" title="Permalink to this headline">¶</a></h3>
 <p>Using the operating system cron feature is the preferred method for executing
 regular tasks.  This method enables the execution of scheduled jobs without the
 inherent limitations the Web server might have.</p>
@@ -304,9 +304,11 @@ path to your current Nextcloud installation.</p>
 <span class="p">[</span><span class="n">Service</span><span class="p">]</span>
 <span class="n">User</span><span class="o">=</span><span class="n">www</span><span class="o">-</span><span class="n">data</span>
 <span class="n">ExecStart</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">php</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">www</span><span class="o">/</span><span class="n">nextcloud</span><span class="o">/</span><span class="n">cron</span><span class="o">.</span><span class="n">php</span>
+<span class="n">KillMode</span><span class="o">=</span><span class="n">process</span>
 </pre></div>
 </div>
 <p>Replace the user <code class="docutils literal notranslate"><span class="pre">www-data</span></code> with the user of your http server and <code class="docutils literal notranslate"><span class="pre">/var/www/nextcloud/cron.php</span></code> with the location of <strong>cron.php</strong> in your nextcloud directory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">KillMode=process</span></code> setting is necessary for external programs that are started by the cron job to keep running after the cron job has finished.</p>
 <p>Note that the <strong>.service</strong> unit file does not need an <code class="docutils literal notranslate"><span class="pre">[Install]</span></code> section. Please check your setup because we recommended it in earlier versions of this admin manual.</p>
 <p><strong>nextcloudcron.timer</strong> should look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Unit</span><span class="p">]</span>

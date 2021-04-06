@@ -164,11 +164,22 @@
     "Tags" : "Etiquetas",
     "Unable to change the favourite state of the file" : "No se ha podido cambiar el estado de favorito del fichero",
     "Error while loading the file data" : "Error al cargar los datos del archivo",
+    "Pick a template for {name}" : "Elija una plantilla para {name}",
+    "Cancel" : "Cancelar",
+    "Create" : "Crear",
+    "Create a new file with the selected template" : "Crear un nuevo archivo con la plantilla seleccionada",
+    "Creating file" : "Creando el archivo",
+    "Blank" : "Vacío",
+    "Unable to create new file from template" : "No se ha podido crear un nuevo archivo desde la plantilla",
+    "Set up templates folder" : "Configura una carpeta para plantillas",
+    "Templates" : "Plantillas",
+    "Unable to initialize the templates directory" : "No se ha podido iniciar la carpeta de plantillas",
     "%s used" : "usado %s",
     "%s%% of %s used" : "%s%% de %s usado",
     "%1$s of %2$s used" : "%1$s de %2$s usados",
     "Settings" : "Ajustes",
     "Show hidden files" : "Mostrar archivos ocultos",
+    "Crop image previews" : "Recortar la previsualización de las imágenes",
     "WebDAV" : "WebDAV",
     "Use this address to access your Files via WebDAV" : "Use esta dirección para acceder a tus archivos vía WebDAV",
     "Toggle grid view" : "Alternar vista de cuadrícula",
@@ -198,8 +209,6 @@
     "A new file or folder has been <strong>created</strong>" : "Se ha <strong>creado</strong> un nuevo archivo o carpeta",
     "A file or folder has been <strong>deleted</strong>" : "Un archivo o carpeta ha sido <strong>eliminado</strong>",
     "Limit notifications about creation and changes to your <strong>favorite files</strong> <em>(Stream only)</em>" : "Limitar las notificaciones sobre la creación y cambios en tus <strong>archivos favoritos</strong> <em>(solo transmisión)</em>",
-    "A file or folder has been <strong>restored</strong>" : "Un archivo o carpeta ha sido <strong>restaurado</strong>",
-    "Cannot transfter ownership of a file or folder you don't own" : "No se puede transferir la propiedad de un archivo o carpeta que no te pertenece",
-    "Use this address to <a href=\"%s\" target=\"_blank\" rel=\"noreferrer noopener\">access your Files via WebDAV</a>" : "Usa esta dirección para <a href=\"%s\" target=\"_blank\" rel=\"noreferrer noopener\">acceder a tus archivos vía WebDAV</a>"
+    "A file or folder has been <strong>restored</strong>" : "Un archivo o carpeta ha sido <strong>restaurado</strong>"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

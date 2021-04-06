@@ -41,6 +41,7 @@ use OCA\DAV\Connector\Sabre\Exception\InvalidPath;
 use OCP\Files\FileInfo;
 use OCP\Files\ForbiddenException;
 use OCP\Files\InvalidPathException;
+use OCP\Files\NotPermittedException;
 use OCP\Files\StorageNotAvailableException;
 use OCP\Lock\ILockingProvider;
 use OCP\Lock\LockedException;
@@ -339,7 +340,11 @@ class Directory extends \OCA\DAV\Connector\Sabre\Node implements \Sabre\DAV\ICol
 				$free
 			];
 			return $this->quotaInfo;
+		} catch (\OCP\Files\NotFoundException $e) {
+			return [0, 0];
 		} catch (\OCP\Files\StorageNotAvailableException $e) {
+			return [0, 0];
+		} catch (NotPermittedException $e) {
 			return [0, 0];
 		}
 	}
@@ -452,7 +457,7 @@ class Directory extends \OCA\DAV\Connector\Sabre\Node implements \Sabre\DAV\ICol
 
 
 	public function copyInto($targetName, $sourcePath, INode $sourceNode) {
-		if ($sourceNode instanceof File) {
+		if ($sourceNode instanceof File || $sourceNode instanceof Directory) {
 			$destinationPath = $this->getPath() . '/' . $targetName;
 			$sourcePath = $sourceNode->getPath();
 

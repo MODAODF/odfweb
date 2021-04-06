@@ -55,6 +55,7 @@ OC.L10N.register(
     "{user} unshared {file} from you" : "{user} cancelou a partilha de {file} consigo",
     "Shared with {user}" : "Partilhado com {user}",
     "Removed share for {user}" : "Partilha removida para {user}",
+    "{actor} removed themselves" : "{actor} removeu eles mesmos",
     "{actor} shared with {user}" : "{actor} partilhou com {user}",
     "{actor} removed share for {user}" : "{actor} removeu partilha com {user}",
     "Shared by {actor}" : "Partilhado por {actor}",
@@ -144,7 +145,6 @@ OC.L10N.register(
     "Upload files to %s" : "Enviar ficheiros para %s",
     "Note" : "Nota",
     "Select or drop files" : "Seleccione ou solte ficheiros",
-    "Uploaded files:" : "Ficheiros enviados:",
-    "Uploading files…" : "A enviar ficheiros..."
+    "Uploaded files:" : "Ficheiros enviados:"
 },
 "nplurals=2; plural=(n != 1);");

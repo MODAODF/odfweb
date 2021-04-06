@@ -69,6 +69,9 @@
     "seconds ago" : "secondi fa",
     "Empty file" : "File vuoto",
     "Module with ID: %s does not exist. Please enable it in your apps settings or contact your administrator." : "Il modulo con ID: %s non esiste. Abilitalo nelle impostazioni delle applicazioni o contatta il tuo amministratore.",
+    "File already exists" : "Il file esiste già",
+    "Failed to create file from template" : "Impossibile creare un file dal modello",
+    "Templates" : "Modelli",
     "File name is a reserved word" : "Il nome del file è una parola riservata",
     "File name contains at least one invalid character" : "Il nome del file contiene almeno un carattere non valido",
     "File name is too long" : "Il nome del file è troppo lungo",
@@ -115,6 +118,7 @@
     "Files can’t be shared with create permissions" : "I file non possono essere condivisi con permessi di creazione",
     "Expiration date is in the past" : "La data di scadenza è nel passato",
     "Can’t set expiration date more than %s days in the future" : "Impossibile impostare la data di scadenza a più di %s giorni nel futuro",
+    "Sharing is only allowed with group members" : "La condivisione è consentita solo con i membri del gruppo",
     "%1$s shared »%2$s« with you" : "%1$s ha condiviso «%2$s» con te",
     "%1$s shared »%2$s« with you." : "%1$s ha condiviso «%2$s» con te.",
     "Click the button below to open it." : "Fai clic sul pulsante sotto per aprirlo.",
@@ -226,14 +230,6 @@
     "Storage connection timeout. %s" : "Timeout di connessione all'archiviazione. %s",
     "Following databases are supported: %s" : "I seguenti database sono supportati: %s",
     "Following platforms are supported: %s" : "Sono supportate le seguenti piattaforme: %s",
-    "Overview" : "Riepilogo",
-    "Basic settings" : "Impostazioni di base",
-    "Sharing" : "Condivisione",
-    "Security" : "Sicurezza",
-    "Groupware" : "Groupware",
-    "Personal info" : "Informazioni personali",
-    "Mobile & desktop" : "Mobile e desktop",
-    "Invalid Federated Cloud ID" : "ID di cloud federata non valido",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Ciò può essere normalmente corretto fornendo al server web accesso in scrittura alla cartella delle applicazioni o disabilitando il negozio di applicazioni nel file di configurazione. Vedi %s"
+    "Invalid Federated Cloud ID" : "ID di cloud federata non valido"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

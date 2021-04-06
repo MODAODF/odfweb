@@ -45,6 +45,7 @@ OC.L10N.register(
     "Invalid backend or authentication mechanism class" : "Netinkama programinio kodo klasė realizuoja prisijungimo mechanizmą",
     "Invalid mount point" : "Neteisingas prijungimo taškas",
     "Objectstore forbidden" : "Objektų saugykla yra neprieinama",
+    "Not permitted to use backend \"%s\"" : "Neleidžiama naudoti vidinės pusės „%s“",
     "Not permitted to use authentication mechanism \"%s\"" : "Neleidžiama naudoti tapatybės nustatymo mechanizmo „%s“",
     "Unsatisfied backend parameters" : " Netinkami posistemės parametrai",
     "Unsatisfied authentication mechanism parameters" : "Netinkami parametrai perduoti į prisijungimo mechanizmą",
@@ -122,7 +123,6 @@ OC.L10N.register(
     "Click to recheck the configuration" : "Spustelėkite norėdami iš naujo patikrinti konfigūraciją",
     "Add storage" : "Pridėti saugyklą",
     "Advanced settings" : "Išplėstiniai nustatymai",
-    "Allow users to mount external storage" : "Leisti naudotojams prijungti išorines saugyklas",
-    "Saving..." : "Įrašoma..."
+    "Allow users to mount external storage" : "Leisti naudotojams prijungti išorines saugyklas"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

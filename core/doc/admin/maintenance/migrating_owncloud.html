@@ -205,19 +205,22 @@ See the table below for a version map, where migrating is easily possible:</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>10.0.1 or later</p></td>
+<tr class="row-even"><td><p>10.0.5 or later</p></td>
+<td><p>20.0.x (but at least 20.0.5)</p></td>
+</tr>
+<tr class="row-odd"><td><p>10.0.1 - 10.0.5</p></td>
 <td><p>12.0.x (but at least 12.0.1)</p></td>
 </tr>
-<tr class="row-odd"><td><p>10.0.0</p></td>
+<tr class="row-even"><td><p>10.0.0</p></td>
 <td><p>12.0.0</p></td>
 </tr>
-<tr class="row-even"><td><p>9.1.x</p></td>
-<td><p>10.0.x</p></td>
-</tr>
-<tr class="row-odd"><td><p>9.0.x</p></td>
+<tr class="row-odd"><td><p>9.1.x</p></td>
 <td><p>10.0.x</p></td>
 </tr>
 <tr class="row-even"><td><p>9.0.x</p></td>
+<td><p>10.0.x</p></td>
+</tr>
+<tr class="row-odd"><td><p>9.0.x</p></td>
 <td><p>9.0.x</p></td>
 </tr>
 </tbody>
@@ -231,10 +234,25 @@ from versions that where released before our last maintenance release,
 so we can at least perform some basic migration tests, before you
 migrate your production instance.</p>
 </div>
-<p>After downloading the correct version of Nextcloud from our
-<a class="reference external" href="https://nextcloud.com/changelog/">older releases page</a>,
-proceed like described in the <a class="reference internal" href="manual_upgrade.html"><span class="doc">Upgrade manually</span></a> manual.</p>
-<p>Afterwards you can use the Nextcloud updater to update your instance to the newest version.</p>
+<ol class="arabic simple">
+<li><p>First download the correct version of Nextcloud from our <a class="reference external" href="https://nextcloud.com/changelog/">older releases page</a>,</p></li>
+<li><p>Make sure to have do a <a class="reference internal" href="backup.html"><span class="doc">backup</span></a> before migrating.</p></li>
+<li><p>Follow the upgrade instructions described in the <a class="reference internal" href="manual_upgrade.html"><span class="doc">Upgrade manually</span></a> manual.</p></li>
+<li><p>When migrating to Nextcloud 20.0 or later, you will also need to run the following commands after <code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">upgrade</span></code>:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">db:convert-filecache-bigint</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">db:add-missing-columns</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">db:add-missing-indices</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">db:add-missing-primary-keys</span></code></p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>If system cron was used, please verify if crontab entry was using the command <code class="docutils literal notranslate"><span class="pre">occ</span> <span class="pre">system:cron</span></code>. If yes, please adjust it to use the <code class="docutils literal notranslate"><span class="pre">php</span></code> command instead according to <a class="reference internal" href="../configuration_server/background_jobs_configuration.html#system-cron-configuration-label"><span class="std std-ref">the background jobs configuration documentation</span></a></p></li>
+<li><p>Use the <a class="reference internal" href="update.html"><span class="doc">Nextcloud built-in updater</span></a> to update your instance to the newest version.</p></li>
+<li><p>Make sure to also verify the “Security &amp; setup warnings” in the “Overview” section on the settings page.</p></li>
+</ol>
 </div>
 
 

@@ -183,7 +183,7 @@ OC.L10N.register(
     "Create a new share link" : "Créer un nouveau lien de partage",
     "{shareWith} by {initiator}" : "{shareWith} par {initiator}",
     "Shared via link by {initiator}" : "Partagé par lien par {initiator}",
-    "Share link ({label})" : "Partager le lien ({étiquette})",
+    "Share link ({label})" : "Partager le lien ({label})",
     "Share link" : "Lien de partage",
     "Error, please enter proper password and/or expiration date" : "Erreur. Merci d'entrer un mot de passe valide et/ou une date d'expiration",
     "No recommendations. Start typing." : "Aucune recommandation. Commencez à écrire.",
@@ -232,7 +232,6 @@ OC.L10N.register(
     "Uploading files" : "Envoi des fichiers en cours ...",
     "Uploaded files:" : "Fichiers envoyés :",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "En envoyant des fichiers, vous acceptez les %1$sconditions d'utilisation%2$s.",
-    "Name, email, or federated cloud ID …" : "Nom, adresse e-mail ou identifiant cloud fédéré…",
-    "Uploading files…" : "Envoi des fichiers..."
+    "Name, email, or federated cloud ID …" : "Nom, adresse e-mail ou identifiant cloud fédéré…"
 },
 "nplurals=2; plural=(n > 1);");

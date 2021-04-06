@@ -270,7 +270,7 @@ reverse proxy. The recommended solution is that your reverse proxy does the redi
 <p>Using docker tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>traefik.frontend.redirect.permanent: &#39;true&#39;
 traefik.frontend.redirect.regex: https://(.*)/.well-known/(card|cal)dav
-traefik.frontend.redirect.replacement: https://$$1/remote.php/dav/
+traefik.frontend.redirect.replacement: https://$1/remote.php/dav/
 </pre></div>
 </div>
 <p>Using traefik.toml:</p>
@@ -310,6 +310,12 @@ location /.well-known/caldav {
 }
 </pre></div>
 </div>
+<p>or</p>
+<dl class="simple">
+<dt>::</dt><dd><p>rewrite ^/.well-known/carddav <a class="reference external" href="https://$server_name/remote.php/dav/">https://$server_name/remote.php/dav/</a> redirect;
+rewrite ^/.well-known/caldav <a class="reference external" href="https://$server_name/remote.php/dav/">https://$server_name/remote.php/dav/</a> redirect;</p>
+</dd>
+</dl>
 </div>
 <div class="section" id="caddy">
 <h3>CADDY<a class="headerlink" href="#caddy" title="Permalink to this headline">¶</a></h3>

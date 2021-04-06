@@ -69,6 +69,9 @@
     "seconds ago" : "seconden geleden",
     "Empty file" : "Leeg bestand",
     "Module with ID: %s does not exist. Please enable it in your apps settings or contact your administrator." : "Module met ID: %s bestaat niet. Schakel die in binnen de app-instellingen of neem contact op met je beheerder.",
+    "File already exists" : "Bestand bestaat al",
+    "Failed to create file from template" : "Kon geen bestand van het sjabloon maken",
+    "Templates" : "Sjablonen",
     "File name is a reserved word" : "Bestandsnaam is een gereserveerd woord",
     "File name contains at least one invalid character" : "De bestandsnaam bevat in ieder geval één verboden teken",
     "File name is too long" : "De bestandsnaam is te lang",
@@ -115,6 +118,7 @@
     "Files can’t be shared with create permissions" : "Bestanden kunnen niet worden gedeeld met 'creëer' permissies",
     "Expiration date is in the past" : "De vervaldatum ligt in het verleden",
     "Can’t set expiration date more than %s days in the future" : "Kan de vervaldatum niet meer dan %s dagen in de toekomst instellen",
+    "Sharing is only allowed with group members" : "Delen kan alleen met groepsleden",
     "%1$s shared »%2$s« with you" : "%1$s deelde \"%2$s\" met jou",
     "%1$s shared »%2$s« with you." : "%1$s deelde \"%2$s\" met jou.",
     "Click the button below to open it." : "Klik de onderstaande button om te openen.",
@@ -226,14 +230,6 @@
     "Storage connection timeout. %s" : "Opslag verbinding time-out. %s",
     "Following databases are supported: %s" : "De volgende databases worden ondersteund: %s",
     "Following platforms are supported: %s" : "De volgende platformen worden ondersteund: %s",
-    "Overview" : "Overzicht",
-    "Basic settings" : "Basis-instellingen",
-    "Sharing" : "Delen",
-    "Security" : "Beveiliging",
-    "Groupware" : "Groupware",
-    "Personal info" : "Persoonlijke informatie",
-    "Mobile & desktop" : "Mobiel & desktop",
-    "Invalid Federated Cloud ID" : "Ongeldige gefedereerde Cloud ID",
-    "This can usually be fixed by giving the webserver write access to the apps directory or disabling the appstore in the config file. See %s" : "Dit kan hersteld worden door de app map schrijf rechten te geven iin de webserver of schakel de appstore uit bij het config bestand. Zie %s"
+    "Invalid Federated Cloud ID" : "Ongeldige gefedereerde Cloud ID"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

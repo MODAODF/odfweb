@@ -169,6 +169,7 @@ OC.L10N.register(
     "Password protection" : "Zaštita zaporkom",
     "Enter a password" : "Unesite zaporku",
     "Expiration date (enforced)" : "Datum isteka (provedeno)",
+    "Create share" : "Stvori dijeljenje",
     "Cancel" : "Odustani",
     "Share label" : "oznaka za dijeljenje",
     "Read only" : "Samo za čitanje",
@@ -180,6 +181,7 @@ OC.L10N.register(
     "Enter a note for the share recipient" : "Unesite bilješku za primatelja dijeljenja",
     "Add another link" : "Dodaj drugu poveznicu",
     "Create a new share link" : "Stvori novu poveznicu dijeljenja",
+    "{shareWith} by {initiator}" : "{shareWith} od {initiator}",
     "Shared via link by {initiator}" : "Dijeli {initiator} putem poveznice",
     "Share link ({label})" : "Poveznica dijeljenja ({label})",
     "Share link" : "Dijeli poveznicu",
@@ -187,6 +189,7 @@ OC.L10N.register(
     "No recommendations. Start typing." : "Nema preporuka. Započnite unos.",
     "Resharing is not allowed" : "Ponovno dijeljenje nije dopušteno",
     "Name or email …" : "Ime ili adresa e-pošte…",
+    "Name, email, or Federated Cloud ID …" : "Naziv, adresa e-pošte ili ID udruženog oblaka…",
     "Searching …" : "Traženje…",
     "No elements found." : "Elementi nisu pronađeni.",
     "Search globally" : "Pretraži globalno",
@@ -229,7 +232,6 @@ OC.L10N.register(
     "Uploading files" : "Otpremanje datoteka",
     "Uploaded files:" : "Otpremljene datoteke:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Otpremanjem datoteka prihvaćate %1$ uvjete korištenja usluge%2$s.",
-    "Name, email, or federated cloud ID …" : "Naziv, adresa e-pošte ili ID udruženog oblaka…",
-    "Uploading files…" : "Otpremanje datoteka..."
+    "Name, email, or federated cloud ID …" : "Naziv, adresa e-pošte ili ID udruženog oblaka…"
 },
 "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;");

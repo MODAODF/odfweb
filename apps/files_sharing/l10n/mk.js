@@ -203,7 +203,9 @@ OC.L10N.register(
     "Expires {relativetime}" : "Истекува {relativetime}",
     "this share just expired." : "ова споделување штотуку истече.",
     "Link to a file" : "Линк до датотеката",
+    "Error creating the share: {errorMessage}" : "Грешка при креирање на споделување: {errorMessage}",
     "Error creating the share" : "Грешка при креирање на споделување",
+    "Error updating the share: {errorMessage}" : "Грешка при ажурирање на споделувањето: {errorMessage}",
     "Error updating the share" : "Грешка при ажурирање на споделувањето",
     "Shared" : "Споделен",
     "Share" : "Сподели",
@@ -232,7 +234,6 @@ OC.L10N.register(
     "Uploading files" : "Прикачување на датотеки",
     "Uploaded files:" : "Прикачени датотеки:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Со прикачување на датотеките, се согласувате со  %1$sусловите за користење%2$s.",
-    "Name, email, or federated cloud ID …" : "Име, е-пошта или федерален ИД ...",
-    "Uploading files…" : "Прикачување датотеки…"
+    "Name, email, or federated cloud ID …" : "Име, е-пошта или федерален ИД ..."
 },
 "nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;");

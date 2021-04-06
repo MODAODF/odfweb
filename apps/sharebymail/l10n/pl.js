@@ -40,7 +40,7 @@ OC.L10N.register(
     "%1$s shared »%2$s« with you and wants to add:" : "%1$s udostępnił »%2$s« z informacją:",
     "%1$s shared »%2$s« with you and wants to add" : "%1$s udostępnił »%2$s« z informacją dla Ciebie",
     "»%s« added a note to a file shared with you" : "»%s« wysłał dodatkową informację dot. udostępnionego zasobu",
-    "You just shared »%1$s« with %2$s. The share was already sent to the recipient. Due to the security policies defined by the administrator of %3$s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Właśnie udostępniłeś »%1$s« z %2$s. Udostępnienie zostało już wysłane do odbiorcy. Ze względu na polityki bezpieczeństwa określone przez administratora %3$s, każda akcja musi być chroniona hasłem i nie wolno wysyłać hasła bezpośrednio do odbiorcy. Dlatego musisz ręcznie przesłać hasło do odbiorcy.",
+    "You just shared »%1$s« with %2$s. The share was already sent to the recipient. Due to the security policies defined by the administrator of %3$s each share needs to be protected by password and it is not allowed to send the password directly to the recipient. Therefore you need to forward the password manually to the recipient." : "Właśnie udostępniłeś »%1$s« z %2$s. Udostępnienie zostało już wysłane do odbiorcy. Ze względu na polityki bezpieczeństwa określone przez administratora %3$s, każda akcja musi być chroniona hasłem i nie wolno wysyłać hasła bezpośrednio do odbiorcy. Dlatego musisz ręcznie wysłać hasło do odbiorcy.",
     "Password to access »%1$s« shared by you with %2$s" : "Hasło dostępu do »%1$s« udostępnione przez %2$s",
     "This is the password:" : "To jest hasło do zasobu:",
     "You can choose a different password at any time in the share dialog." : "W dowolnym momencie możesz zmienić hasło w oknie udostępnienia.",
@@ -49,6 +49,7 @@ OC.L10N.register(
     "Share provider which allows you to share files by mail" : "Wskaż dostawcę, który umożliwia udostępnianie plików pocztą",
     "Allows users to share a personalized link to a file or folder by putting in an email address." : "Umożliwia użytkownikom udostępnianie spersonalizowanego linku do pliku lub katalogu poprzez umieszczenie go w wiadomości e-mail.",
     "Send password by mail" : "Wyślij hasło e-mailem",
-    "Enforce password protection" : "Wymuś zabezpieczenie hasłem"
+    "Enforce password protection" : "Wymuś zabezpieczenie hasłem",
+    "Reply to initiator" : "Odpowiedz inicjatorowi"
 },
 "nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);");

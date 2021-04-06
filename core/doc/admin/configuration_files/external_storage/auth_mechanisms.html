@@ -227,12 +227,15 @@ credentials and therefore cannot perform any background tasks on the storage:</p
 <li><p>Background versions expiration does not work</p></li>
 <li><p>Desktop and mobile clients that use tokens to authenticate can not access those shares</p></li>
 <li><p>Other services that might request the file through a different request like Collabora Online or OnlyOffice will not be able to open files from that storage</p></li>
-<li><p>The method cannot be used with SAML authentication, because Nextcloud does not get a hold of any credentials whatsoever</p></li>
+<li><p>The method cannot be used with SAML/SSO authentication, because Nextcloud does not get a hold of any credentials whatsoever</p></li>
 </ul>
 <p>The <strong>Log-in credentials, save in database</strong> mechanism uses the Nextcloud login
 credentials of the user to connect to the storage. These are stored in the
 database encrypted with the shared secret. This allows to share files from
 within this mount point.</p>
+<ul class="simple">
+<li><p>The method cannot be used with SAML/SSO authentication, because Nextcloud does not get a hold of any credentials whatsoever</p></li>
+</ul>
 <p>The <strong>User entered, store in database</strong> mechanism work in the same way as the
 “Username and password” mechanism but the credentials need to be specified by
 each user individually. Before the first access to that mount point the user

@@ -203,7 +203,9 @@ OC.L10N.register(
     "Expires {relativetime}" : "Caducidades {relativetime}",
     "this share just expired." : "acaba de caducar este recurso compartido.",
     "Link to a file" : "Ligar a un ficheiro",
+    "Error creating the share: {errorMessage}" : "Produciuse un erro ao crear a compartición: {errorMessage}",
     "Error creating the share" : "Produciuse un erro ao crear a compartición",
+    "Error updating the share: {errorMessage}" : "Produciuse un erro ao actualizar a compartición: {errorMessage}",
     "Error updating the share" : "Produciuse un erro ao actualizar a compartición",
     "Shared" : "Compartido",
     "Share" : "Compartir",
@@ -232,7 +234,6 @@ OC.L10N.register(
     "Uploading files" : "Enviando ficheiros",
     "Uploaded files:" : "Ficheiros enviados:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Ao enviar ficheiros acepta os %1$s termos do servizo %2$s.",
-    "Name, email, or federated cloud ID …" : "Nome, correo ou ID da nube federada...",
-    "Uploading files…" : "Enviando ficheiros…"
+    "Name, email, or federated cloud ID …" : "Nome, correo ou ID da nube federada..."
 },
 "nplurals=2; plural=(n != 1);");

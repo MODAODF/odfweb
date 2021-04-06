@@ -81,7 +81,7 @@ OC.L10N.register(
     "Port" : "連接埠",
     "Detect Port" : "偵測連接阜",
     "User DN" : "User DN",
-    "The DN of the client user with which the bind shall be done, e.g. uid=agent,dc=example,dc=com. For anonymous access, leave DN and Password empty." : "需填入可連結目錄服務用戶端完整的使用者 DN 值，例如:uid=agent,dc=example,dc=com。若是目錄服務可允許匿名連接，則請將DN與密碼欄位留白。",
+    "The DN of the client user with which the bind shall be done, e.g. uid=agent,dc=example,dc=com. For anonymous access, leave DN and Password empty." : "客戶端使用者的DN與特定字詞的連結需要完善，例如:uid=agent,dc=example,dc=com。若是匿名連接，則將DN與密碼欄位留白。",
     "Password" : "密碼",
     "For anonymous access, leave DN and Password empty." : "匿名連接時請將 DN 與密碼欄位留白",
     "Save Credentials" : "保存憑證",
@@ -149,8 +149,6 @@ OC.L10N.register(
     "By default, the UUID attribute is automatically detected. The UUID attribute is used to doubtlessly identify LDAP users and groups. Also, the internal username will be created based on the UUID, if not specified otherwise above. You can override the setting and pass an attribute of your choice. You must make sure that the attribute of your choice can be fetched for both users and groups and it is unique. Leave it empty for default behavior. Changes will have effect only on newly mapped (added) LDAP users and groups." : "預設情況下，UUID 屬性會自動偵測。UUID 屬性用來準確識別 LDAP 使用者及群組。此外，如果未在上方指定，內部使用者名稱會基於 UUID 建立。您能覆蓋設定並直接指定屬性，但一定要確保指定的屬性能被使用者及群組取得且唯一。留空則執行預設行為。變更只會對新映射 (加入) 的 LDAP 使用者及群組生效。",
     "UUID Attribute for Users:" : "使用者的UUID值:",
     "UUID Attribute for Groups:" : "群組的UUID值:",
-    "Clear Groupname-LDAP Group Mapping" : "清除 群組名稱-LDAP 群組映射",
-    "Leave empty for user name (default). Otherwise, specify an LDAP/AD attribute." : "使用者名稱請留白(預設)。若不留白請指定一個LDAP/AD屬性。",
-    "User not found. Please check your login attributes and username. Effective filter (to copy-and-paste for command-line validation): <br/>" : "找不到該使用者的資訊。請檢查您的登入屬性和使用者名稱。<br/>",
+    "Clear Groupname-LDAP Group Mapping" : "清除 群組名稱-LDAP 群組映射"
 },
 "nplurals=1; plural=0;");

@@ -203,7 +203,9 @@ OC.L10N.register(
     "Expires {relativetime}" : "Platnost končí {relativetime}",
     "this share just expired." : "platnost tohoto sdílení právě skončila.",
     "Link to a file" : "Odkaz na soubor",
+    "Error creating the share: {errorMessage}" : "Chyba při vytváření sdílení: {errorMessage}",
     "Error creating the share" : "Chyba při vytváření sdílení",
+    "Error updating the share: {errorMessage}" : "Chyba při aktualizaci sdílení: {errorMessage}",
     "Error updating the share" : "Chyba při aktualizaci sdílení",
     "Shared" : "Sdíleno",
     "Share" : "Sdílet",
@@ -232,7 +234,6 @@ OC.L10N.register(
     "Uploading files" : "Nahrávání souborů",
     "Uploaded files:" : "Nahrané soubory:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Nahráním souborů vyjadřujete souhlas s %1$svšeobecnými podmínkami%2$s.",
-    "Name, email, or federated cloud ID …" : "Jméno, e-mail nebo identifikátor ve federovaném cloudu…",
-    "Uploading files…" : "Nahrávání souborů…"
+    "Name, email, or federated cloud ID …" : "Jméno, e-mail nebo identifikátor ve federovaném cloudu…"
 },
 "nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;");

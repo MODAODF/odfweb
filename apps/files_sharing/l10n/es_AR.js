@@ -55,6 +55,7 @@ OC.L10N.register(
     "{user} unshared {file} from you" : "{user} ha dejado de compartir {file} con usted",
     "Shared with {user}" : "Compartido con {user}",
     "Removed share for {user}" : "Eliminó el elemento compartido para {user}",
+    "{actor} removed themselves" : "{actor} se ha eliminado",
     "{actor} shared with {user}" : "{actor} compartió con {user}",
     "{actor} removed share for {user}" : "{actor} eliminó el elemento compartido para {user}",
     "Shared by {actor}" : "Compartido por {actor}",
@@ -139,7 +140,6 @@ OC.L10N.register(
     "Upload files to %s" : "Cargar archivos a %s",
     "Note" : "Nota",
     "Select or drop files" : "Seleccione o suelte los archivos",
-    "Uploaded files:" : "Archivos cargados:",
-    "Uploading files…" : "Cargando archivos..."
+    "Uploaded files:" : "Archivos cargados:"
 },
 "nplurals=2; plural=(n != 1);");

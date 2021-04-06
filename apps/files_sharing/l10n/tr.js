@@ -203,7 +203,9 @@ OC.L10N.register(
     "Expires {relativetime}" : "Kullanma süresi sonu {relativetime}",
     "this share just expired." : "bu paylaşımın kullanma süresi doldu.",
     "Link to a file" : "Bir dosya ile bağla",
+    "Error creating the share: {errorMessage}" : "Paylaşım oluşturulurken sorun çıktı: {errorMessage}",
     "Error creating the share" : "Paylaşım oluşturulurken sorun çıktı",
+    "Error updating the share: {errorMessage}" : "Paylaşım güncellenirken sorun çıktı: {errorMessage}",
     "Error updating the share" : "Paylaşım güncellenirken sorun çıktı",
     "Shared" : "Paylaşılan",
     "Share" : "Paylaş",
@@ -232,7 +234,6 @@ OC.L10N.register(
     "Uploading files" : "Dosyalar yükleniyor",
     "Uploaded files:" : "Yüklenmiş dosyalar:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Dosya yükleyerek %1$shizmet koşullarını%2$s kabul etmiş olursunuz.",
-    "Name, email, or federated cloud ID …" : "Ad, e-posta ya da Birleşik Bulut Kodu …",
-    "Uploading files…" : "Dosyalar yükleniyor …"
+    "Name, email, or federated cloud ID …" : "Ad, e-posta ya da Birleşik Bulut Kodu …"
 },
 "nplurals=2; plural=(n > 1);");

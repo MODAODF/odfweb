@@ -8,8 +8,8 @@ OC.L10N.register(
     "Nothing shared yet" : "Você ainda não compartilhou nada!",
     "Files and folders you share will show up here" : "Arquivos e pastas que você compartilhar serão exibidos aqui.",
     "Shared by link" : "Compartilhado por link",
-    "No shared links" : "Nenhum link compartilhado",
-    "Files and folders you share by link will show up here" : "Arquivos e pastas que você compartilha por link serão mostrados aqui",
+    "No shared links" : "Nenhum link compartilhado!",
+    "Files and folders you share by link will show up here" : "Arquivos e pastas que você compartilha por link serão exibidos aqui",
     "Deleted shares" : "Compartilhamentos excluídos",
     "No deleted shares" : "Não há compartilhamentos excluídos",
     "Shares you deleted will show up here" : "Compartilhamentos excluídos aparecem aqui",
@@ -203,7 +203,9 @@ OC.L10N.register(
     "Expires {relativetime}" : "Expira {relativetime}",
     "this share just expired." : "esse compartilhamento acabou de expirar.",
     "Link to a file" : "Linkar para um arquivo",
+    "Error creating the share: {errorMessage}" : "Erro ao criar o compartilhamento: {errorMessage}",
     "Error creating the share" : "Erro ao criar o compartilhamento",
+    "Error updating the share: {errorMessage}" : "Erro ao atualizar o compartilhamento: {errorMessage}",
     "Error updating the share" : "Erro ao atualizar o compartilhamento",
     "Shared" : "Compartilhado",
     "Share" : "Compartilhar",
@@ -232,7 +234,6 @@ OC.L10N.register(
     "Uploading files" : "Enviando arquivos...",
     "Uploaded files:" : "Arquivos enviados:",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Ao enviar arquivos, você concorda com os %1$stermos de serviço%2$s.",
-    "Name, email, or federated cloud ID …" : "Nome, e-mail, ou ID da nuvem federada...",
-    "Uploading files…" : "Enviando arquivos..."
+    "Name, email, or federated cloud ID …" : "Nome, e-mail, ou ID da nuvem federada..."
 },
 "nplurals=2; plural=(n > 1);");

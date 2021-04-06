@@ -76,9 +76,9 @@ OC.L10N.register(
     "Log-in credentials, save in session" : "Credenciais de acceso, gardar na sesión",
     "Global credentials, user entered" : "Credenciais globais, introducidas polo usuario",
     "User entered, store in database" : "Usuario que accedeu, almacenar na base de datos",
-    "RSA public key" : "Clave pública RSA",
+    "RSA public key" : "Clave RSA pública",
     "Public key" : "Clave pública",
-    "RSA private key" : "Clave privada RSA",
+    "RSA private key" : "Clave RSA privada",
     "Private key" : "Clave privada",
     "Kerberos ticket" : "Billete Kerberos",
     "Amazon S3" : "Amazon S3",
@@ -134,7 +134,6 @@ OC.L10N.register(
     "Add storage" : "Engadir almacenamento",
     "Advanced settings" : "Axustes avanzados",
     "Allow users to mount external storage" : "Permitirlle aos usuarios montar almacenamento externo",
-    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Poden empregarse credenciais globais para autenticar con múltiples almacenamentos externos que teñan as mesmas credenciais.",
-    "Saving..." : "Gardando…"
+    "Global credentials can be used to authenticate with multiple external storages that have the same credentials." : "Poden empregarse credenciais globais para autenticar con múltiples almacenamentos externos que teñan as mesmas credenciais."
 },
 "nplurals=2; plural=(n != 1);");

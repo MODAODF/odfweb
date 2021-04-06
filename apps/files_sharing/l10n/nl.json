@@ -201,7 +201,9 @@
     "Expires {relativetime}" : "Vervalt {relativetime}",
     "this share just expired." : "deze share is net verlopen.",
     "Link to a file" : "Link naar een bestand",
+    "Error creating the share: {errorMessage}" : "Fout bij aanmaken share: {errorMessage}",
     "Error creating the share" : "Fout tijdens aanmaken share",
+    "Error updating the share: {errorMessage}" : "Fout bij aanpassen van de share: {errorMessage}",
     "Error updating the share" : "Fout tijdens bijwerken share",
     "Shared" : "Gedeeld",
     "Share" : "Deel",
@@ -230,7 +232,6 @@
     "Uploading files" : "Uploaden bestanden",
     "Uploaded files:" : "Geüploade bestanden",
     "By uploading files, you agree to the %1$sterms of service%2$s." : "Door het uploaden van bestanden stem je in met de %1$sgebruiksvoorwaarden%2$s.",
-    "Name, email, or federated cloud ID …" : "Naam, e-mailadres of gefedereerde Cloud ID …",
-    "Uploading files…" : "Uploaden bestanden..."
+    "Name, email, or federated cloud ID …" : "Naam, e-mailadres of gefedereerde Cloud ID …"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
