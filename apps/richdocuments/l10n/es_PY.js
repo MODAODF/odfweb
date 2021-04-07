@@ -22,6 +22,7 @@ OC.L10N.register(
     "Description" : "Descripción",
     "No results" : "No hay resultados",
     "Error" : "Error",
+    "An error occurred" : "Se presentó un error",
     "Nickname" : "Apodo",
     "Please enter the filename to store the document as." : "Por favor ingresa el nombre del archivo con el cual almacenar el documento",
     "Save As" : "Guardar Como",
@@ -39,11 +40,6 @@ OC.L10N.register(
     "New Spreadsheet" : "Nueva Hoja de cálculo",
     "New Presentation" : "Nueva Presentación",
     "Could not create file" : "No fue posible crear el archivo",
-    "Create" : "Crear",
-    "Wrong password. Please retry." : "Contraseña incorrecta. Por favor intentalo de nuevo.",
-    "Password" : "Contraseña",
-    "OK" : "OK",
-    "Guest %s" : "Invitado %s",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "Esta liga ha expirado o nunca existió. Por favor de contacta a la persona que lo compartió contigo para más detalles."
+    "Create" : "Crear"
 },
 "nplurals=2; plural=(n != 1);");

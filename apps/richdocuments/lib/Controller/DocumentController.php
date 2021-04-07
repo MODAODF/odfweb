@@ -11,6 +11,7 @@
 
 namespace OCA\Richdocuments\Controller;
 
+use OCA\Richdocuments\Events\BeforeFederationRedirectEvent;
 use OCA\Richdocuments\Service\FederationService;
 use OCA\Richdocuments\TokenManager;
 use \OCP\AppFramework\Controller;
@@ -193,11 +194,21 @@ class DocumentController extends Controller {
 				$remoteCollabora = $this->federationService->getRemoteCollaboraURL($remote);
 				if ($remoteCollabora !== '') {
 					$absolute = $item->getParent()->getPath();
-					$relative = $folder->getRelativePath($absolute);
-					$url = '/index.php/apps/files?dir=' . $relative .
-						'&richdocuments_open=' . $item->getName() .
+					$relativeFolderPath = $folder->getRelativePath($absolute);
+					$relativeFilePath = $folder->getRelativePath($item->getPath());
+					$url = '/index.php/apps/files/?dir=' . $relativeFolderPath .
+						'&richdocuments_open=' . $relativeFilePath .
 						'&richdocuments_fileId=' . $fileId .
 						'&richdocuments_remote_access=' . $remote;
+
+						$event = new BeforeFederationRedirectEvent(
+							$item, $relativeFolderPath, $remote
+						);
+						$eventDispatcher = \OC::$server->getEventDispatcher();
+						$eventDispatcher->dispatch(BeforeFederationRedirectEvent::class, $event);
+						if ($event->getRedirectUrl()) {
+							$url = $event->getRedirectUrl();
+						}
 					return new RedirectResponse($url);
 				}
 				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
@@ -217,12 +228,19 @@ class DocumentController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 * @param string $fileId
+	 * @param string|null $path
 	 * @return RedirectResponse|TemplateResponse
 	 */
-	public function index($fileId) {
+	public function index($fileId, $path = null) {
 		try {
 			$folder = $this->rootFolder->getUserFolder($this->uid);
-			$item = $folder->getById($fileId)[0];
+
+			if ($path !== null) {
+				$item = $folder->get($path);
+			} else {
+				$item = $folder->getById($fileId)[0];
+			}
+
 			if(!($item instanceof File)) {
 				throw new \Exception();
 			}
@@ -259,7 +277,7 @@ class DocumentController extends Controller {
 				$encryptionManager->getEncryptionModule()->update($absPath, $owner, $accessList);
 			}
 
-			$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+			$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
 			$policy = new ContentSecurityPolicy();
 			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 			$policy->allowInlineScript(true);
@@ -325,7 +343,7 @@ class DocumentController extends Controller {
 			'userId' => $this->uid
 		];
 
-		$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+		$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
 		$policy = new ContentSecurityPolicy();
 		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 		$policy->allowInlineScript(true);
@@ -377,7 +395,7 @@ class DocumentController extends Controller {
 					$params['urlsrc'] = $urlSrc;
 				}
 
-				$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+				$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
 				$policy->allowInlineScript(true);
@@ -426,6 +444,9 @@ class DocumentController extends Controller {
 				list($urlSrc, $token, $wopi) = $this->tokenManager->getToken($node->getId(), $shareToken, $this->uid);
 
 				$remoteWopi = $this->federationService->getRemoteFileDetails($remoteServer, $remoteServerToken);
+				if ($remoteWopi === null) {
+					throw new \Exception('Invalid remote file details for ' . $remoteServerToken);
+				}
 				$this->tokenManager->updateToRemoteToken($wopi, $shareToken, $remoteServer, $remoteServerToken, $remoteWopi);
 
 				$permissions = $share->getPermissions();
@@ -445,7 +466,7 @@ class DocumentController extends Controller {
 					'userId' => $remoteWopi['editorUid'] . '@' . $remoteServer
 				];
 
-				$response = new TemplateResponse('richdocuments', 'documents', $params, 'empty');
+				$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
 				$policy = new ContentSecurityPolicy();
 				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
 				$policy->allowInlineScript(true);

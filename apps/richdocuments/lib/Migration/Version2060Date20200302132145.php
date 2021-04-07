@@ -9,7 +9,8 @@ use OCP\DB\ISchemaWrapper;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
 
-class Version2060Date20200302132145 extends SimpleMigrationStep {
+class Version2060Date20200302132145 extends SimpleMigrationStep
+{
 
 	/**
 	 * @param IOutput $output
@@ -17,15 +18,18 @@ class Version2060Date20200302132145 extends SimpleMigrationStep {
 	 * @param array $options
 	 * @return null|ISchemaWrapper
 	 */
-	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options)
+	{
 		/** @var ISchemaWrapper $schema */
 		$schema = $schemaClosure();
 
 		$table = $schema->getTable('richdocuments_wopi');
-		$table->addColumn('share', 'string', [
-			'notnull' => false,
-			'length' => 64
-		]);
+		if (!$table->hasColumn('share')) {
+			$table->addColumn('share', 'string', [
+				'notnull' => false,
+				'length' => 64
+			]);
+		}
 
 		return $schema;
 	}

@@ -22,17 +22,20 @@
 namespace OCA\Richdocuments\Controller;
 
 use OC\Files\View;
-use OCA\Richdocuments\Db\Wopi;
 use OCA\Richdocuments\AppConfig;
+use OCA\Richdocuments\Db\Wopi;
 use OCA\Richdocuments\Db\WopiMapper;
+use OCA\Richdocuments\Helper;
 use OCA\Richdocuments\Service\UserScopeService;
 use OCA\Richdocuments\TemplateManager;
 use OCA\Richdocuments\TokenManager;
-use OCA\Richdocuments\Helper;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\StreamResponse;
+use OCP\AppFramework\QueryException;
+use OCP\Encryption\IManager as IEncryptionManager;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\Files\GenericFileException;
@@ -45,11 +48,10 @@ use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
-use OCP\AppFramework\Http\StreamResponse;
 use OCP\IUserManager;
 use OCP\Lock\LockedException;
 use OCP\Share\Exceptions\ShareNotFound;
-use OCP\Share\IManager;
+use OCP\Share\IManager as IShareManager;
 
 class WopiController extends Controller {
 	/** @var IRootFolder */
@@ -70,10 +72,12 @@ class WopiController extends Controller {
 	private $logger;
 	/** @var TemplateManager */
 	private $templateManager;
-	/** @var IManager */
+	/** @var IShareManager */
 	private $shareManager;
 	/** @var UserScopeService */
 	private $userScopeService;
+	/** @var IEncryptionManager */
+	private $encryptionManager;
 
 	// Signifies LOOL that document has been changed externally in this storage
 	const LOOL_STATUS_DOC_CHANGED = 1010;
@@ -84,11 +88,15 @@ class WopiController extends Controller {
 	 * @param IRootFolder $rootFolder
 	 * @param IURLGenerator $urlGenerator
 	 * @param IConfig $config
+	 * @param AppConfig $appConfig
 	 * @param TokenManager $tokenManager
 	 * @param IUserManager $userManager
 	 * @param WopiMapper $wopiMapper
 	 * @param ILogger $logger
 	 * @param TemplateManager $templateManager
+	 * @param IShareManager $shareManager
+	 * @param UserScopeService $userScopeService
+	 * @param IEncryptionManager $encryptionManager
 	 */
 	public function __construct(
 		$appName,
@@ -102,8 +110,9 @@ class WopiController extends Controller {
 		WopiMapper $wopiMapper,
 		ILogger $logger,
 		TemplateManager $templateManager,
-		IManager $shareManager,
-		UserScopeService $userScopeService
+		IShareManager $shareManager,
+		UserScopeService $userScopeService,
+		IEncryptionManager $encryptionManager
 	) {
 		parent::__construct($appName, $request);
 		$this->rootFolder = $rootFolder;
@@ -117,6 +126,7 @@ class WopiController extends Controller {
 		$this->templateManager = $templateManager;
 		$this->shareManager = $shareManager;
 		$this->userScopeService = $userScopeService;
+		$this->encryptionManager = $encryptionManager;
 	}
 
 	/**
@@ -157,10 +167,11 @@ class WopiController extends Controller {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		$isPublic = $wopi->getEditorUid() === null;
+		$isPublic = empty($wopi->getEditorUid());
 		$guestUserId = 'Guest-' . \OC::$server->getSecureRandom()->generate(8);
 		$user = $this->userManager->get($wopi->getEditorUid());
 		$userDisplayName = $user !== null && !$isPublic ? $user->getDisplayName() : $wopi->getGuestDisplayname();
+		$isVersion = $version !== '0';
 		$response = [
 			'BaseFileName' => $file->getName(),
 			'Size' => $file->getSize(),
@@ -170,14 +181,14 @@ class WopiController extends Controller {
 			'UserFriendlyName' => $userDisplayName,
 			'UserExtraInfo' => [
 			],
-			'UserCanWrite' => $wopi->getCanwrite(),
-			'UserCanNotWriteRelative' => \OC::$server->getEncryptionManager()->isEnabled() || $isPublic,
+			'UserCanWrite' => (bool)$wopi->getCanwrite(),
+			'UserCanNotWriteRelative' => $this->encryptionManager->isEnabled() || $isPublic,
 			'PostMessageOrigin' => $wopi->getServerHost(),
 			'LastModifiedTime' => Helper::toISO8601($file->getMTime()),
-			'SupportsRename' => true,
-			'UserCanRename' => !$isPublic,
+			'SupportsRename' => !$isVersion,
+			'UserCanRename' => !$isPublic && !$isVersion,
 			'EnableInsertRemoteImage' => true,
-			'EnableShare' => true,
+			'EnableShare' => $file->isShareable() && !$isVersion,
 			'HideUserList' => 'desktop',
 			'DisablePrint' => $wopi->getHideDownload(),
 			'DisableExport' => $wopi->getHideDownload(),
@@ -201,10 +212,13 @@ class WopiController extends Controller {
 		}
 
 		if ($this->shouldWatermark($isPublic, $wopi->getEditorUid(), $fileId, $wopi)) {
+			$email = $user !== null && !$isPublic ? $user->getEMailAddress() : "";
 			$replacements = [
 				'userId' => $wopi->getEditorUid(),
 				'date' => (new \DateTime())->format('Y-m-d H:i:s'),
 				'themingName' => \OC::$server->getThemingDefaults()->getName(),
+				'userDisplayName' => $userDisplayName,
+				'email' => $email,
 
 			];
 			$watermarkTemplate = $this->appConfig->getAppValue('watermark_text');
@@ -215,7 +229,7 @@ class WopiController extends Controller {
 
 		/**
 		 * New approach for generating files from templates by creating an empty file
-		 * and providing an URL which returns the actual templyte
+		 * and providing an URL which returns the actual template
 		 */
 		if ($wopi->hasTemplateId()) {
 			$templateUrl = 'index.php/apps/richdocuments/wopi/template/' . $wopi->getTemplateId() . '?access_token=' . $wopi->getToken();
@@ -224,11 +238,11 @@ class WopiController extends Controller {
 		}
 
 		$user = $this->userManager->get($wopi->getEditorUid());
-		if($user !== null && $user->getAvatarImage(32) !== null) {
+		if($user !== null) {
 			$response['UserExtraInfo']['avatar'] = $this->urlGenerator->linkToRouteAbsolute('core.avatar.getAvatar', ['userId' => $wopi->getEditorUid(), 'size' => 32]);
 		}
 
-		if ($wopi->getRemoteServer() !== '') {
+		if (!empty($wopi->getRemoteServer())) {
 			$response = $this->setFederationFileInfo($wopi, $response);
 		}
 
@@ -385,15 +399,23 @@ class WopiController extends Controller {
 				$versionPath = '/files_versions/' . $relPath . '.v' . $version;
 				$view = new View('/' . $wopi->getOwnerUid());
 				if ($view->file_exists($versionPath)){
-					$response = new StreamResponse($view->fopen($versionPath, 'rb'));
+					$info = $view->getFileInfo($versionPath);
+					if ($info->getSize() === 0) {
+						$response = new Http\Response();
+					} else {
+						$response = new StreamResponse($view->fopen($versionPath, 'rb'));
+					}
 				}
 				else {
 					return new JSONResponse([], Http::STATUS_NOT_FOUND);
 				}
 			}
-			else
-			{
-				$response = new StreamResponse($file->fopen('rb'));
+			else {
+				if ($file->getSize() === 0) {
+					$response = new Http\Response();
+				} else {
+					$response = new StreamResponse($file->fopen('rb'));
+				}
 			}
 			$response->addHeader('Content-Disposition', 'attachment');
 			$response->addHeader('Content-Type', 'application/octet-stream');
@@ -420,16 +442,21 @@ class WopiController extends Controller {
 							$access_token) {
 		list($fileId, ,) = Helper::parseFileId($fileId);
 		$isPutRelative = ($this->request->getHeader('X-WOPI-Override') === 'PUT_RELATIVE');
-		$isRenameFile = ($this->request->getHeader('X-WOPI-Override') === 'RENAME_FILE');
 
 		$wopi = $this->wopiMapper->getWopiForToken($access_token);
 		if (!$wopi->getCanwrite()) {
 			return new JSONResponse([], Http::STATUS_FORBIDDEN);
 		}
 
-		// Set the user to register the change under his name
-		$this->userScopeService->setUserScope($wopi->getEditorUid());
-		$this->userScopeService->setFilesystemScope($isPutRelative ? $wopi->getEditorUid() : $wopi->getUserForFileAccess());
+		if (!$this->encryptionManager->isEnabled() || $this->isMasterKeyEnabled()) {
+			// Set the user to register the change under his name
+			$this->userScopeService->setUserScope($wopi->getUserForFileAccess());
+			$this->userScopeService->setFilesystemScope($isPutRelative ? $wopi->getEditorUid() : $wopi->getUserForFileAccess());
+		} else {
+			// Per-user encryption is enabled so that collabora isn't able to store the file by using the
+			// user's private key. Because of that we have to use the incognito mode for writing the file.
+			\OC_User::setIncognitoMode(true);
+		}
 
 		try {
 			if ($isPutRelative) {
@@ -543,7 +570,7 @@ class WopiController extends Controller {
 
 		// Unless the editor is empty (public link) we modify the files as the current editor
 		$editor = $wopi->getEditorUid();
-		if ($editor === null || $wopi->getRemoteServer() !== '') {
+		if ($editor === null || !empty($wopi->getRemoteServer())) {
 			$editor = $wopi->getOwnerUid();
 		}
 
@@ -682,7 +709,7 @@ class WopiController extends Controller {
 	private function getFileForWopiToken(Wopi $wopi) {
 		$file = null;
 
-		if ($wopi->getRemoteServer() !== '') {
+		if (!empty($wopi->getRemoteServer())) {
 			$share = $this->shareManager->getShareByToken($wopi->getEditorUid());
 			$node = $share->getNode();
 			if ($node instanceof Folder) {
@@ -738,4 +765,16 @@ class WopiController extends Controller {
 		}
 	}
 
+	/**
+	 * Check if the encryption module uses a master key.
+	 */
+	private function isMasterKeyEnabled(): bool {
+		try {
+			$util = \OC::$server->query(\OCA\Encryption\Util::class);
+			return $util->isMasterKeyEnabled();
+		} catch (QueryException $e) {
+			// No encryption module enabled
+			return false;
+		}
+	}
 }

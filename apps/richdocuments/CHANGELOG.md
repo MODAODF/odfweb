@@ -1,14 +1,197 @@
 # Changelog
 
-## 3.5.3
+## 3.7.17
+
+* [#1417](https://github.com/nextcloud/richdocuments/pull/1417) Fix version restore
+* [#1419](https://github.com/nextcloud/richdocuments/pull/1419) Pass through UI_Share message if used in the version viewer
+* [#1426](https://github.com/nextcloud/richdocuments/pull/1426) Allow revision viewer to enter full screen
+
+
+## 3.7.16
+
+* [#1399](https://github.com/nextcloud/richdocuments/pull/1399) Improve dark theme experience
+* [#1402](https://github.com/nextcloud/richdocuments/pull/1402) Assets: Use octet-stream and attachment instead of allowing to inline display
+* [#1404](https://github.com/nextcloud/richdocuments/pull/1404) Avoid determination of document editor in per-user-encryption setups
+* [#1407](https://github.com/nextcloud/richdocuments/pull/1407) Make sure that the same host remote is always considered as trusted
+* [#1413](https://github.com/nextcloud/richdocuments/pull/1413) Emit events on frontend failure states
+* [#1415](https://github.com/nextcloud/richdocuments/pull/1415) Trim duplicate trailing slashes in wopi url
+
+## 3.7.15
+
+* [#1339](https://github.com/nextcloud/richdocuments/pull/1339) Open file after creating from template
+* [#1355](https://github.com/nextcloud/richdocuments/pull/1355) Apply new file name after rename
+* [#1383](https://github.com/nextcloud/richdocuments/pull/1383) use https for fetching the demo servers
+* [#1384](https://github.com/nextcloud/richdocuments/pull/1384) Add proper return values to occ commands
+
+
+## 3.7.14
+
+* [#1331](https://github.com/nextcloud/richdocuments/pull/1331) Log the exception so we know what is actually failing @rullzer
+* [#1332](https://github.com/nextcloud/richdocuments/pull/1332) Use https by default for the federation service @rullzer
+* [#1337](https://github.com/nextcloud/richdocuments/pull/1337) Properly handle cached failed requests in the Federation service @rullzer
+* Update dependencies
+
+## 3.7.13
+
+* [#1326](https://github.com/nextcloud/richdocuments/pull/1326) Do not update CSP on calls to files_sharing @rullzer
+* [#1327](https://github.com/nextcloud/richdocuments/pull/1327) Handle errors when fetching remote file info more gracefully @juliushaertl
+* [#1329](https://github.com/nextcloud/richdocuments/pull/1329) Move federation cache to a distributed one @juliushaertl
+
+## 3.7.12
+
+* [#1178](https://github.com/nextcloud/richdocuments/pull/1178) Show error if trying to open a file on session credential based external storage @juliushaertl
+* [#1279](https://github.com/nextcloud/richdocuments/pull/1279) Actually mark wopi entity fields as updated @juliushaertl
+* [#1284](https://github.com/nextcloud/richdocuments/pull/1284) Rename document on save as success @eszkadev
+* [#1303](https://github.com/nextcloud/richdocuments/pull/1303) Cut of guest names so they fit into the database @nickvergessen
+* [#1305](https://github.com/nextcloud/richdocuments/pull/1305) Properly trim trailing slashes from the remote url @juliushaertl
+* [#941](https://github.com/nextcloud/richdocuments/pull/941) Be fair about compatiblity of this module @mmaridev
+* Update dependencies
+
+## 3.7.11
+
+* [#1256](https://github.com/nextcloud/richdocuments/pull/1256) Adapt built-in CODE url on host address change @mrkara
+* [#1269](https://github.com/nextcloud/richdocuments/pull/1269) Increase timeout if proxy is starting @eszkadev
+* [#1277](https://github.com/nextcloud/richdocuments/pull/1277) Check proxy status on timeout @eszkadev
+* [#1278](https://github.com/nextcloud/richdocuments/pull/1278) Fix possible issues with remote editing
+* [#989](https://github.com/nextcloud/richdocuments/pull/989) Show hint about missing capabilities endpoint connection
+
+## 3.7.10
+
+* [#1257](https://github.com/nextcloud/richdocuments/pull/1257) Try to obtain the appdata folder in 1 go @rullzer
+* [#1258](https://github.com/nextcloud/richdocuments/pull/1258) Fix compatibility issue with Nextcloud 15 @juliushaertl
+* [#1259](https://github.com/nextcloud/richdocuments/pull/1259) Don't use a stream response on an empty file @rullzer
+* [#1266](https://github.com/nextcloud/richdocuments/pull/1266) Fix issues with federated editing in global scale setups @juliushaertl
+* [#1268](https://github.com/nextcloud/richdocuments/pull/1268) Fix typo when refetching discovery @eszkadev
+
+## 3.7.9
+
+## Fixed
+
+* [#1238](https://github.com/nextcloud/richdocuments/pull/1238) Move to @nextcloud/capabilities and only register default mime types for viewer
+* [#1239](https://github.com/nextcloud/richdocuments/pull/1239) Fix compatibility to oracle as a database
+* [#1240](https://github.com/nextcloud/richdocuments/pull/1240) Add two more useful placeholders for watermark text @timar
+* [#1242](https://github.com/nextcloud/richdocuments/pull/1242) Add French (Switzerland) and Italian (Switzerland) as special case @timar
+* [#1243](https://github.com/nextcloud/richdocuments/pull/1243) Add migration to bigint columns
+* [#1244](https://github.com/nextcloud/richdocuments/pull/1244) Do not fail if capabilities have not been fetched for the built-in server
+
+
+## 3.7.8
+
+### Added
+
+* [#1237](https://github.com/nextcloud/richdocuments/pull/1237) Make frame loading timeout configurable through occ
+
+## 3.7.7
+
+### Added
+
+* [#1220](https://github.com/nextcloud/richdocuments/pull/1220) Support opening visio files @timar
+* [#1221](https://github.com/nextcloud/richdocuments/pull/1221) Add close method for mobile app integration @juliushaertl
 
 ### Fixed
-- Hardening check for edit permissions when editing though iOS/Android
-- Fix editing though public share links as logged in users
-- Fix issues with setting the language properly in Collabora Online
-- Dependency bumps
 
-## 3.5.2
+* [#1222](https://github.com/nextcloud/richdocuments/pull/1222) Adjust ui_defaults do be the same across different document types @juliushaertl
+* [#1226](https://github.com/nextcloud/richdocuments/pull/1226) Move Collabora endpoint caching to distributed cache @juliushaertl
+
+## 3.7.6
+
+### Added
+* [#1211](https://github.com/nextcloud/richdocuments/pull/1211) Passing some UI Defaults to loleaflet frame @merttumer
+
+### Fixed
+* [#1198](https://github.com/nextcloud/richdocuments/pull/1198) Use correct call to notify mobile @eszkadev
+* [#1210](https://github.com/nextcloud/richdocuments/pull/1210) Fix escaping for edit with message @gary-kim
+
+
+## 3.7.5
+
+### Added
+* [#1137](https://github.com/nextcloud/richdocuments/pull/1137) Add occ richdocuments:activate-config to autoprovision Collabora configurations @ebardie
+* [#974](https://github.com/nextcloud/richdocuments/pull/974) Add frontend hooks and expose config/open methods @juliushaertl
+
+### Bugfixes
+
+* [#1055](https://github.com/nextcloud/richdocuments/pull/1055) Fix bug #1054 @SamKer
+* [#1095](https://github.com/nextcloud/richdocuments/pull/1095) Make 'Remove user' label localizable @timar
+* [#1111](https://github.com/nextcloud/richdocuments/pull/1111) Updated presentation template. @kendy
+* [#1133](https://github.com/nextcloud/richdocuments/pull/1133) Use proper base template to be compatible with Nextcloud 20 @juliushaertl
+* [#1150](https://github.com/nextcloud/richdocuments/pull/1150) Arm64: Allow auto-enabling Built-in CODE Server on ARM64 @mrkara
+* [#1152](https://github.com/nextcloud/richdocuments/pull/1152) Properly check value types when updating watermark settings @juliushaertl
+* [#1153](https://github.com/nextcloud/richdocuments/pull/1153) Very minimal document templates for Collabora Online @timar
+* [#1154](https://github.com/nextcloud/richdocuments/pull/1154) Use PHP_OS instead of PHP_OS_FAMILY when PHP version < 7.2 @mrkara
+* [#1162](https://github.com/nextcloud/richdocuments/pull/1162) Arm64 adaptations @mrkara
+* [#1163](https://github.com/nextcloud/richdocuments/pull/1163) Fix platform mismatch error message @mrkara
+* [#1164](https://github.com/nextcloud/richdocuments/pull/1164) Do not use isset for checking the class constant @juliushaertl
+* [#1169](https://github.com/nextcloud/richdocuments/pull/1169) Template sourced documents support DownloadAsPostMessage @Ashod
+* [#1170](https://github.com/nextcloud/richdocuments/pull/1170) No need to get the avatar image since we have one for each user @juliushaertl
+* [#1174](https://github.com/nextcloud/richdocuments/pull/1174) Update location of screenshots @timar
+* [#1180](https://github.com/nextcloud/richdocuments/pull/1180) Ensures <iframe> contains a non-empty title attribute @pedropintosilva
+* [#1192](https://github.com/nextcloud/richdocuments/pull/1192) Lint fix @R0Wi
+* [#1194](https://github.com/nextcloud/richdocuments/pull/1194) Use base template for direct editing @juliushaertl
+* [#1195](https://github.com/nextcloud/richdocuments/pull/1195) The mobile apps need to handle the hyperlinks themselves. @kendy
+
+## 3.7.4
+
+* Nextcloud 20 compatibility
+* [#1055](https://github.com/nextcloud/richdocuments/pull/1055) Fix migrations for missing table columns @SamKer
+* [#1077](https://github.com/nextcloud/richdocuments/pull/1077) Hide sharing menu if no share permission is set @juliushaertl
+* [#1078](https://github.com/nextcloud/richdocuments/pull/1078) Hide revision history menu on public pages @juliushaertl
+* [#1095](https://github.com/nextcloud/richdocuments/pull/1095) Make 'Remove user' label localizable @timar
+* [#1111](https://github.com/nextcloud/richdocuments/pull/1111) Updated presentation template. @kendy
+
+
+## 3.7.3
+
+### Fixed
+* [#1023](https://github.com/nextcloud/richdocuments/pull/1023) Fix saving 'disable certificate verification' @CySlider
+* [#1059](https://github.com/nextcloud/richdocuments/pull/1059) Fix issue with custom trusted certificates not being applied
+* [#1061](https://github.com/nextcloud/richdocuments/pull/1061) Fix not found error when opening share links with edit permission
+ 
+
+## 3.7.2
+
+### Fixed
+
+* [#1052](https://github.com/nextcloud/richdocuments/pull/1052) Fix regression caused documents to not load
+
+## 3.7.1
+
+
+### Fixed
+
+* [#1010](https://github.com/nextcloud/richdocuments/pull/1010) Advise installation via 'occ' if it fails from the web interface. @kendy
+* [#1015](https://github.com/nextcloud/richdocuments/pull/1015) String update for built-in CODE option @mrkara
+* [#1017](https://github.com/nextcloud/richdocuments/pull/1017) Handling of a new error state from proxy.php?status. @kendy
+* [#1020](https://github.com/nextcloud/richdocuments/pull/1020) Check for read permission on the file actions @juliushaertl
+* [#1022](https://github.com/nextcloud/richdocuments/pull/1022) Update install.md @juliushaertl
+* [#1024](https://github.com/nextcloud/richdocuments/pull/1024) Update screenshots @timar
+* [#1026](https://github.com/nextcloud/richdocuments/pull/1026) New error state to handle - running on non-glibc based Linux. @kendy
+* [#885](https://github.com/nextcloud/richdocuments/pull/885) Move to @nextcloud packages @juliushaertl
+* [#1038](https://github.com/nextcloud/richdocuments/pull/1038) Fix issues with Nextcloud 15/16 @juliushaertl
+
+
+## 3.7.0
+
+### Added
+- Add support for built-in CODE server
+- Inform user about web server configuration issues
+- Document templates: use only one sans-serif font family
+- Viewer integration
+
+### Fixed
+- Fix CSP violation when collabora server has so-called 'service root'
+- Allow connecting to local addresses
+- Avoid duplicate save requests
+- Avoid additional HTTP request on the files app
+- Reduce requests for loaded CSS files
+- Fix certificate validation handling
+- Be more robust on paths that don't start with a slash
+- Bring back IE11 support
+
+## 3.6.0
+
+### Added
+- Add demo server selector and show hint about that when Collabora is not setup
 
 ### Fixed
 - Fix filesystem setup that caused save issues all over the place

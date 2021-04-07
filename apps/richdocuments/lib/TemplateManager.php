@@ -35,7 +35,6 @@ use OCP\IL10N;
 use OCP\IPreview;
 use OCP\IURLGenerator;
 use OC\Files\AppData\Factory;
-use OCA\Templaterepo\Folder\FolderManager;
 
 class TemplateManager {
 
@@ -58,7 +57,7 @@ class TemplateManager {
 	private $l;
 
 	/** @var FolderManager */
-	private $folderManager;
+	private $folderManager = null;
 
 	/** Accepted templates mime types */
 	const MIMES_DOCUMENTS = [
@@ -127,14 +126,16 @@ class TemplateManager {
 								IAppData $appData,
 								IURLGenerator $urlGenerator,
 								IRootFolder $rootFolder,
-								IL10N $l,
-								FolderManager $folderManager) {
+								IL10N $l) {
 		$this->appName        = $appName;
 		$this->userId         = $userId;
 		$this->config         = $config;
 		$this->rootFolder     = $rootFolder;
 		$this->urlGenerator   = $urlGenerator;
-		$this->folderManager = $folderManager;
+		if (class_exists('OCA\Templaterepo\Folder\FolderManager')) {
+			// if apps/templaterepo enabled
+			$this->folderManager = \OC::$server->query('OCA\Templaterepo\Folder\FolderManager');
+		}
 
 		$this->appData = $appData;
 		$this->createAppDataFolders();
@@ -227,12 +228,14 @@ class TemplateManager {
 			}
 		}
 
-		$foldersId = $this->getTemplaterepoFoldersId();
-		foreach ($foldersId as $id) {
-			$files = $this->getTemplaterepoDir($id)->getDirectoryListing();
-			foreach ($files as $file) {
-				if ($file->getId() === $fileId) {
-					return $file;
+		if ($this->folderManager) {
+			$foldersId = $this->getTemplaterepoFoldersId();
+			foreach ($foldersId as $id) {
+				$files = $this->getTemplaterepoDir($id)->getDirectoryListing();
+				foreach ($files as $file) {
+					if ($file->getId() === $fileId) {
+						return $file;
+					}
 				}
 			}
 		}
@@ -382,7 +385,7 @@ class TemplateManager {
 	public function getAll($type = 'document') {
 		$system = $this->getSystem();
 		$user   = $this->getUser();
-		$templaterepo = $this->getTemplaterepo();
+		$templaterepo = $this->folderManager ? $this->getTemplaterepo() : [];
 
 		if (!array_key_exists($type, self::$tplTypes)) {
 			return [];
@@ -407,14 +410,17 @@ class TemplateManager {
 		$user   = $this->getUserFormatted($type);
 		$result = array_merge($system, $user);
 
-		// get templateRepo foldersId
-		$templaterepoFoldersId = $this->getTemplaterepoFoldersId();
-		if (count($templaterepoFoldersId) > 0) {
-			foreach($templaterepoFoldersId as $id) {
-				$templaterepo = $this->getTemplaterepoFormatted($id, $type);
-				$result = array_merge($result, $templaterepo);
+		if ($this->folderManager) {
+			// get templateRepo foldersId
+			$templaterepoFoldersId = $this->getTemplaterepoFoldersId();
+			if (count($templaterepoFoldersId) > 0) {
+				foreach($templaterepoFoldersId as $id) {
+					$templaterepo = $this->getTemplaterepoFormatted($id, $type);
+					$result = array_merge($result, $templaterepo);
+				}
 			}
 		}
+
 		return $result;
 	}
 
@@ -508,9 +514,16 @@ class TemplateManager {
 	 * @return Folder
 	 */
 	private function getSystemTemplateDir() {
-		return $this->rootFolder->get('appdata_' . $this->config->getSystemValue('instanceid', null))
-			->get('richdocuments')
-			->get('templates');
+		$path = 'appdata_' . $this->config->getSystemValue('instanceid', null) . '/richdocuments/templates';
+		return $this->rootFolder->get($path);
+	}
+
+	/**
+	 * @return Folder
+	 */
+	private function getEmptyTemplateDir() {
+		$path = 'appdata_' . $this->config->getSystemValue('instanceid', null) . '/richdocuments/empty_templates';
+		return $this->rootFolder->get($path);
 	}
 
 	/**
@@ -518,15 +531,6 @@ class TemplateManager {
 	 */
 	private function getTemplaterepoDir($folderId) {
 		return $this->rootFolder->get('__templaterepo')->get((string)$folderId);
-	}
-
-	/**
-	 * @return Folder
-	 */
-	private function getEmptyTemplateDir() {
-		return $this->rootFolder->get('appdata_' . $this->config->getSystemValue('instanceid', null))
-			->get('richdocuments')
-			->get('empty_templates');
 	}
 
 	/**
@@ -563,11 +567,13 @@ class TemplateManager {
 		/** @var File[] $all */
 		$all = array_merge($empty, $system, $user);
 
-		$foldersId = $this->getTemplaterepoFoldersId();
-		if (count($foldersId) > 0) {
-			foreach ($foldersId as $id) {
-				$templaterepo = $this->getTemplaterepo($id);
-				$all = array_merge($all, $templaterepo);
+		if ($this->folderManager) {
+			$foldersId = $this->getTemplaterepoFoldersId();
+			if (count($foldersId) > 0) {
+				foreach ($foldersId as $id) {
+					$templaterepo = $this->getTemplaterepo($id);
+					$all = array_merge($all, $templaterepo);
+				}
 			}
 		}
 

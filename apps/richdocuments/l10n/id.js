@@ -7,9 +7,11 @@ OC.L10N.register(
     "Invalid file provided" : "Berkas yang diberikan tidak sah",
     "Advanced settings" : "Pengaturan Lanjutan",
     "Select groups" : "Pilih grup",
+    "Failed to save settings" : "Gagal simpan setelan",
     "Description" : "Deskrisi",
     "No results" : "Tidak ada hasil",
     "Error" : "Kesalahan",
+    "An error occurred" : "Terjadi kesalahan",
     "Nickname" : "Nama panggilan",
     "Cancel" : "Membatalkan",
     "Save" : "Simpan",
@@ -20,11 +22,6 @@ OC.L10N.register(
     "Download" : "Unduh",
     "Could not create file" : "Tidak dapat membuat berkas",
     "Create" : "Buat",
-    "Select template" : "Pilih template",
-    "Wrong password. Please retry." : "Kata sandi salah. Silakan ulangi.",
-    "Password" : "Kata Sandi",
-    "OK" : "Oke",
-    "Guest %s" : "Pengunjung %s",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "Tautan ini sudah kadaluarsa atau tidak pernah ada. Silahkan hubungi orang yang berbagi dengan Anda untuk lebih rinci."
+    "Select template" : "Pilih template"
 },
 "nplurals=1; plural=0;");

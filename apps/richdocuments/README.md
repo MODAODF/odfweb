@@ -7,6 +7,17 @@
 
 ![](https://nextcloud.com/wp-content/themes/next/assets/img/features/collabora-document.png)
 
+
+## Development setup
+
+Just clone this repo into your apps directory ([Nextcloud server](https://github.com/nextcloud/server#running-master-checkouts) installation needed). Additionally, [npm](https://www.npmjs.com/) and [Node.js](https://nodejs.org/en/download/package-manager/) are needed for installing JavaScript dependencies and building the frontend code.
+
+Once npm and Node.js are installed, this can be done by running:
+```bash
+npm ci
+npm run dev
+```
+
 ## Installation
 
 ### Server
@@ -14,7 +25,7 @@
 You will need an working Collabora Online server to connect to.
 Find out more about Nextcloud and Collabora Online, and how to setup an server here: https://nextcloud.com/collaboraonline/
 
-Note: it is possible to use Collabora Online’s integration with re-compiled and/or re-branded backends.
+Note: it is possible to use Collabora Online’s integration with re-compiled and/or re-branded backends. This app may work with other WOPI Edtiors such as LibreOffice Online but it is not tested.
 
 ### Nextcloud app
 

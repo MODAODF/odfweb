@@ -43,15 +43,13 @@ $eventDispatcher = \OC::$server->getEventDispatcher();
 $eventDispatcher->addListener(
 	'OCA\Files::loadAdditionalScripts',
 	function() {
-		\OCP\Util::addScript('richdocuments', 'viewer');
-		\OCP\Util::addStyle('richdocuments', 'viewer');
+		\OCP\Util::addScript('richdocuments', 'files');
 	}
 );
 $eventDispatcher->addListener(
 	'OCA\Files_Sharing::loadAdditionalScripts',
 	function() {
-		\OCP\Util::addScript('richdocuments', 'viewer');
-		\OCP\Util::addStyle('richdocuments', 'viewer');
+		\OCP\Util::addScript('richdocuments', 'files');
 	}
 );
 
@@ -70,3 +68,4 @@ if (class_exists('\OC\Files\Type\TemplateManager')) {
 $app = \OC::$server->query(Application::class);
 $app->registerProvider();
 $app->updateCSP();
+$app->checkAndEnableCODEServer();

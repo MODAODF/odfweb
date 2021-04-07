@@ -2,8 +2,8 @@
 	var richdocuments_permissions = '<?php p($_['permissions']) ?>';
 	var richdocuments_title = '<?php p($_['title']) ?>';
 	var richdocuments_fileId = '<?php p($_['fileId']) ?>';
-	var richdocuments_token = '<?php p($_['token'] ? $_['token'] : "''") ?>';
-	var richdocuments_urlsrc = '<?php p($_['urlsrc'] ? $_['urlsrc'] : "''") ?>';
+	var richdocuments_token = '<?php p($_['token'] ? $_['token'] : "") ?>';
+	var richdocuments_urlsrc = '<?php p($_['urlsrc'] ? $_['urlsrc'] : "") ?>';
 	var richdocuments_path = '<?php p($_['path']) ?>';
 	var richdocuments_userId = <?php isset($_['userId']) ? print_unescaped('\'' . \OCP\Util::sanitizeHTML($_['userId']) . '\'') : print_unescaped('null') ?>;
 	var richdocuments_instanceId = '<?php p($_['instanceId']) ?>';
@@ -12,8 +12,11 @@
 </script>
 
 <?php
-style( 'richdocuments', 'style' );
 script('richdocuments', 'document');
 ?>
-<div id="loadingContainer" class="icon-loading"></div>
+<div id="loadingContainer"></div>
+<div id="proxyLoadingContainer">
+	<div id="proxyLoadingIcon"></div>
+	<div id="proxyLoadingMessage"></div>
+</div>
 <div id="documents-content"></div>

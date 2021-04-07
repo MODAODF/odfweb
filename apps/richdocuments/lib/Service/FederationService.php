@@ -35,7 +35,9 @@ use OCP\Files\NotFoundException;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\IConfig;
 use OCP\ILogger;
+use OCP\IRequest;
 
 class FederationService {
 
@@ -47,25 +49,41 @@ class FederationService {
 	private $logger;
 	/** @var TrustedServers */
 	private $trustedServers;
+	/** @var IConfig */
+	private $config;
 	/** @var TokenManager */
 	private $tokenManager;
+	/** @var IRequest */
+	private $request;
 
-	public function __construct(ICacheFactory $cacheFactory, IClientService $clientService, ILogger $logger, TokenManager $tokenManager) {
-		$this->cache = $cacheFactory->createLocal('richdocuments_remote/');
+	public function __construct(ICacheFactory $cacheFactory, IClientService $clientService, ILogger $logger, TokenManager $tokenManager, IConfig $config, IRequest $request) {
+		$this->cache = $cacheFactory->createDistributed('richdocuments_remote/');
 		$this->clientService = $clientService;
 		$this->logger = $logger;
 		$this->tokenManager = $tokenManager;
+		$this->config = $config;
+		$this->request = $request;
 		try {
 			$this->trustedServers = \OC::$server->query( \OCA\Federation\TrustedServers::class);
 		} catch (QueryException $e) {}
 	}
 
+	/**
+	 * @param $remote
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function getRemoteCollaboraURL($remote) {
-		if ($this->trustedServers === null || !$this->trustedServers->isTrustedServer($remote)) {
-			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote . ' - Remote is not a trusted server');
-			return '';
+		// If no protocol is provided we default to https
+		if (strpos($remote, 'http://') !== 0 && strpos($remote, 'https://') !== 0) {
+			$remote = 'https://' . $remote;
 		}
-		if ($remoteCollabora = $this->cache->get('richdocuments_remote/' . $remote)) {
+
+		if (!$this->isTrustedRemote($remote)) {
+			throw new \Exception('Unable to determine collabora URL of remote server ' . $remote . ' - Remote is not a trusted server');
+		}
+		$remoteCollabora = $this->cache->get('richdocuments_remote/' . $remote);
+		if ($remoteCollabora !== null) {
 			return $remoteCollabora;
 		}
 		try {
@@ -76,10 +94,58 @@ class FederationService {
 			$this->cache->set('richdocuments_remote/' . $remote, $remoteCollabora, 3600);
 			return $remoteCollabora;
 		} catch (\Throwable $e) {
-			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote);
+			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote, ['exception' => $e]);
 			$this->cache->set('richdocuments_remote/' . $remote, '', 300);
 		}
 		return '';
+	}
+
+	public function isTrustedRemote($domainWithPort) {
+		if (strpos($domainWithPort, 'http://') === 0 || strpos($domainWithPort, 'https://') === 0) {
+			$port = parse_url($domainWithPort, PHP_URL_PORT);
+			$domainWithPort = parse_url($domainWithPort, PHP_URL_HOST) . ($port ? ':' . $port : '');
+		}
+
+		if ($this->trustedServers !== null && $this->trustedServers->isTrustedServer($domainWithPort)) {
+			return true;
+		}
+
+		$domain = $this->getDomainWithoutPort($domainWithPort);
+
+		$trustedList = array_merge($this->config->getSystemValue('gs.trustedHosts', []), [$this->request->getServerHost()]);
+		if (!is_array($trustedList)) {
+			return false;
+		}
+
+		foreach ($trustedList as $trusted) {
+			if (!is_string($trusted)) {
+				break;
+			}
+			$regex = '/^' . implode('[-\.a-zA-Z0-9]*', array_map(function ($v) {
+					return preg_quote($v, '/');
+				}, explode('*', $trusted))) . '$/i';
+			if (preg_match($regex, $domain) || preg_match($regex, $domainWithPort)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Strips a potential port from a domain (in format domain:port)
+	 * @param string $host
+	 * @return string $host without appended port
+	 */
+	private function getDomainWithoutPort($host) {
+		$pos = strrpos($host, ':');
+		if ($pos !== false) {
+			$port = substr($host, $pos + 1);
+			if (is_numeric($port)) {
+				$host = substr($host, 0, $pos);
+			}
+		}
+		return $host;
 	}
 
 	public function getRemoteDirectUrl($remote, $shareToken, $filePath) {
@@ -98,13 +164,13 @@ class FederationService {
 			$data = \json_decode($response->getBody(), true);
 			return $data['ocs']['data'];
 		} catch (\Throwable $e) {
-			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote);
+			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote, ['exception' => $e]);
 		}
 		return null;
 	}
 
 	public function getRemoteFileDetails($remote, $remoteToken) {
-		if ($this->trustedServers === null || !$this->trustedServers->isTrustedServer($remote)) {
+		if (!$this->isTrustedRemote($remote)) {
 			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote . ' - Remote is not a trusted server');
 			return null;
 		}
@@ -116,10 +182,12 @@ class FederationService {
 					'token' => $remoteToken
 				]
 			]);
-			$data = \json_decode($response->getBody(), true);
+			$responseBody = $response->getBody();
+			$data = \json_decode($responseBody, true, 512);
+			$this->logger->debug('Reveived remote file details for ' . $remoteToken . ' from ' . $remote . ': ' . $responseBody);
 			return $data['ocs']['data'];
 		} catch (\Throwable $e) {
-			$this->logger->info('Unable to determine collabora URL of remote server ' . $remote);
+			$this->logger->error('Unable to fetch remote file details for ' . $remoteToken . ' from ' . $remote, ['exception' => $e]);
 		}
 		return null;
 	}
@@ -140,7 +208,7 @@ class FederationService {
 				} else {
 					$wopi = $this->tokenManager->getRemoteTokenFromDirect($item, $direct->getUid());
 				}
-				$url = $remote . 'index.php/apps/richdocuments/remote?shareToken=' . $item->getStorage()->getToken() .
+				$url = rtrim($remote, '/') . '/index.php/apps/richdocuments/remote?shareToken=' . $item->getStorage()->getToken() .
 					'&remoteServer=' . $wopi->getServerHost() .
 					'&remoteServerToken=' . $wopi->getToken();
 				if ($item->getInternalPath() !== '') {

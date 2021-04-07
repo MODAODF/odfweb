@@ -26,10 +26,10 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('richdocuments_wopi')) {
 			$table = $schema->createTable('richdocuments_wopi');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 				'unsigned' => true,
 			]);
 			$table->addColumn('owner_uid', 'string', [
@@ -44,17 +44,19 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('fileid', 'integer', [
+			$table->addColumn('fileid', 'bigint', [
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 			]);
-			$table->addColumn('version', 'integer', [
-				'notnull' => true,
-				'length' => 4,
+			$table->addColumn('version', 'bigint', [
+				//'notnull' => true,
+				'notnull' => false,
+				'length' => 20,
 				'default' => 0,
 			]);
 			$table->addColumn('canwrite', 'boolean', [
-				'notnull' => true,
+				//'notnull' => true,
+				'notnull' => false,
 				'default' => false,
 			]);
 			$table->addColumn('server_host', 'string', [
@@ -62,41 +64,47 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 				'default' => 'localhost',
 			]);
 			$table->addColumn('token', 'string', [
-				'notnull' => true,
+				//'notnull' => true,
+				'notnull' => false,
 				'length' => 32,
 				'default' => '',
 			]);
-			$table->addColumn('expiry', 'integer', [
+			$table->addColumn('expiry', 'bigint', [
 				'notnull' => false,
-				'length' => 4,
+				'length' => 20,
 				'unsigned' => true,
 			]);
-			$table->addColumn('template_destination', 'integer', [
+			$table->addColumn('template_destination', 'bigint', [
 				'notnull' => false,
-				'length' => 4,
+				'length' => 20,
 			]);
-			$table->addColumn('template_id', 'integer', [
+			$table->addColumn('template_id', 'bigint', [
 				'notnull' => false,
-				'length' => 4,
+				'length' => 20,
 			]);
 			$table->addColumn('hide_download', 'boolean', [
-				'notnull' => true,
+				// 'notnull' => true,
+				'notnull' => false,
 				'default' => false,
 			]);
 			$table->addColumn('direct', 'boolean', [
-				'notnull' => true,
+				// 'notnull' => true,
+				'notnull' => false,
 				'default' => false,
 			]);
 			$table->addColumn('is_remote_token', 'boolean', [
-				'notnull' => true,
+				// 'notnull' => true,
+				'notnull' => false,
 				'default' => false,
 			]);
 			$table->addColumn('remote_server', 'string', [
-				'notnull' => true,
+				// 'notnull' => true,
+				'notnull' => false,
 				'default' => '',
 			]);
 			$table->addColumn('remote_server_token', 'string', [
-				'notnull' => true,
+				// 'notnull' => true,
+				'notnull' => false,
 				'length' => 32,
 				'default' => '',
 			]);
@@ -104,30 +112,12 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 			$table->addUniqueIndex(['token'], 'rd_wopi_token_idx');
 		}
 
-		/**
-		 * check Column("template_id") in Table('richdocuments_wopi')
-		 * richdoc342 - hasTable('richdocuments_wopi') but !hasColumn("template_id")
-		 * check and add Column("template_id")
-		 *
-		 */
-		if ($schema->hasTable('richdocuments_wopi')) {
-			$table = $schema->getTable('richdocuments_wopi');
-			if (!$table->hasColumn('template_id')) {
-				$table->addColumn('template_id', 'integer', [
-					'notnull' => false,
-					'length' => 4,
-				]);
-			}
-		}
-
-
-
 		if (!$schema->hasTable('richdocuments_direct')) {
 			$table = $schema->createTable('richdocuments_direct');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 				'unsigned' => true,
 			]);
 			$table->addColumn('token', 'string', [
@@ -138,23 +128,24 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('fileid', 'integer', [
+			$table->addColumn('fileid', 'bigint', [
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 			]);
-			$table->addColumn('timestamp', 'integer', [
-				'notnull' => true,
-				'length' => 4,
+			$table->addColumn('timestamp', 'bigint', [
+				// 'notnull' => true,
+				'notnull' => false,
+				'length' => 20,
 				'default' => 0,
 				'unsigned' => true,
 			]);
-			$table->addColumn('template_destination', 'integer', [
+			$table->addColumn('template_destination', 'bigint', [
 				'notnull' => false,
-				'length' => 4,
+				'length' => 20,
 			]);
-			$table->addColumn('template_id', 'integer', [
+			$table->addColumn('template_id', 'bigint', [
 				'notnull' => false,
-				'length' => 4,
+				'length' => 20,
 			]);
 			$table->setPrimaryKey(['id']);
 			$table->addUniqueIndex(['token'], 'rd_direct_token_idx');
@@ -163,27 +154,28 @@ class Version2060Date20200302131958 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('richdocuments_assets')) {
 			$table = $schema->createTable('richdocuments_assets');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', 'bigint', [
 				'autoincrement' => true,
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 				'unsigned' => true,
 			]);
 			$table->addColumn('uid', 'string', [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('fileid', 'integer', [
+			$table->addColumn('fileid', 'bigint', [
 				'notnull' => true,
-				'length' => 4,
+				'length' => 20,
 			]);
 			$table->addColumn('token', 'string', [
 				'notnull' => false,
 				'length' => 64,
 			]);
-			$table->addColumn('timestamp', 'integer', [
-				'notnull' => true,
-				'length' => 4,
+			$table->addColumn('timestamp', 'bigint', [
+				// 'notnull' => true,
+				'notnull' => false,
+				'length' => 20,
 				'default' => 0,
 				'unsigned' => true,
 			]);

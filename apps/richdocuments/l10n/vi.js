@@ -14,9 +14,11 @@ OC.L10N.register(
     "File is too big" : "Tệp quá lớn",
     "Invalid file provided" : "File không hợp lệ",
     "Select groups" : "Chọn nhóm",
+    "Failed to save settings" : "Lưu cấu hình thất bại",
     "Description" : "Mô tả",
     "No results" : "Không có kết quả",
     "Error" : "Lỗi",
+    "An error occurred" : "Có lỗi đã xảy ra",
     "Nickname" : "Biệt danh",
     "Cancel" : "Hủy bỏ",
     "Save" : "Lưu",
@@ -31,11 +33,6 @@ OC.L10N.register(
     "New Spreadsheet" : "Bảng tính mới",
     "New Presentation" : "Trình bày mới",
     "Could not create file" : "Không thể tạo file",
-    "Create" : "Tạo mới",
-    "Wrong password. Please retry." : "Mật khẩu không đúng. Vui lòng thử lại.",
-    "Password" : "Mật khẩu",
-    "OK" : "Chấp nhận",
-    "Guest %s" : "Khách %s",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "Liên kết này đã hết hạn hoặc không tồn tại. Vui lòng liên hệ với người đã chia sẻ nó để biết chi tiết."
+    "Create" : "Tạo mới"
 },
 "nplurals=1; plural=0;");

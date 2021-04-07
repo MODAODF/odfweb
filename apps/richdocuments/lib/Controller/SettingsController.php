@@ -12,12 +12,14 @@
 namespace OCA\Richdocuments\Controller;
 
 use OCA\Richdocuments\Service\CapabilitiesService;
+use OCA\Richdocuments\Service\DemoService;
 use OCA\Richdocuments\WOPI\DiscoveryManager;
 use OCA\Richdocuments\WOPI\Parser;
 use \OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\NotFoundResponse;
 use \OCP\IRequest;
 use \OCP\IL10N;
 use OCA\Richdocuments\AppConfig;
@@ -39,6 +41,8 @@ class SettingsController extends Controller{
 	private $userId;
 	/** @var CapabilitiesService */
 	private $capabilitiesService;
+	/** @var DemoService */
+	private $demoService;
 
 	/**
 	 * @param string $appName
@@ -52,14 +56,16 @@ class SettingsController extends Controller{
 	 * @param CapabilitiesService $capabilitiesService
 	 */
 	public function __construct($appName,
-								IRequest $request,
-								IL10N $l10n,
-								AppConfig $appConfig,
-								IConfig $config,
-								DiscoveryManager $discoveryManager,
-								Parser $wopiParser,
-								$userId,
-								CapabilitiesService $capabilitiesService) {
+		IRequest $request,
+		IL10N $l10n,
+		AppConfig $appConfig,
+		IConfig $config,
+		DiscoveryManager $discoveryManager,
+		Parser $wopiParser,
+		$userId,
+		CapabilitiesService $capabilitiesService,
+		DemoService $demoService
+	) {
 		parent::__construct($appName, $request);
 		$this->l10n = $l10n;
 		$this->appConfig = $appConfig;
@@ -68,6 +74,7 @@ class SettingsController extends Controller{
 		$this->wopiParser = $wopiParser;
 		$this->userId = $userId;
 		$this->capabilitiesService = $capabilitiesService;
+		$this->demoService = $demoService;
 	}
 
 	/**
@@ -88,6 +95,14 @@ class SettingsController extends Controller{
 		return new DataResponse();
 	}
 
+	public function demoServers() {
+		$demoServers = $this->demoService->fetchDemoServers(true);
+		if (count($demoServers) > 0) {
+			return new DataResponse($demoServers);
+		}
+		return new NotFoundResponse([]);
+	}
+
 	/**
 	 * @NoAdminRequired
 	 *
@@ -97,7 +112,7 @@ class SettingsController extends Controller{
 		return new JSONResponse([
 			'wopi_url' => $this->appConfig->getAppValue('wopi_url'),
 			'public_wopi_url' => $this->appConfig->getAppValue('public_wopi_url'),
-			'disable_certificate_verification' => $this->appConfig->getAppValue('disable_certificate_verification'),
+			'disable_certificate_verification' => $this->appConfig->getAppValue('disable_certificate_verification') === 'yes',
 			'edit_groups' => $this->appConfig->getAppValue('edit_groups'),
 			'use_groups' => $this->appConfig->getAppValue('use_groups'),
 			'doc_format' => $this->appConfig->getAppValue('doc_format'),
@@ -131,7 +146,7 @@ class SettingsController extends Controller{
 		if ($disable_certificate_verification !== null) {
 			$this->appConfig->setAppValue(
 				'disable_certificate_verification',
-				$disable_certificate_verification === 'true' ? 'yes' : ''
+				$disable_certificate_verification === true ? 'yes' : ''
 			);
 		}
 
@@ -159,7 +174,8 @@ class SettingsController extends Controller{
 			$this->appConfig->setAppValue('saveToOdf', $saveToOdf);
 		}
 
-		$this->discoveryManager->refretch();
+		$this->discoveryManager->refetch();
+		$this->capabilitiesService->clear();
 		try {
 			$capaUrlSrc = $this->wopiParser->getUrlSrc('Capabilities');
 			if (is_array($capaUrlSrc) && $capaUrlSrc['action'] === 'getinfo') {
@@ -173,11 +189,22 @@ class SettingsController extends Controller{
 				}
 			}
 		} catch (\Exception $e){
-			// Ignore
+			if ($wopi_url !== null) {
+				return new JSONResponse([
+					'status' => 'error',
+					'data' => ['message' => 'Failed to connect to the remote server']
+				], 500);
+			}
 		}
 
 		$this->capabilitiesService->clear();
-		$this->capabilitiesService->refretch();
+		$this->capabilitiesService->refetch();
+		if ($this->capabilitiesService->getCapabilities() === []) {
+			return new JSONResponse([
+				'status' => 'error',
+				'data' => ['message' => 'Failed to connect to the remote server', 'hint' => 'missing_capabilities']
+			], 500);
+		}
 
 		$response = [
 			'status' => 'success',
@@ -214,12 +241,15 @@ class SettingsController extends Controller{
 					'data' => ['message' => $this->l10n->t('Invalid config key') . ' ' . $fullKey]
 				], Http::STATUS_BAD_REQUEST);
 			}
-			$value = $value === true ? 'yes' : $value;
-			$value = $value === false ? 'no' : $value;
-			if (AppConfig::APP_SETTING_TYPES[$fullKey] === 'array') {
-				$value = implode(',', $value);
+			$parsedValue = $value;
+			if (is_bool($value)) {
+				$parsedValue = $value ? 'yes' : 'no';
 			}
-			$this->appConfig->setAppValue($fullKey, $value);
+			$appSettingsType = array_key_exists($fullKey, AppConfig::APP_SETTING_TYPES) ? AppConfig::APP_SETTING_TYPES[$fullKey] : 'string';
+			if ($appSettingsType === 'array') {
+				$parsedValue = implode(',', $value);
+			}
+			$this->appConfig->setAppValue($fullKey, $parsedValue);
 		}
 
 		$response = [

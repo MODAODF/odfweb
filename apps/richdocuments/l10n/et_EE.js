@@ -6,11 +6,13 @@ OC.L10N.register(
     "Saved" : "Salvestatud",
     "File is too big" : "Fail on liiga suur",
     "Invalid file provided" : "Vigane fail",
+    "Empty" : "Tühi",
     "Advanced settings" : "Lisavalikud",
     "Select groups" : "Vali grupid",
     "Description" : "Kirjeldus",
     "No results" : "Vasteid ei leitud",
     "Error" : "Viga",
+    "An error occurred" : "Tekkis tõrge",
     "Nickname" : "Hüüdnimi",
     "Cancel" : "Loobu",
     "Save" : "Salvesta",
@@ -19,12 +21,8 @@ OC.L10N.register(
     "Add to favorites" : "Lisa lemmikutesse",
     "Details" : "Üksikasjad",
     "Download" : "Lae alla",
+    "Guest" : "Külaline",
     "Could not create file" : "Ei suuda luua faili",
-    "Create" : "Loo",
-    "Wrong password. Please retry." : "Vale parool. Palun proovi uuesti.",
-    "Password" : "Parool",
-    "OK" : "OK",
-    "Guest %s" : "Külaline %s",
-    "This link has been expired or is never existed. Please contact the person who shared it with you for details." : "See link on aegunud või seda pole kunagi eksisteerinud. Palun võta ühendust inimesega, kes selle sulle jagas."
+    "Create" : "Loo"
 },
 "nplurals=2; plural=(n != 1);");

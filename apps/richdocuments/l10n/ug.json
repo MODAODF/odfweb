@@ -7,8 +7,6 @@
     "Remove from favorites" : "Remove from favorites",
     "Add to favorites" : "Add to favorites",
     "Download" : "چۈشۈر",
-    "Create" : "قۇر",
-    "Password" : "ئىم",
-    "OK" : "جەزملە"
-},"pluralForm" :"nplurals=1; plural=0;"
+    "Create" : "قۇر"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
