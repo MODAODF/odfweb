@@ -7,7 +7,7 @@ style('ndcversionstatus', 'index');
 
 	<h2><?php p($l->t('Ndc Version Status')) ?></h2>
 
-	<?php if($_['lastCheckTime']) { ?>
+	<?php if($_['lastCheckTime'] && !empty($_['lastCheckTime'])) { ?>
 		<span>（<?php p($l->t('Last Time'))?>: <?php p($_['lastCheckTime'])?>）</span>
 	<?php }?>
 
@@ -29,7 +29,7 @@ style('ndcversionstatus', 'index');
 	</form>
 
 	<?php if($_['showButton']){ ?>
-	<button url="<?php p($_['redirect_url']) ?>" id="checkBtn"><?php p($l->t('Check')) ?></button>
+	<button id="checkBtn"><?php p($l->t('Check')) ?></button>
 	<span class="msg"></span>
 	<?php }?>
 

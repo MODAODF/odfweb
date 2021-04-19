@@ -62,7 +62,10 @@ class PageController extends Controller {
 	 * 取得目前使用的 odfweb 版號
 	 */
 	private function getOdfwebVersion() {
-		$version_odfweb = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
+		try {
+			$version_odfweb = file_get_contents(\OC::$SERVERROOT.'/version-odfweb.txt');
+		} catch (Exception $e) { /*$e->getMessage();*/ }
+
 		if ($version_odfweb) {
 			$this->versionParams['odfweb'] = preg_replace('/\r|\n/', '', $version_odfweb);
 		} else {
@@ -76,7 +79,10 @@ class PageController extends Controller {
 	private function getNdcodfwebVersion() {
 		$wopi_url = $this->config->getAppValue('richdocuments', 'wopi_url');
 		if ($wopi_url) {
-			$response = file_get_contents($wopi_url . "/hosting/version");
+			try {
+				$response = file_get_contents($wopi_url . "/hosting/version");
+			} catch (Exception $e)  { /*$e->getMessage();*/ }
+
 			if ($response) {
 				$obj = json_decode($response);
 				if ($versionStr = $obj->loolserver->Version ?? $obj->OxOOL) {
@@ -113,11 +119,7 @@ class PageController extends Controller {
 
 		$parameters['redirectUrl'] = self::RedirectUrl;
 		$parameters['odfwebReferrer'] = $this->urlGenerator->getAbsoluteURL('index.php/apps/ndcversionstatus/result/');
-
-		$lastCheckTime = $this->config->getAppValue($this->appName, 'lastCheckTime');
-		if ($lastCheckTime && !empty($lastCheckTime)) {
-			$parameters['lastCheckTime'] = $lastCheckTime;
-		}
+		$parameters['lastCheckTime'] = $lastCheckTime = $this->config->getAppValue($this->appName, 'lastCheckTime', '');
 
 		$this->updateCSP();
 		return new TemplateResponse('ndcversionstatus', 'index', $parameters);
