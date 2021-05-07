@@ -1,6 +1,4 @@
 <?php
-namespace OCA\LoginCaptcha\AppInfo;
-
 use OCA\LoginCaptcha\AppInfo\Application;
 
 const APP_NAME = 'logincaptcha';
@@ -13,7 +11,7 @@ if (isset($request->server['REQUEST_URI'])) {
 		\OCP\Util::addScript(APP_NAME, 'main');
 		\OCP\Util::addStyle(APP_NAME, 'main');
 
-		$app = new Application();
+		$app = \OC::$server->query(Application::class);
 		if ($app->showErrorMsg()) \OCP\Util::addScript(APP_NAME, 'error');
 		$app->removeSession();
 		$app->registerListener();
