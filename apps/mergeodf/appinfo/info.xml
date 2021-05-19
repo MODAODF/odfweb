@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<info>
+	<id>mergeodf</id>
+	<name>MergeODF</name>
+	<summary>Admin configured folders shared by everyone in a group</summary>
+	<description><![CDATA[Admin configured folders shared by everyone in a group.
+
+Folders can be configured from *Merge ODF* in the admin settings.
+
+After a folder is created, the admin can give access to the folder to one or more groups, control their write/sharing permissions and assign a quota for the folder.
+
+Note: encrypting the contents of mergeodf is currently not supported.]]></description>
+	<version>2.0.0</version>
+	<licence>agpl</licence>
+	<author>Tommy.Wu</author>
+	<namespace>MergeODF</namespace>
+	<types>
+		<filesystem/>
+		<dav/>
+	</types>
+
+	<category>files</category>
+
+	<dependencies>
+		<nextcloud min-version="20" max-version="20" />
+	</dependencies>
+
+	<background-jobs>
+		<job>OCA\MergeODF\BackgroundJob\ExpireGroupVersions</job>
+	</background-jobs>
+
+	<commands>
+		<command>OCA\MergeODF\Command\ExpireGroupVersions</command>
+		<command>OCA\MergeODF\Command\ListCommand</command>
+		<command>OCA\MergeODF\Command\ACL</command>
+		<command>OCA\MergeODF\Command\Quota</command>
+		<command>OCA\MergeODF\Command\Group</command>
+		<command>OCA\MergeODF\Command\Create</command>
+		<command>OCA\MergeODF\Command\Rename</command>
+		<command>OCA\MergeODF\Command\Delete</command>
+		<command>OCA\MergeODF\Command\Scan</command>
+		<command>OCA\MergeODF\Command\Trashbin\Cleanup</command>
+	</commands>
+
+	<settings>
+		<admin>OCA\MergeODF\Settings\Admin</admin>
+		<admin-section>OCA\MergeODF\Settings\Section</admin-section>
+	</settings>
+
+	<sabre>
+		<plugins>
+			<plugin>OCA\MergeODF\DAV\ACLPlugin</plugin>
+		</plugins>
+	</sabre>
+
+	<trash>
+		<backend for="OCA\MergeODF\Mount\MergeODFStorage">OCA\MergeODF\Trash\TrashBackend</backend>
+	</trash>
+
+	<versions>
+		<backend for="OCA\MergeODF\Mount\MergeODFStorage">OCA\MergeODF\Versions\VersionsBackend</backend>
+	</versions>
+</info>
