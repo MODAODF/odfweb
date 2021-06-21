@@ -1,0 +1,92 @@
+#subscription-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0.6;
+    padding: 0;
+    margin: 0;
+}
+
+#subscription-content {
+    .content {
+        padding: 1rem;
+        min-width: 220px;
+
+        & > h3 {
+            font-weight: bold;
+            text-align: center;
+        }
+        em {
+            display: block;
+            line-height: 19px;
+            font-size: 12px;
+        }
+        form#subscription-mail {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1 1 auto;
+
+            @mixin borderStyle($color) {
+                border-color: $color;
+                & + label.icon-confirm {
+                    border-color: $color !important;
+                    border-left-color: transparent !important;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-top-left-radius: 0 !important;
+                    border-bottom-left-radius: 0 !important;
+                }
+            }
+
+            input[type=email] {
+                width: 100%;
+                @include borderStyle(var(--color-border-dark));
+
+                &:focus:invalid { @include borderStyle(crimson); }
+                &:focus:valid { @include borderStyle(cornflowerblue); }
+                &:hover { @include borderStyle(darkgray); }
+                &:active { @include borderStyle(black); }
+            }
+
+            label.icon-confirm {
+                box-sizing: border-box;
+                &:hover {
+                    background-position-x: 60%
+                }
+                &:active {
+                    background-position-y: 55%
+                }
+            }
+        }
+    }
+
+    // unsubscr
+    #subscription-mail + div {
+        margin-bottom: 1rem;
+        a {
+            color: gray;
+            text-decoration: underline;
+            &:hover {
+                color: black;
+            }
+        }
+    }
+
+    .msg {
+        color: #000;
+        padding: 3px;
+        &.success {
+            color: #fff;
+            background-color: #47a447;
+        }
+        &.error {
+            color: #fff;
+            background-color: #d2322d;
+        }
+    }
+}

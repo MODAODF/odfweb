@@ -1,0 +1,28 @@
+{{!-- <div class="item" share-id={{shareId}}> </div>--}}
+
+    <div class="itemEntry">
+        <div class="entryAvatar entryAvatarInvaild icon icon-public-white"></div>
+        <div class="entryDesc">
+            <h5><b>{{strEntryTitle}}
+                {{#if labelName}}
+                (<span>{{labelName}}</span>)
+                {{/if}}
+            </b></h5>
+            <div>{{strEntryDeleted}}</div>
+        </div>
+        <button class="entryEdit icon icon-caret-dark rotate"></button>
+    </div>
+
+    <ul>
+        <li>
+            <div><span class="msg hidden"></span></div>
+            <div>
+                {{#if hasLog}}
+                <button class="downloadLog" type="button">{{strBtnLog}}</button>
+                {{else}}
+                <div>{{strNoLog}}</div>
+                {{/if}}
+            </div>
+            <div><button class="deleteLog" type="button">{{strBtnDelete}}</button></div>
+        </li>
+    </ul>

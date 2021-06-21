@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<info>
+	<id>filesubscription</id>
+	<name>File subscription</name>
+	<namespace>FileSubscription</namespace>
+	<summary>File subscription</summary>
+	<description><![CDATA[File Subscription:
+- Users with access to a file can subscribe to email notifications.
+- The file owner can email the new version of the file and modification instructions to the subscribers.]]></description>
+	<version>0.0.1</version>
+	<licence>agpl</licence>
+    <author mail="develop@ossii.com.tw" homepage="https://ossii.com.tw">sharon wu</author>
+	<category>files</category>
+	<category>social</category>
+	<website>https://ossii.com.tw</website>
+	<dependencies>
+		<nextcloud min-version="20" max-version="20"/>
+	</dependencies>
+</info>

@@ -1,0 +1,63 @@
+{{!-- <div class="item" share-id={{shareId}}> </div>--}}
+
+    <div class="itemEntry">
+        <div class="entryAvatar {{entryAvatarCssClass}} icon icon-public-white"></div>
+        <div class="entryDesc">
+            <h5><b>{{strEntryTitle}}
+                {{#if labelName}}
+                (<span>{{labelName}}</span>)
+                {{/if}}
+            </b></h5>
+            <div><span>{{strEntryEnable}}</span> | <span>{{strEntrySubscriberNum}}({{subscriberNum}})</span></div>
+        </div>
+        <button class="entryEdit icon icon-caret-dark rotate"></button>
+    </div>
+
+    <ul>
+        <li>
+            <input type="checkbox" class="checkbox" name="subscribable" id="subscribable{{shareId}}" {{#if isEnabled}} checked {{/if}}>
+            <label for="subscribable{{shareId}}">{{strEntryEnable}}</label>
+            <span class="msg hidden"></span>
+        </li>
+
+        <li>
+            <div>
+                <div class="icon icon-edit"></div>
+                <span>{{strLiTitleEdit}}</span>
+                <span class="msg hidden"></span>
+            </div>
+            <textarea name="versionDescr" id="versionDescr{{shareId}}" rows="5" wrap="hard">{{message}}</textarea>
+            <div>
+                {{#if lastMessageTime}}
+                <em class="lasttime">{{strLastUpdateOn}} {{lastMessageTime}}</em>
+                {{/if}}
+                <button class="setDescr" type="button">{{strSave}}</button>
+            </div>
+        </li>
+
+        <li>
+            <div>
+                <div class="icon icon-mail"></div>
+                <span>{{strLiTitleMail}}</span>
+                <span class="msg hidden"></span>
+            </div>
+            <button class="sendSubscrMail" type="button" {{buttonDisable}}>{{strSend}}({{subscriberNum}})</button>
+            <div class="lasttime">
+                {{#if lastEmailTime}}
+                <em>{{strLastEmailOn}} <span>{{lastEmailTime}}</span></em>
+                {{/if}}
+            </div>
+        </li>
+
+        <li>
+            <div>
+                <div class="icon icon-delete"></div>
+                <span>{{strLiTitleCancel}}</span>
+                <span class="msg hidden"></span>
+            </div>
+            <button class="cancelSubscr" type="button" {{buttonDisable}}>{{strCancel}}({{subscriberNum}})</button>
+            {{#if lastCancelTime}}
+            <div class="lasttime"><em>{{strLastCancelOn}}{{lastCancelTime}}</em></div>
+            {{/if}}
+        </li>
+    </ul>
