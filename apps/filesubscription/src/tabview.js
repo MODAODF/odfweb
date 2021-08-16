@@ -88,6 +88,10 @@ import '../css/tabview.scss'
 			}
 		},
 
+		canDisplay(fileInfo) {
+			return !(typeof fileInfo.shareOwnerId != 'undefined' || fileInfo.shareOwnerI)
+		},
+
 		/**
 		 * Renders this details view
 		 */
