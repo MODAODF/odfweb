@@ -30,7 +30,10 @@ import '../css/tabview.scss'
 				return `<div>${this.l10n('Unable to get share link')}</div>`
 			},
 			noLink() {
-				return `<div>${this.l10n('No share link')}</div>`
+				return `<div>
+				${this.l10n('There is no external share link of this resource, please reload after creating an external share link in the "Shareing" tab.')}</br>
+				${this.l10n('Note: This application does not support the subscription of internal links.')}
+				</div>`
 			},
 			notOwner() {
 				return `<div>${this.l10n('Not file owner')}</div>`

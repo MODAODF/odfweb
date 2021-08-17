@@ -147,7 +147,7 @@ class Manager {
 			$subscription = $this->subscriptionMapper->getByShareId($shareId);
 			$isEnabled = $subscription->getEnabled();
 		} catch (DoesNotExistException $e) {
-			$isEnabled = ture;
+			$isEnabled = false;
 		}
 		return $isEnabled;
 	}

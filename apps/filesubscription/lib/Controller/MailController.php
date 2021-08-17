@@ -208,15 +208,16 @@ class MailController extends Controller {
 	 * 取消訂閱通知 EMail 模板
 	 * @return IEMailTemplate
 	 */
-	private function mailTemplate_cancel($shareId):IEMailTemplate {
+	private function mailTemplate_cancel($shareId, $subscription):IEMailTemplate {
 		$ocDefaults = new \OC_Defaults;
 		$serverName = $this->config->getAppValue('theming', 'name', $ocDefaults->getTitle());
+		$filename = $subscription->getFileName();
 
 		$template = $this->mailer->createEMailTemplate('filesubscription.newVersion');
 		$template->setSubject('['.$serverName.'] ' . $this->l->t('Subscribe cancel notification'));
 		$template->addHeader();
 		$template->addHeading($this->l->t('Subscribe cancel notification'));
-		$template->addBodyText($this->l->t('The subscription has been cancelled by the file owner.'));
+		$template->addBodyText($this->l->t('Your subscription of "%s" has been cancelled by the owner.', [$filename]));
 		$template->addFooter();
 		return $template;
 	}

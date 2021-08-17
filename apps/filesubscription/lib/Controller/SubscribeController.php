@@ -172,12 +172,17 @@ class SubscribeController extends Controller {
 	 */
 	public function getState(string $token) {
 		try {
-			$shareId = $this->shareManager->getShareByToken($token)->getId();
+			$share = $this->shareManager->getShareByToken($token);
+			$isOwnerCreate = $share->getSharedBy() === $share->getShareOwner();
+			$shareId = $share->getId();
 		} catch (ShareNotFound $e) {
 			return new DataResponse([], Http::STATUS_NOT_FOUND);
 		}
-		$status = $this->manager->getEnabled($shareId);
-		return new DataResponse($status);
+		if ($isOwnerCreate) {
+			$status = $this->manager->getEnabled($shareId);
+			return new DataResponse($status);
+		}
+		return new DataResponse(false);
 	}
 
 	/**
