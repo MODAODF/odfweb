@@ -45,4 +45,15 @@ class TransferOwnershipMapper extends QBMapper {
 
 		return $this->findEntity($qb);
 	}
+
+	// 檢查 使用者(uid) 有沒有 pending 的移交作業
+	public function getBySourceUser(string $uid) {
+		$qb = $this->db->getQueryBuilder();
+		$qb->select('*')
+			->from($this->getTableName())
+			->where(
+				$qb->expr()->eq('source_user', $qb->createNamedParameter($uid))
+			);
+		return $this->findEntities($qb);
+	}
 }

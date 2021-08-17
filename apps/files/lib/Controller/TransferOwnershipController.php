@@ -41,6 +41,8 @@ use OCP\Files\IRootFolder;
 use OCP\IRequest;
 use OCP\IUserManager;
 use OCP\Notification\IManager as NotificationManager;
+use OCA\Files\Event\TransferProgressUpdateEvent as TransferEvent;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class TransferOwnershipController extends OCSController {
 
@@ -77,6 +79,8 @@ class TransferOwnershipController extends OCSController {
 		$this->mapper = $mapper;
 		$this->userManager = $userManager;
 		$this->rootFolder = $rootFolder;
+
+		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 	}
 
 
@@ -154,7 +158,7 @@ class TransferOwnershipController extends OCSController {
 		$this->jobList->add(TransferOwnership::class, [
 			'id' => $newTransferOwnership->getId(),
 		]);
-
+		$this->eventDispatcher->dispatchTyped(new TransferEvent($newTransferOwnership, TransferEvent::REPLY_TYPE_ACCEPT));
 		return new DataResponse([], Http::STATUS_OK);
 	}
 
@@ -190,7 +194,24 @@ class TransferOwnershipController extends OCSController {
 		$this->notificationManager->notify($notification);
 
 		$this->mapper->delete($transferOwnership);
+		$this->eventDispatcher->dispatchTyped(new TransferEvent($transferOwnership, TransferEvent::REPLY_TYPE_REJECT));
+		return new DataResponse([], Http::STATUS_OK);
+	}
 
+	/**
+	 * @NoAdminRequired
+	 */
+	public function check(string $uid): DataResponse {
+		try {
+			$pendingEvents = $this->mapper->getBySourceUser($uid);
+		} catch (DoesNotExistException $e) {
+			// 沒有等待中的移交項目
+		} catch (\Throwable $th) {
+			// 找不到 TransferOwnershipMapper 的 getBySourceUser() 忽略檢查
+		}
+		if (count($pendingEvents) > 0) {
+			return new DataResponse([], Http::STATUS_BAD_REQUEST);
+		}
 		return new DataResponse([], Http::STATUS_OK);
 	}
 }

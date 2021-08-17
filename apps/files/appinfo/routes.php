@@ -209,6 +209,11 @@ $application->registerRoutes(
 				'url' => '/api/v1/openlocaleditor/{token}',
 				'verb' => 'POST',
 			],
+			[
+				'name' => 'TransferOwnership#check',
+				'url' => '/api/v1/transferownership/check/{uid}',
+				'verb' => 'GET',
+			],
 		],
 	]
 );

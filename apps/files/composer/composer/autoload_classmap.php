@@ -46,6 +46,7 @@ return array(
     'OCA\\Files\\DirectEditingCapabilities' => $baseDir . '/../lib/DirectEditingCapabilities.php',
     'OCA\\Files\\Event\\LoadAdditionalScriptsEvent' => $baseDir . '/../lib/Event/LoadAdditionalScriptsEvent.php',
     'OCA\\Files\\Event\\LoadSidebar' => $baseDir . '/../lib/Event/LoadSidebar.php',
+    'OCA\\Files\\Event\\TransferProgressUpdateEvent' => $baseDir . '/../lib/Event/TransferProgressUpdateEvent.php',
     'OCA\\Files\\Exception\\TransferOwnershipException' => $baseDir . '/../lib/Exception/TransferOwnershipException.php',
     'OCA\\Files\\Helper' => $baseDir . '/../lib/Helper.php',
     'OCA\\Files\\Listener\\LegacyLoadAdditionalScriptsAdapter' => $baseDir . '/../lib/Listener/LegacyLoadAdditionalScriptsAdapter.php',
