@@ -39,6 +39,9 @@ use OCP\IUserManager;
 use OCP\Notification\IManager as NotificationManager;
 use function ltrim;
 
+use OCA\Files\Event\TransferProgressUpdateEvent as TransferEvent;
+use OCP\EventDispatcher\IEventDispatcher;
+
 class TransferOwnership extends QueuedJob {
 
 	/** @var IUserManager $userManager */
@@ -73,6 +76,7 @@ class TransferOwnership extends QueuedJob {
 		$this->notificationManager = $notificationManager;
 		$this->mapper = $mapper;
 		$this->rootFolder = $rootFolder;
+		$this->eventDispatcher = \OC::$server->query(IEventDispatcher::class);
 	}
 
 	protected function run($argument) {
@@ -149,6 +153,8 @@ class TransferOwnership extends QueuedJob {
 			])
 			->setObject('transfer', (string)$transfer->getId());
 		$this->notificationManager->notify($notification);
+
+		$this->eventDispatcher->dispatchTyped(new TransferEvent($transfer, TransferEvent::REPLY_TYPE_ACCEPT, TransferEvent::EXECUTED_RESULT_FAILED));
 	}
 
 	private function successNotification(Transfer $transfer): void {
@@ -177,5 +183,7 @@ class TransferOwnership extends QueuedJob {
 			])
 			->setObject('transfer', (string)$transfer->getId());
 		$this->notificationManager->notify($notification);
+
+		$this->eventDispatcher->dispatchTyped(new TransferEvent($transfer, TransferEvent::REPLY_TYPE_ACCEPT, TransferEvent::EXECUTED_RESULT_SUCCESS));
 	}
 }

@@ -169,6 +169,11 @@ $application->registerRoutes(
 				'url' => '/api/v1/transferownership/{id}',
 				'verb' => 'DELETE',
 			],
+			[
+				'name' => 'TransferOwnership#check',
+				'url' => '/api/v1/transferownership/check/{uid}',
+				'verb' => 'GET',
+			],
 		],
 	]
 );
