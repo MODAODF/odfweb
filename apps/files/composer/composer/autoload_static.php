@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInitFiles
 {
     public static $prefixLengthsPsr4 = array (
-        'O' => 
+        'O' =>
         array (
             'OCA\\Files\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'OCA\\Files\\' => 
+        'OCA\\Files\\' =>
         array (
             0 => __DIR__ . '/..' . '/../lib',
         ),
@@ -54,6 +54,7 @@ class ComposerStaticInitFiles
         'OCA\\Files\\Db\\TransferOwnershipMapper' => __DIR__ . '/..' . '/../lib/Db/TransferOwnershipMapper.php',
         'OCA\\Files\\Event\\LoadAdditionalScriptsEvent' => __DIR__ . '/..' . '/../lib/Event/LoadAdditionalScriptsEvent.php',
         'OCA\\Files\\Event\\LoadSidebar' => __DIR__ . '/..' . '/../lib/Event/LoadSidebar.php',
+        'OCA\\Files\\Event\\TransferProgressUpdateEvent' => __DIR__ . '/..' . '/../lib/Event/TransferProgressUpdateEvent.php',
         'OCA\\Files\\Exception\\TransferOwnershipException' => __DIR__ . '/..' . '/../lib/Exception/TransferOwnershipException.php',
         'OCA\\Files\\Helper' => __DIR__ . '/..' . '/../lib/Helper.php',
         'OCA\\Files\\Listener\\LegacyLoadAdditionalScriptsAdapter' => __DIR__ . '/..' . '/../lib/Listener/LegacyLoadAdditionalScriptsAdapter.php',
