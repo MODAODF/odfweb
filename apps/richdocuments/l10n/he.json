@@ -1,6 +1,5 @@
 { "translations": {
     "Collabora Online" : "Collabora Online",
-    "Can't create document" : "לא ניתן ליצור מסמך",
     "New Document.odt" : "מסמך חדש.odt",
     "New Spreadsheet.ods" : "גיליון נתונים חדש.ods",
     "New Presentation.odp" : "מצגת חדשה.odp",
@@ -30,13 +29,10 @@
     "Use the built-in CODE - Collabora Online Development Edition" : "להשתמש ב־CODE‏ - Collabora Online Development Edition (מהדורת המפתחים) המובנה",
     "Easy to install, for home use or small groups. A bit slower than a standalone server and without the advanced scalability features." : "קלה להתקנה, לשימוש ביתי או לצוותים קטנים. מעט אטית יותר משרת עצמאי וללא יכולות ההתגמשות המתקדמות.",
     "This installation does not have a built in server." : "להתקנה זו אין שרת מובנה.",
-    "Install it from the app store." : "להתקין אותו מחנות היישומונים.",
-    "If the installation from the app store fails, you can still do that manually using this command:" : "אם ההתקנה מחנות היישומונים נכשלת, עדיין ניתן להתקין ידנית באמצעות הפקודה:",
     "Use a demo server" : "להשתמש בשרת הדגמה",
     "You can use a demo server provided by Collabora and other service providers for giving Collabora Online a try." : "ניתן להשתמש בשרת הדגמה שמסופק על ידי Collabora וספקי שירות אחרים כדי להתנסות ב־Collabora Online.",
     "Your Nextcloud setup is not capable of connecting to the demo servers because:" : "תצורת ה־Nextcloud שלך אינה יכולה להתחבר לשרתי ההדגמה:",
     "it is a local setup (localhost)" : "כי מדובר בהתקנה מקומית בלבד (localhost)",
-    "it uses an insecure protocol (http)" : "כי נעשה שימוש בפרוטוקול פרוץ (http)",
     "it is unreachable from the Internet (possibly because of a firewall, or lack of port forwarding)" : "כי אין גישה אל העותק מהאינטרנט (כנראה בגלל חומת אש או שאין העברת פתחות)",
     "For use cases like this, we offer instructions for a" : "למקרים כאלו אנחנו מציעים הנחיות לטובת",
     "Quick tryout with Nextcloud docker." : "התנסות מהירה עם Nextcloud על Docker.",
@@ -81,13 +77,9 @@
     "Guest" : "אורח/ת",
     "Follow current editor" : "מעקב אחר העורך הנוכחי",
     "Last saved version" : "הגרסה האחרונה שנשמרה",
-    "Current version" : "גרסה נוכחית",
     "Failed to revert the document to older version" : "שחזור המסמך לגרסה קודמת נכשל",
     "Please enter the filename for the new document" : "נא להקליד את שם הקובץ של המסמך החדש",
     "Create a new document" : "יצירת מסמך חדש",
-    "New Document" : "מסמך חדש",
-    "New Spreadsheet" : "גיליון נתונים חדש",
-    "New Presentation" : "מצגת חדשה",
     "Could not create file" : "יצירת הקובץ נכשלה",
     "Create" : "יצירה",
     "Select template" : "בחירת תבנית",
@@ -98,6 +90,7 @@
     "template preview" : "תצוגה מקדימה של תבנית",
     "Select a template directory" : "בחירת תיקיית תבניות",
     "Remove personal template folder" : "הסרת תיקיית תבניות אישית",
-    "Templates inside of this directory will be added to the template selector of Collabora Online." : "תבניות בתוך התיקייה הזאת יתווספו לבורר התבניות של Collabora Online."
+    "Templates inside of this directory will be added to the template selector of Collabora Online." : "תבניות בתוך התיקייה הזאת יתווספו לבורר התבניות של Collabora Online.",
+    "it uses an insecure protocol (http)" : "כי נעשה שימוש בפרוטוקול פרוץ (http)"
 },"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;"
 }

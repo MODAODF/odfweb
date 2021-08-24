@@ -1,8 +1,11 @@
 OC.L10N.register(
     "richdocuments",
     {
+    "New document" : "Naujas dokumentas",
+    "New spreadsheet" : "Nauja skaičiuoklė",
+    "New presentation" : "Nauja pateiktis",
     "Collabora Online" : "Collabora Online",
-    "Can't create document" : "Nepavyksta sukurti dokumento",
+    "Cannot create document" : "Nepavyksta sukurti dokumento",
     "New Document.odt" : "Naujas dokumentas.odt",
     "New Spreadsheet.ods" : "Nauja skaičiuoklė.ods",
     "New Presentation.odp" : "Nauja pateiktis.odp",
@@ -26,7 +29,6 @@ OC.L10N.register(
     "Use your own server" : "Naudoti asmeninį serverį",
     "Use a demo server" : "Naudoti demonstracinį serverį",
     "it is a local setup (localhost)" : "tai yra vietinė sąranka (localhost)",
-    "it uses an insecure protocol (http)" : "ji naudoja nesaugų protokolą (http)",
     "it is unreachable from the Internet (possibly because of a firewall, or lack of port forwarding)" : "ji yra nepasiekiama iš interneto (galimai, dėl užkardos ar neperadresuotų prievadų)",
     "Loading available demo servers …" : "Įkeliami prieinami demonstraciniai serveriai…",
     "No available demo servers found." : "Nerasta jokių prieinamų demonstracinių serverių.",
@@ -63,13 +65,9 @@ OC.L10N.register(
     "(read only)" : "(tik skaitymui)",
     "Guest" : "Svečias",
     "Last saved version" : "Paskutinė įrašyta versija",
-    "Current version" : "Dabartinė versija",
     "Failed to revert the document to older version" : "Nepavyko sugrąžinti dokumentą į senesnę versiją",
     "Please enter the filename for the new document" : "Įveskite naujo dokumento failo pavadinimą",
     "Create a new document" : "Sukurti naują dokumentą",
-    "New Document" : "Naujas dokumentas",
-    "New Spreadsheet" : "Nauja skaičiuoklė",
-    "New Presentation" : "Nauja pateiktis",
     "Could not create file" : "Nepavyko sukurti failo",
     "Create" : "Sukurti",
     "Select template" : "Pasirinkite šabloną",
@@ -77,6 +75,7 @@ OC.L10N.register(
     "Add a new template" : "Pridėti naują šabloną",
     "No templates defined." : "Neapibrėžtas joks šablonas.",
     "Add a new one?" : "Pridėti naują?",
-    "template preview" : "šablono peržiūra"
+    "template preview" : "šablono peržiūra",
+    "it uses an insecure protocol (http)" : "ji naudoja nesaugų protokolą (http)"
 },
 "nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);");

@@ -1,5 +1,46 @@
 # Changelog
 
+## 3.8.4
+
+* [#1666](https://github.com/nextcloud/richdocuments/pull/1666) Throttle on invalid share tokens
+* [#1667](https://github.com/nextcloud/richdocuments/pull/1667) Keep DownloadAsPostMessage when "saving as" documents
+* [#1668](https://github.com/nextcloud/richdocuments/pull/1668) Check for share token permissions
+* [#1671](https://github.com/nextcloud/richdocuments/pull/1671) l10n: Unify spelling
+
+## 3.8.3
+
+* [#1639](https://github.com/nextcloud/richdocuments/pull/1639) Fix opening files when groupfolder ACL has revoked share permissions
+* [#1641](https://github.com/nextcloud/richdocuments/pull/1641) Allow to limit wopi requests to specific source hosts
+
+
+## 3.8.2
+
+* [#1550](https://github.com/nextcloud/richdocuments/pull/1550) Fix wrong parameters set when creating a file from a template id
+* [#1564](https://github.com/nextcloud/richdocuments/pull/1564) Fix PutRelativeFile as non-owner
+* [#1549](https://github.com/nextcloud/richdocuments/pull/1549) Retry to check if Collabora is configured
+
+
+## 3.8.1
+
+* [#1529](https://github.com/nextcloud/richdocuments/pull/1529) Don't cache empty capabilities
+* [#1530](https://github.com/nextcloud/richdocuments/pull/1530) Emit WOPI postmessages through the nextcloud event bus
+* [#1540](https://github.com/nextcloud/richdocuments/pull/1540) Work around safari having a inproper 100vh value
+
+
+## 3.8.0
+
+* [#1516](https://github.com/nextcloud/richdocuments/pull/1516) Enhanced federated editing for global scale setups
+
+## 3.7.19
+
+* [#1489](https://github.com/nextcloud/richdocuments/pull/1489) Improve parsing of guest name cookie @juliushaertl
+
+## 3.7.18
+
+* [#1456](https://github.com/nextcloud/richdocuments/pull/1456) Add @nextcloud/dialogs and @nextcloud/event-bus to babel
+* [#1467](https://github.com/nextcloud/richdocuments/pull/1467) Reload file name for share feature after Save As
+* [#1469](https://github.com/nextcloud/richdocuments/pull/1469) Setup FeaturePolicy to allow fullscreen
+
 ## 3.7.17
 
 * [#1417](https://github.com/nextcloud/richdocuments/pull/1417) Fix version restore

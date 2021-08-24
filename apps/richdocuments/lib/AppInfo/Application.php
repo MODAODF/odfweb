@@ -29,6 +29,7 @@ use OC\Security\CSP\ContentSecurityPolicy;
 use OCA\Federation\TrustedServers;
 use OCA\Richdocuments\AppConfig;
 use OCA\Richdocuments\Capabilities;
+use OCA\Richdocuments\Middleware\WOPIMiddleware;
 use OCA\Richdocuments\Preview\MSExcel;
 use OCA\Richdocuments\Preview\MSWord;
 use OCA\Richdocuments\Preview\OOXML;
@@ -77,6 +78,7 @@ class Application extends App {
 		}
 
 		$this->getContainer()->registerCapability(Capabilities::class);
+		$this->getContainer()->registerMiddleWare(WOPIMiddleware::class);
 	}
 
 	public function registerProvider() {
@@ -139,7 +141,7 @@ class Application extends App {
 		try {
 			$path = $container->getServer()->getRequest()->getPathInfo();
 		} catch (\Exception $e) {}
-		if (strpos($path, '/apps/files/') === 0 && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
+		if ((strpos($path, '/apps/files/') === 0 || strpos($path, '/s/') === 0) && $container->getServer()->getAppManager()->isEnabledForUser('federation')) {
 			/** @var FederationService $federationService */
 			$federationService = \OC::$server->query(FederationService::class);
 

@@ -31,6 +31,7 @@ use \OCP\IConfig;
 use \OCP\IL10N;
 use \OCP\ILogger;
 use \OCP\AppFramework\Http\ContentSecurityPolicy;
+use \OCP\AppFramework\Http\FeaturePolicy;
 use \OCP\AppFramework\Http\TemplateResponse;
 use \OCA\Richdocuments\AppConfig;
 use \OCA\Richdocuments\Helper;
@@ -175,53 +176,21 @@ class DocumentController extends Controller {
 	}
 
 	/**
-	 * Redirect to the files app with proper CSP headers set for federated editing
-	 * This is a workaround since we cannot set a nonce for allowing dynamic URLs in the richdocument iframe
-	 *
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
+	 * Setup policy headers for the response
 	 */
-	public function open($fileId) {
-		try {
-			$folder = $this->rootFolder->getUserFolder($this->uid);
-			$item = $folder->getById($fileId)[0];
-			if (!($item instanceof File)) {
-				throw new \Exception('Node is not a file');
-			}
+	private function setupPolicy($response) {
+		$wopiDomain = $this->domainOnly($this->appConfig->getAppValue('public_wopi_url'));
 
-			if ($item->getStorage()->instanceOfStorage(\OCA\Files_Sharing\External\Storage::class)) {
-				$remote = $item->getStorage()->getRemote();
-				$remoteCollabora = $this->federationService->getRemoteCollaboraURL($remote);
-				if ($remoteCollabora !== '') {
-					$absolute = $item->getParent()->getPath();
-					$relativeFolderPath = $folder->getRelativePath($absolute);
-					$relativeFilePath = $folder->getRelativePath($item->getPath());
-					$url = '/index.php/apps/files/?dir=' . $relativeFolderPath .
-						'&richdocuments_open=' . $relativeFilePath .
-						'&richdocuments_fileId=' . $fileId .
-						'&richdocuments_remote_access=' . $remote;
+		$policy = new ContentSecurityPolicy();
+		$policy->addAllowedFrameDomain($wopiDomain);
+		$policy->allowInlineScript(true);
+		$response->setContentSecurityPolicy($policy);
 
-						$event = new BeforeFederationRedirectEvent(
-							$item, $relativeFolderPath, $remote
-						);
-						$eventDispatcher = \OC::$server->getEventDispatcher();
-						$eventDispatcher->dispatch(BeforeFederationRedirectEvent::class, $event);
-						if ($event->getRedirectUrl()) {
-							$url = $event->getRedirectUrl();
-						}
-					return new RedirectResponse($url);
-				}
-				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
-			}
-		} catch (\Exception $e) {
-			$this->logger->logException($e, ['app'=>'richdocuments']);
-			$params = [
-				'errors' => [['error' => $e->getMessage()]]
-			];
-			return new TemplateResponse('core', 'error', $params, 'guest');
+		if (class_exists(FeaturePolicy::class)) {
+			$featurePolicy = new FeaturePolicy();
+			$featurePolicy->addAllowedFullScreenDomain($wopiDomain);
+			$response->setFeaturePolicy($featurePolicy);
 		}
-
-		return new TemplateResponse('core', '403', [], 'guest');
 	}
 
 	/**
@@ -245,7 +214,10 @@ class DocumentController extends Controller {
 				throw new \Exception();
 			}
 
-			/** Open file from remote collabora */
+			/**
+			 * Open file on source instance if it is originating from a federated share
+			 * The generated url will result in {@link remote()}
+			 */
 			$federatedUrl = $this->federationService->getRemoteRedirectURL($item);
 			if ($federatedUrl !== null) {
 				$response = new RedirectResponse($federatedUrl);
@@ -278,10 +250,7 @@ class DocumentController extends Controller {
 			}
 
 			$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
-			$policy = new ContentSecurityPolicy();
-			$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-			$policy->allowInlineScript(true);
-			$response->setContentSecurityPolicy($policy);
+			$this->setupPolicy($response);
 			return $response;
 		} catch (\Exception $e) {
 			$this->logger->logException($e, ['app'=>'richdocuments']);
@@ -290,8 +259,6 @@ class DocumentController extends Controller {
 			];
 			return new TemplateResponse('core', 'error', $params, 'guest');
 		}
-
-		return new TemplateResponse('core', '403', [], 'guest');
 	}
 
 	/**
@@ -328,7 +295,6 @@ class DocumentController extends Controller {
 		$template = $this->templateManager->get($templateId);
 		list($urlSrc, $wopi) = $this->tokenManager->getTokenForTemplate($template, $this->uid, $file->getId());
 
-		$wopiFileId = $template->getId() . '-' . $file->getId() . '_' . $this->settings->getSystemValue('instanceid');
 		$wopiFileId = $wopi->getFileid() . '_' . $this->settings->getSystemValue('instanceid');
 
 		$params = [
@@ -344,10 +310,7 @@ class DocumentController extends Controller {
 		];
 
 		$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
-		$policy = new ContentSecurityPolicy();
-		$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-		$policy->allowInlineScript(true);
-		$response->setContentSecurityPolicy($policy);
+		$this->setupPolicy($response);
 		return $response;
 	}
 
@@ -357,7 +320,7 @@ class DocumentController extends Controller {
 	 *
 	 * @param string $shareToken
 	 * @param string $fileName
-	 * @return TemplateResponse
+	 * @return TemplateResponse|RedirectResponse
 	 * @throws \Exception
 	 */
 	public function publicPage($shareToken, $fileName, $fileId) {
@@ -372,11 +335,21 @@ class DocumentController extends Controller {
 				}
 			}
 
+			if (($share->getPermissions() & Constants::PERMISSION_READ) === 0) {
+				return new TemplateResponse('core', '403', [], 'guest');
+			}
+
 			$node = $share->getNode();
 			if($node instanceof Folder) {
 				$item = $node->getById($fileId)[0];
 			} else {
 				$item = $node;
+			}
+			$federatedUrl = $this->federationService->getRemoteRedirectURL($item, null, $share);
+			if ($federatedUrl !== null) {
+				$response = new RedirectResponse($federatedUrl);
+				$response->addHeader('X-Frame-Options', 'ALLOW');
+				return $response;
 			}
 			if ($item instanceof Node) {
 				$params = [
@@ -396,10 +369,7 @@ class DocumentController extends Controller {
 				}
 
 				$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
-				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('public_wopi_url')));
-				$policy->allowInlineScript(true);
-				$response->setContentSecurityPolicy($policy);
+				$this->setupPolicy($response);
 				return $response;
 			}
 		} catch (\Exception $e) {
@@ -414,6 +384,58 @@ class DocumentController extends Controller {
 	}
 
 	/**
+	 * Redirect to the files app with proper CSP headers set for federated editing
+	 * This is a workaround since we cannot set a nonce for allowing dynamic URLs in the richdocument iframe
+	 *
+	 * @NoAdminRequired
+	 * @NoCSRFRequired
+	 */
+	public function openRemoteFile($fileId) {
+		try {
+			$folder = $this->rootFolder->getUserFolder($this->uid);
+			$item = $folder->getById($fileId)[0];
+			if (!($item instanceof File)) {
+				throw new \Exception('Node is not a file');
+			}
+
+			if ($item->getStorage()->instanceOfStorage(\OCA\Files_Sharing\External\Storage::class)) {
+				$remote = $item->getStorage()->getRemote();
+				$remoteCollabora = $this->federationService->getRemoteCollaboraURL($remote);
+				if ($remoteCollabora !== '') {
+					$absolute = $item->getParent()->getPath();
+					$relativeFolderPath = $folder->getRelativePath($absolute);
+					$relativeFilePath = $folder->getRelativePath($item->getPath());
+					$url = '/index.php/apps/files/?dir=' . $relativeFolderPath .
+						'&richdocuments_open=' . $relativeFilePath .
+						'&richdocuments_fileId=' . $fileId .
+						'&richdocuments_remote_access=' . $remote;
+
+					$event = new BeforeFederationRedirectEvent(
+						$item, $relativeFolderPath, $remote
+					);
+					$eventDispatcher = \OC::$server->getEventDispatcher();
+					$eventDispatcher->dispatch(BeforeFederationRedirectEvent::class, $event);
+					if ($event->getRedirectUrl()) {
+						$url = $event->getRedirectUrl();
+					}
+					return new RedirectResponse($url);
+				}
+				$this->logger->warning('Failed to connect to remote collabora instance for ' . $fileId);
+			}
+		} catch (\Exception $e) {
+			$this->logger->logException($e, ['app'=>'richdocuments']);
+			$params = [
+				'errors' => [['error' => $e->getMessage()]]
+			];
+			return new TemplateResponse('core', 'error', $params, 'guest');
+		}
+
+		return new TemplateResponse('core', '403', [], 'guest');
+	}
+
+	/**
+	 * Open file on Source instance with token from Initiator instance
+	 *
 	 * @PublicPage
 	 * @NoCSRFRequired
 	 *
@@ -435,6 +457,10 @@ class DocumentController extends Controller {
 				}
 			}
 
+			if (($share->getPermissions() & Constants::PERMISSION_READ) === 0) {
+				return new TemplateResponse('core', '403', [], 'guest');
+			}
+
 			$node = $share->getNode();
 			if ($filePath !== null) {
 				$node = $node->get($filePath);
@@ -447,10 +473,10 @@ class DocumentController extends Controller {
 				if ($remoteWopi === null) {
 					throw new \Exception('Invalid remote file details for ' . $remoteServerToken);
 				}
-				$this->tokenManager->updateToRemoteToken($wopi, $shareToken, $remoteServer, $remoteServerToken, $remoteWopi);
+				$this->tokenManager->upgradeToRemoteToken($wopi, $remoteWopi, $shareToken, $remoteServer, $remoteServerToken);
 
 				$permissions = $share->getPermissions();
-				if (!$remoteWopi['canwrite']) {
+				if (!$remoteWopi->getCanwrite()) {
 					$permissions = $permissions & ~ Constants::PERMISSION_UPDATE;
 				}
 
@@ -463,15 +489,21 @@ class DocumentController extends Controller {
 					'path' => '/',
 					'instanceId' => $this->settings->getSystemValue('instanceid'),
 					'canonical_webroot' => $this->appConfig->getAppValue('canonical_webroot'),
-					'userId' => $remoteWopi['editorUid'] . '@' . $remoteServer
+					'userId' => $remoteWopi->getEditorUid() ? ($remoteWopi->getEditorUid() . '@' . $remoteServer) : null,
 				];
 
 				$response = new TemplateResponse('richdocuments', 'documents', $params, 'base');
+				$remoteWopi = $this->domainOnly($this->appConfig->getAppValue('wopi_url'));
 				$policy = new ContentSecurityPolicy();
-				$policy->addAllowedFrameDomain($this->domainOnly($this->appConfig->getAppValue('wopi_url')));
+				$policy->addAllowedFrameDomain($remoteWopi);
 				$policy->allowInlineScript(true);
 				$policy->addAllowedFrameAncestorDomain('https://*');
 				$response->setContentSecurityPolicy($policy);
+				if (class_exists(FeaturePolicy::class)) {
+					$featurePolicy = new FeaturePolicy();
+					$featurePolicy->addAllowedFullScreenDomain($remoteWopi);
+					$response->setFeaturePolicy($featurePolicy);
+				}
 				$response->addHeader('X-Frame-Options', 'ALLOW');
 				return $response;
 			}
@@ -509,14 +541,14 @@ class DocumentController extends Controller {
 		} catch (NotFoundException $e) {
 			return new JSONResponse([
 					'status' => 'error',
-					'message' => $this->l10n->t('Can\'t create document')
+					'message' => $this->l10n->t('Cannot create document')
 			], Http::STATUS_BAD_REQUEST);
 		}
 
 		if (!($folder instanceof Folder)) {
 			return new JSONResponse([
 				'status' => 'error',
-				'message' => $this->l10n->t('Can\'t create document')
+				'message' => $this->l10n->t('Cannot create document')
 			], Http::STATUS_BAD_REQUEST);
 		}
 
@@ -585,7 +617,7 @@ class DocumentController extends Controller {
 
 		return new JSONResponse([
 			'status' => 'error',
-			'message' => $this->l10n->t('Can\'t create document')
+			'message' => $this->l10n->t('Cannot create document')
 		]);
 	}
 }
