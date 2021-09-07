@@ -5,7 +5,7 @@
     <name>Admin Transferownership</name>
     <summary>提供管理員從後台執行移交及查詢移交紀錄</summary>
     <description><![CDATA[提供管理員從後台執行移交及查詢移交紀錄]]></description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <licence>agpl</licence>
     <author mail="devloper@ossii.com.tw" homepage="http://www.ossii.com.tw">ossii</author>
     <namespace>AdminTransferownership</namespace>

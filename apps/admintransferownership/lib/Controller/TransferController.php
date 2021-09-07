@@ -88,7 +88,7 @@ class TransferController extends Controller {
 	 * @param string $targetUID   新擁有者
 	 * @param bool   $needConfirm 需要新擁有者確認
 	 */
-	public function index($path = '/', string $sourceUID, string $targetUID, $needConfirm = ture) {
+	public function index($path = '/', string $sourceUID, string $targetUID, $needConfirm = true) {
 		try {
 			$pendingEvents = $this->mapper->getBySourceUser($sourceUID);
 		} catch (DoesNotExistException $e) {

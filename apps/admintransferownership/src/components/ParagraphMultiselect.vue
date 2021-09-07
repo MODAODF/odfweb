@@ -1,7 +1,7 @@
 <template>
 	<p>
 		<label :for="elId">
-			<span>搜尋使用者</span>
+			<span>{{ titleName }}</span>
 		</label>
 		<Multiselect
 			:id="elId"
@@ -35,7 +35,7 @@ export default {
 	components: {
 		Multiselect,
 	},
-	props: ['elId'],
+	props: ['elId', 'titleName'],
 	data() {
 		return {
 			selectedVal: '',

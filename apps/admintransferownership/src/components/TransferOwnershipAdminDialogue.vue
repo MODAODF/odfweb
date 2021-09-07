@@ -2,8 +2,8 @@
 	<div>
 		<h3>轉移檔案或是資料夾的所有權</h3>
 		<form @submit.prevent="submit">
-			<ParagraphMultiselect :elId="sourceUser" @selectedVal="getSelectedSourceUser" />
-			<ParagraphMultiselect :elId="targetUser" @selectedVal="getSelectedTargetUser" />
+			<ParagraphMultiselect :elId="sourceUser" :titleName="'原擁有者'" @selectedVal="getSelectedSourceUser" />
+			<ParagraphMultiselect :elId="targetUser" :titleName="'新擁有者'" @selectedVal="getSelectedTargetUser" />
 			<p>
 				<input id="needConfirm"
 					v-model="needConfirm"
