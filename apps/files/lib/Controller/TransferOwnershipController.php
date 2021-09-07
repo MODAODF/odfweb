@@ -205,15 +205,13 @@ class TransferOwnershipController extends OCSController {
 		try {
 			$pendingEvents = $this->mapper->getBySourceUser($uid);
 		} catch (DoesNotExistException $e) {
-			$noPendingEvent = true;
+			// 沒有等待中的移交項目
 		} catch (\Throwable $th) {
-			$ignorePendingEvent = true; // 找不到 getBySourceUser() 忽略檢查
-		}
-		if ($noPendingEvent || $ignorePendingEvent || count($pendingEvents) === 0) {
-			return new DataResponse([], Http::STATUS_OK);
+			// 找不到 TransferOwnershipMapper 的 getBySourceUser() 忽略檢查
 		}
 		if (count($pendingEvents) > 0) {
 			return new DataResponse([], Http::STATUS_BAD_REQUEST);
 		}
+		return new DataResponse([], Http::STATUS_OK);
 	}
 }
