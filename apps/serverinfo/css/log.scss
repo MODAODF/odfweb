@@ -1,0 +1,112 @@
+.server-info-log-wrapper {
+    border-top: 1px solid var(--color-border);
+}
+
+.days-interval-wrapper, .chart-wrapper {
+    margin: 2rem 1.5rem;
+}
+
+.days-interval-wrapper {
+    background-color: #f8f8f8;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    input#daysInterval {
+        width: 60px;
+        height: 25px;
+        min-height: 25px;
+        font-size: 15px;
+        font-weight: bold;
+        text-align: center;
+        outline: 0;
+        background-color: inherit;
+        padding: 0;
+        margin: 0 12px;
+        border: none;
+        border-radius: 0;
+        border-bottom: 2px solid darkgray;
+    }
+    #searchLogs button {
+        margin-left: 12px;
+    }
+    em {
+        display: block;
+        font-size: 13px;
+        margin-top: 15px;
+        button[data] {
+            color: inherit;
+            background-color: inherit;
+            text-decoration: underline;
+            padding: 0;
+            margin: 0;
+            border: none;
+            &:hover:not([disabled]), &:active:not([disabled]) {
+                color: black;
+                background-color: inherit;
+            }
+        }
+    }
+    .msg {
+        display: none;
+        color: red;
+        font-size: 12px;
+    }
+}
+
+.download-pdf-wrapper {
+    display: none;
+    text-align: end;
+    margin: 0 1.5rem;
+    form {
+        input {
+            width: 150px;
+            height: 25px;
+            min-height: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            outline: 0;
+            background-color: inherit;
+            padding: 0;
+            margin: 0;
+            border: none;
+            border-radius: 0;
+        }
+        span {
+            border-bottom: 2px solid darkgray;
+            font-weight: bold;
+        }
+        button {
+            margin-left: 12px;
+        }
+    }
+    .pdfHead {
+        visibility: hidden;
+        #servertitle {
+            font-size: 20px;
+        }
+        #timestamp {
+            font-size: 13px;
+        }
+    }
+}
+
+.server-info-log-wrapper .infobox {
+    flex-direction: column;
+    .downloadPng {
+        text-align: end;
+        a {
+            display: none;
+            color: gray;
+            text-decoration: underline;
+            &:hover {
+                color: darkgray;
+            }
+        }
+    }
+}

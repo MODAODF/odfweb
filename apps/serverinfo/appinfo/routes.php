@@ -31,6 +31,7 @@
 return [
 	'routes' => [
 		['name' => 'page#update', 'url' => '/update', 'verb' => 'GET'],
+		['name' => 'log#get', 'url' => 'log/{days}', 'verb' => 'GET'],
 	],
 	'ocs' => [
 		['name' => 'api#info', 'url' => '/api/v1/info', 'verb' => 'GET'],
