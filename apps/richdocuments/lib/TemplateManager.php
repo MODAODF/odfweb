@@ -167,7 +167,7 @@ class TemplateManager {
 				$folderId[] = $folder['id'];
 			}
 		// }
-		return $folderId;
+		return $folderId ?? [];
 	}
 
 
