@@ -5,6 +5,8 @@ if(!$error) {
     script('serverinfo', 'Chart.min.2.5.0');
     script('serverinfo', 'log');
     style('serverinfo', 'log');
+    $resultDate = "近" . $_['days_number'] . "天";
+    $resultDate .= "（" . $_['days_duration'] . "）";
 }
 ?>
 
@@ -15,30 +17,38 @@ if(!$error) {
     <p><?php p($error); ?></p>
     <?php else: ?>
 
-    <div class="days-interval-wrapper">
+    <div class="search-wrapper">
         <div>
             <form id="searchLogs">
                 <span>
-                    查詢近<input type="number" id="daysInterval" name="daysInterval" require min="1" max="90" prevval="<?php p($_['days_interval']) ?>" value="<?php p($_['days_interval']) ?>"/>天的紀錄
+                    查詢近
+                    <input type="number" id="daysNumber" name="daysNumber" require min="1" max="90"
+                        prevval="<?php p($_['days_number']) ?>" value="<?php p($_['days_number']) ?>"/>
+                    天的紀錄
                 </span>
                 <button type="submit">查詢</button>
             </form>
             <div class="msg"></div>
-            <em>快速查詢: <button data="1">1天</button> | <button data="7">7天</button> | <button data="30">30天</button> | <button data="60">60天</button> | <button data="90">90天</button></em>
+            <em>快速查詢：<button data="1">1天</button> | <button data="7">7天</button> | <button data="30">30天</button> | <button data="60">60天</button> | <button data="90">90天</button></em>
         </div>
     </div>
 
-    <div class="download-pdf-wrapper">
-        <form id="downloadPdf">
-            將查詢結果下載為 PDF，檔案名稱：
-            <span>
-                <input type="text" value="系統資訊查詢結果"/>.pdf
-            </span>
-            <button type="submit">下載</button>
-        </form>
-        <div class="pdfHead">
-            <span id="servertitle"><?php p($_['server_overview']); ?></span>
-            <span id="timestamp">查詢日期：<?php p($_['create_at']); ?></span>
+    <div class="result-controller">
+        <div>查詢結果：<b><?php p($resultDate) ?></b></div>
+        <div>
+            <input type="checkbox" id="hideNullData"/>
+            <label for="hideNullData">隱藏無數據資料</label>
+        </div>
+        <div>
+            <form id="downloadPdf">
+                將結果下載為 PDF，檔案名稱：
+                <span><input type="text" value="系統資訊查詢結果"/>.pdf</span>
+                <button type="submit">下載</button>
+            </form>
+            <div class="pdfHead">
+                <span id="servertitle"><?php p($_['server_overview']); ?></span>
+                <span id="timestamp">查詢日期：<?php p($_['create_at']); ?></span>
+            </div>
         </div>
     </div>
 

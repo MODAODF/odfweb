@@ -27,6 +27,7 @@ class LogController extends Controller {
 	 * @return DataResponse
 	 */
 	public function get(int $days) {
+		$days = floor($days);
 		try {
 			if($days < 1 || $days > 90) {
 				throw new \Exception("有效查詢天數為 1-90 天");

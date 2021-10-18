@@ -2,11 +2,11 @@
     border-top: 1px solid var(--color-border);
 }
 
-.days-interval-wrapper, .chart-wrapper {
+.search-wrapper, .chart-wrapper {
     margin: 2rem 1.5rem;
 }
 
-.days-interval-wrapper {
+.search-wrapper {
     background-color: #f8f8f8;
     font-size: 15px;
     font-weight: bold;
@@ -16,7 +16,7 @@
     justify-content: center;
     align-items: center;
 
-    input#daysInterval {
+    input#daysNumber {
         width: 60px;
         height: 25px;
         min-height: 25px;
@@ -58,11 +58,13 @@
     }
 }
 
-.download-pdf-wrapper {
+.result-controller {
     display: none;
-    text-align: end;
     margin: 0 1.5rem;
-    form {
+    input#hideNullData {
+        vertical-align: middle;
+    }
+    form#downloadPdf {
         input {
             width: 150px;
             height: 25px;

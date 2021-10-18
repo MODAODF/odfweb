@@ -16,7 +16,7 @@ class LogsData {
 	const DEV_TODAY = '2021-09-20';
 
 	const SERVERLOG_DIR_NAME = "__serverinfologs";
-	const DEFAULT_DAYS_INTERVAL = 10;
+	const DEFAULT_DAYS_NUMBER = 10;
 
 	/**
 	 * @param IConfig $config
@@ -32,8 +32,10 @@ class LogsData {
 
 		// 查詢區間
 		$this->days = null;
+		$this->dayFirst = null;
+		$this->dayLast = null;
+
 		// 查詢結果
-		$this->daysLabels = null;
 		$this->daysData = null;
 	}
 
@@ -43,7 +45,7 @@ class LogsData {
 	 * @throws \Exception
 	 * @return array
 	 */
-	public function getDaysData(int $days = self::DEFAULT_DAYS_INTERVAL) {
+	public function getDaysData(int $days = self::DEFAULT_DAYS_NUMBER) {
 		if(!file_exists($this->dirname)) {
 			throw new \Exception("目前沒有歷史記錄");
 		}
@@ -56,7 +58,6 @@ class LogsData {
 		$dtNow = $this->timeFactory->getDateTime();
 		$chartData = [
 			"create_at" => $dtNow->format("Y-m-d H:i") . ' ' . $dtNow->getTimeZone()->getName(),
-			"days_interval" => count($this->daysLabels),
 			"disk_space" => $this->getDiskSpace(),
 			"cpu_load"   => $this->getCpuLoad(),
 			"files_num"  => $this->getFileNum(),
@@ -67,6 +68,11 @@ class LogsData {
 		$chartData["share_user_num"]  = $share["user"];
 		$chartData["share_group_num"] = $share["group"];
 		$chartData["share_link_num"]  = $share["link"];
+
+		$start = date("Y年m月d日", strtotime($this->dayFirst));
+		$end = date("Y年m月d日", strtotime($this->dayLast));
+		$chartData["days_duration"] = ($start === $end) ? $start : $start . ' - ' . $end;
+		$chartData["days_number"] = (new \DateTime($this->dayFirst))->diff(new \DateTime($this->dayLast))->days + 1;
 		return $chartData;
 	}
 
@@ -77,33 +83,34 @@ class LogsData {
 		$todayYmd = self::DEV_MODE ? self::DEV_TODAY : "";
 
 		// 計算日期、建立日期標籤(daysLabels)
-		$beginDT = (new \DateTime($todayYmd))->modify("-$this->days day")->setTime(0,0,1);
-		$endDT = (new \DateTime($todayYmd))->setTime(0,0,1);
+		$beginDT = (new \DateTime($todayYmd))->modify("-$this->days day"); // ->setTime(0,0,1);
+		$endDT = new \DateTime($todayYmd); // (new \DateTime($todayYmd))->setTime(0,0,1);
 
 		$interval = \DateInterval::createFromDateString('1 day');
 		$period = new \DatePeriod($beginDT, $interval, $endDT);
 
-		$ignoreMonth = [];
 		$logFileDates = [];
+		$dataWithLabels = [];
 		foreach ($period as $dt) {
 			$yymm = $dt->format("Y-m");
-			if (in_array($yymm, $ignoreMonth, true)) continue;
-			if (file_exists($this->dirname."/Server-" . $yymm . ".log")) {
-				// 該月份的檔案存在
-				$this->daysLabels[] = $dt->format("Y-m-d");
-				if (!in_array($yymm, $logFileDates, true)) {
-					array_push($logFileDates, $yymm);
-				}
-			} else {
-				array_push($ignoreMonth, $yymm);
+			if (file_exists($this->dirname."/Server-" . $yymm . ".log") &&  !in_array($yymm, $logFileDates, true)) {
+				array_push($logFileDates, $yymm);
+			}
+
+			// 建立每小時標籤
+			for ($H = 0; $H < 24; $H++) {
+				$key = $dt->setTime($H,0,0)->format("Y-m-d H"); // :i
+				$dataWithLabels[$key] = null;
 			}
 		}
-		if (count($logFileDates) < 1 || is_null($this->daysLabels) || count($this->daysLabels) < 1) {
-			return null;
-		}
+		if (is_null($dataWithLabels) || count($dataWithLabels) < 1) return null;
+
+		reset($dataWithLabels);
+		$this->dayFirst = key($dataWithLabels).':00';
+		end($dataWithLabels);
+		$this->dayLast = key($dataWithLabels).':00';
 
 		// 取得區間內log資料
-		$datas = null;
 		foreach ($logFileDates as $yymm) {
 			$filePath = $this->dirname."/Server-" . $yymm . ".log";
 
@@ -124,15 +131,14 @@ class LogsData {
 				$timestamp = $rowArr['timestamp'];
 				$rowDT = new \DateTime($timestamp);
 
-				// 比較資料日期 是否在查詢區間內
-				if ($rowDT > $endDT) break;
-				if ($beginDT < $rowDT && $rowDT < $endDT) {
-					$dt = date("Y-m-d H:i", strtotime($timestamp));
-					$datas[$dt]= $rowArr;
+				$dtKeys = array_keys($dataWithLabels);
+				$key = date("Y-m-d H", strtotime($timestamp));
+				if ($beginDT < $rowDT && $rowDT < $endDT && in_array($key, $dtKeys, true)) {
+					$dataWithLabels[$key] = $rowArr;
 				}
 			}
 		}
-		return $datas;
+		return $dataWithLabels;
 	}
 
 	/**
@@ -144,8 +150,8 @@ class LogsData {
 		$data = null;
 		$dtLabels = array_keys($this->daysData);
 		foreach($dtLabels as $dt) {
-			$data[$dt]["totalSpace"] = $this->daysData[$dt]['disk_total_space'];
-			$data[$dt]["freeSpace"] = $this->daysData[$dt]['disk_free_space'];
+			$data[$dt.':00']["totalSpace"] = $this->daysData[$dt]['disk_total_space'];
+			$data[$dt.':00']["freeSpace"] = $this->daysData[$dt]['disk_free_space'];
 		}
 		return $data;
 	}
@@ -160,11 +166,11 @@ class LogsData {
 		foreach($dtLabels as $dt) {
 			$str = $this->daysData[$dt]['hour_load_average'] ?? "";
 			$hourLoadArr = json_decode($str, 1);
-			$dt = date("Y-m-d H:", strtotime($dt));
-			$data[$dt.'00'] = $hourLoadArr[0];
-			$data[$dt.'15'] = $hourLoadArr[1];
-			$data[$dt.'30'] = $hourLoadArr[2];
-			$data[$dt.'45'] = $hourLoadArr[3];
+			$dt = date("Y-m-d H", strtotime($dt.':00'));
+			$data[$dt.':00'] = $hourLoadArr[0];
+			$data[$dt.':15'] = $hourLoadArr[1];
+			$data[$dt.':30'] = $hourLoadArr[2];
+			$data[$dt.':45'] = $hourLoadArr[3];
 		}
 		return $data;
 	}
@@ -177,7 +183,7 @@ class LogsData {
 		$data = null;
 		$dtLabels = array_keys($this->daysData);
 		foreach($dtLabels as $dt) {
-			$data[$dt] = $this->daysData[$dt]['num_files'];
+			$data[$dt.':00'] = $this->daysData[$dt]['num_files'];
 		}
 		return $data;
 	}
@@ -191,8 +197,8 @@ class LogsData {
 		$data = null;
 		$dtLabels = array_keys($this->daysData);
 		foreach($dtLabels as $dt) {
-			$data[$dt]["totalUser"] = $this->daysData[$dt]['num_users'];
-			$data[$dt]["hourActiveUser"] = $this->daysData[$dt]['hour_active_users'];
+			$data[$dt.':00']["totalUser"] = $this->daysData[$dt]['num_users'];
+			$data[$dt.':00']["hourActiveUser"] = $this->daysData[$dt]['hour_active_users'];
 		}
 		return $data;
 	}
@@ -207,9 +213,9 @@ class LogsData {
 		$data = null;
 		$dtLabels = array_keys($this->daysData);
 		foreach($dtLabels as $dt) {
-			$data["user"][$dt] = $this->daysData[$dt]['num_shares_user'];
-			$data["group"][$dt] = $this->daysData[$dt]['num_shares_groups'];
-			$data["link"][$dt] = $this->daysData[$dt]['num_shares_link'];
+			$data["user"][$dt.':00'] = $this->daysData[$dt]['num_shares_user'];
+			$data["group"][$dt.':00'] = $this->daysData[$dt]['num_shares_groups'];
+			$data["link"][$dt.':00'] = $this->daysData[$dt]['num_shares_link'];
 		}
 		return $data;
 	}

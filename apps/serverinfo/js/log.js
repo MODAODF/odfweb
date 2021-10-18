@@ -7,6 +7,14 @@
         logShareGroupChart,
         logShareLinkChart;
 
+    let dataDiskSpace = null;
+    let dataCpuLoad = null;
+    let dataFile = null;
+    let dataUser = null;
+    let dataShareUser = null;
+    let dataShareGroup = null;
+    let dataShareLink = null;
+
 	$(window).load(function(){ resizeSystemCharts(); });
     $(window).resize(function(){ resizeSystemCharts(); });
 
@@ -66,11 +74,7 @@
         pdf.save(filename + '.pdf');
     })
 
-    $('#daysInterval').focus(function() {
-        $(this).attr('prevval', this.value)
-    })
-
-    $('#daysInterval').on('input', function() {
+    $('#daysNumber').on('input', function() {
         const inputDays = Number(this.value);
         if (!inputDays || inputDays < 1 || inputDays > 90) {
             $('.msg').html('有效查詢天數為 1-90 天').show();
@@ -82,7 +86,7 @@
     });
 
     $('button[data]').on('click',function() {
-        $('#daysInterval').val($(this).attr('data'))
+        $('#daysNumber').val($(this).attr('data'))
         $('#searchLogs').submit()
     })
 
@@ -90,8 +94,13 @@
         e.preventDefault();
         const $msg = $('.msg');
         const $charts = $('.charts-container');
-        const $input = $('#daysInterval');
-        const inputDays = Number($input.val());
+        const $input = $('#daysNumber');
+        const $result = $('.result-controller');
+        let inputDays = Number($input.val());
+        if (!Number.isInteger(inputDays)) {
+            inputDays = Math.floor(inputDays);
+            $input.val(inputDays);
+        }
         if (inputDays === Number($input.attr('prevval'))) {
             $charts.css('opacity', '0.3');
             setTimeout(function(){
@@ -106,35 +115,51 @@
             context: this,
             beforeSend: function() {
                 $charts.css('opacity', '0.3');
-                $('.days-interval-wrapper').find('button, input').attr('disabled', 'disabled')
-                $('.download-pdf-wrapper').hide();
-                $msg.html('').hide()
+                $('.search-wrapper').find('button, input').attr('disabled', 'disabled');
+                $result.find('b').html('');
+                $result.hide();
+                $msg.html('').hide();
             },
         })
         .done(function(resp) {
-            if(Number(resp["days_interval"]) !== inputDays) {
-                $msg.html('（目前僅有近' + resp["days_interval"] + '天的歷史記錄）').show()
-            }
-            $input.val(resp["days_interval"]).attr('prevval', resp["days_interval"]);
-            updateDiskSpace(resp["disk_space"]);
-            updateCupLoad(resp["cpu_load"]);
-            updateFile(resp["files_num"]);
-            updateUser(resp["users_num"]);
-            updateShare('user', resp["share_user_num"]);
-            updateShare('group', resp["share_group_num"]);
-            updateShare('link', resp["share_link_num"]);
+            $input.attr('prevval', inputDays)
+            const resultDate = "近" + resp['days_number'] + "天歷史記錄" + "（" + resp['days_duration'] + "）";
+            $result.find('b').html(resultDate);
+            $result.show();
+            dataDiskSpace = resp["disk_space"];
+            dataCpuLoad = resp["cpu_load"];
+            dataFile = resp["files_num"];
+            dataUser = resp["users_num"];
+            dataShareUser = resp["share_user_num"];
+            dataShareGroup = resp["share_group_num"];
+            dataShareLink = resp["share_link_num"];
+            updateCharts();
             $charts.show();
         })
         .fail(function(resp) {
-            const msg = resp.responseJSON?.message ?? '無法查詢歷史記錄'
-            $msg.html(msg).show()
+            const msg = resp.responseJSON?.message ?? '無法查詢歷史記錄';
+            $msg.html(msg).show();
             $charts.hide();
         })
         .always(function() {
             $charts.css('opacity', 'unset');
-            $('.days-interval-wrapper').find('button, input').removeAttr('disabled')
+            $('.search-wrapper').find('button, input').removeAttr('disabled');
         });
     })
+
+    const $hideNull = $('#hideNullData');
+    let needHide = $hideNull.is(':checked');
+    $hideNull.on('change', updateCharts);
+    function updateCharts() {
+        needHide = $hideNull.is(':checked');
+        updateDiskSpace();
+        updateCupLoad();
+        updateFile();
+        updateUser();
+        updateShare('user');
+        updateShare('group');
+        updateShare('link');
+    }
 
     function getThemedPrimaryColor() {
         return OCA.Theming ? OCA.Theming.color : 'rgb(54, 129, 195)';
@@ -143,11 +168,11 @@
     function _formatDate(date, fotmatStr) {
         const d = new Date(date);
         const year = d.getFullYear();
-        const month = String(d.getMonth() + 1) // .padStart(2,'0');
+        const month = Number(d.getMonth()) + 1; // .padStart(2,'0');
         const day = String(d.getDate()) // .padStart(2,'0');
-        const hour = String(d.getHours()).padStart(2,'0');
-        const min = String(d.getMinutes()).padStart(2,'0');
-        const sec = String(d.getSeconds()).padStart(2,'0');
+        const hour = String(d.getHours()) //.padStart(2,'0');
+        const min = String(d.getMinutes()) // .padStart(2,'0');
+        const sec = String(d.getSeconds()) // .padStart(2,'0');
         fotmatStr = fotmatStr.replaceAll(/Y/g, year).replaceAll(/M/g, month).replaceAll(/D/g, day).replaceAll(/h/g, hour).replaceAll(/m/g, min).replaceAll(/s/g, sec);
         return fotmatStr;
     }
@@ -170,7 +195,7 @@
             if( !labelYears.includes(y) ) labelYears.push(y);
             if( !labelDays.includes(ymd) ) labelDays.push(ymd);
         })
-        let str = _formatDate(labelDays[0],"西元Y年M月D日") + ' 至 ' + _formatDate(labelDays[labelDays.length-1],"西元Y年M月D日")
+        let str = _formatDate(labelDays[0],"西元Y年M月D日") + ' 至 ' + _formatDate(labelDays[labelDays.length-1],"西元Y年M月D日");
         if (labelDays.length === 1) {
             str = _formatDate(labelDays[0], '西元Y年M月D日');
         }
@@ -193,7 +218,7 @@
         if (labelDays.length === 1) formatStr = '["h時m分"]';
         else if (labelDays.length < 4) formatStr = '["M月D日", "h時m分"]';
         else if (labelYears.length === 1) formatStr = '["M月D日"]';
-        let res = labels.map(el => JSON.parse(_formatDate(el, formatStr)))
+        let res = labels.map(el => JSON.parse(_formatDate(el, formatStr)));
         return res;
     }
 
@@ -203,47 +228,36 @@
             el.width(parent);
             el.attr('width', parent);
         }
-
         canvasWidth($("#logdiskspacecanvas"));
-        updateDiskSpace();
-
         canvasWidth($("#logcpuloadcanvas"));
-        updateCupLoad();
-
         canvasWidth($("#logfilecanvas"));
-        updateFile();
-
         canvasWidth($("#logusercanvas"));
-        updateUser();
-
         canvasWidth($("#logshareusercanvas"));
-        updateShare('user');
-
         canvasWidth($("#logsharegroupcanvas"));
-        updateShare('group');
-
         canvasWidth($("#logsharelinkcanvas"));
-        updateShare('link');
+        updateCharts();
     }
 
     function _onChartComplete(ctx, chartObj, title) {
-        $('.download-pdf-wrapper').show();
-        const $a = $(ctx).siblings('.downloadPng').find('a')
+        $('.result-controller').show();
+        const $a = $(ctx).siblings('.downloadPng').find('a');
         $a.show();
         $a.attr('href', chartObj.toBase64Image());
-        $a.attr('download', title + '.png')
+        $a.attr('download', title + '.png');
     }
 
-    function updateDiskSpace(updatedata) {
-        const dataObj = updatedata ?? $('#logdiskspacecanvas').data('logs');
-        const logLabels = Object.keys(dataObj);
-        const _getTooltipsTitle = (idx) => logLabels[idx];
-
+    function updateDiskSpace() {
+        const dataObj = dataDiskSpace ?? $('#logdiskspacecanvas').data('logs');
         let logData = {'totalSpace':[], 'freeSpace':[]};
+        let logLabels = [];
         for (const [key, value] of Object.entries(dataObj)) {
+            if (needHide && (value['totalSpace'] === null || value['freeSpace'] === null)) continue;
+            logLabels.push(key);
             logData['totalSpace'].push(value['totalSpace']);
             logData['freeSpace'].push(value['freeSpace']);
         }
+
+        const _getTooltipsTitle = (idx) => logLabels[idx];
 
         let stepSize = Math.max.apply(null, logData['totalSpace'])/5;
 		if (typeof logDiskSpaceChart === 'undefined') {
@@ -330,7 +344,7 @@
 				},
             }
             logDiskSpaceChart = new Chart(ctx, chartConfig);
-        } else if (updatedata) {
+        } else {
             logDiskSpaceChart.config.data.datasets[0].data = logData['freeSpace'];
             logDiskSpaceChart.config.data.datasets[1].data = logData['totalSpace'];
             logDiskSpaceChart.config.data.labels = _formatLabels(logLabels);
@@ -343,10 +357,16 @@
         logDiskSpaceChart.update();
     }
 
-    function updateCupLoad(updatedata) {
-		const dataObj = updatedata ?? $('#logcpuloadcanvas').data('logs')
-        const logData = Object.values(dataObj)
-        const logLabels = Object.keys(dataObj)
+    function updateCupLoad() {
+		const dataObj = dataCpuLoad ?? $('#logcpuloadcanvas').data('logs')
+        const logData = [];
+        const logLabels = [];
+        for (const [key, value] of Object.entries(dataObj)) {
+            if (needHide && value === null) continue;
+            logLabels.push(key);
+            logData.push(value);
+        }
+
         const _getTooltipsTitle = (idx) => logLabels[idx];
 
 		if (typeof logCpuLoadChart === 'undefined') {
@@ -397,7 +417,6 @@
                             ticks: {
                                 autoSkip: true,
                                 maxTicksLimit: 5,
-                                max: Math.max.apply(null, logData) + 0.5,
                                 min: 0,
                             }
                         }],
@@ -417,7 +436,7 @@
                 },
             }
 			logCpuLoadChart = new Chart(ctx, chartConfig);
-		} else if (updatedata) {
+		} else {
             logCpuLoadChart.config.data.datasets[0].data = logData;
             logCpuLoadChart.config.data.labels = _formatLabels(logLabels);
             logCpuLoadChart.config.options.scales['xAxes'][0].scaleLabel = _getScaleLabel(logLabels);
@@ -426,10 +445,16 @@
 		logCpuLoadChart.update();
     }
 
-    function updateFile(updatedata) {
-		const dataObj = updatedata ?? $('#logfilecanvas').data('logs')
-        const logData = Object.values(dataObj)
-        const logLabels = Object.keys(dataObj)
+    function updateFile() {
+		const dataObj = dataFile ?? $('#logfilecanvas').data('logs')
+        const logData = [];
+        const logLabels = [];
+        for (const [key, value] of Object.entries(dataObj)) {
+            if (needHide && value === null) continue;
+            logLabels.push(key);
+            logData.push(value);
+        }
+
         const _getTooltipsTitle = (idx) => logLabels[idx];
 
 		if (typeof logFileChart === 'undefined') {
@@ -500,7 +525,7 @@
                 },
             }
 			logFileChart = new Chart(ctx, chartConfig);
-		} else if (updatedata) {
+		} else {
             logFileChart.config.data.datasets[0].data = logData;
             logFileChart.config.data.labels = _formatLabels(logLabels);
             logFileChart.config.options.scales['xAxes'][0].scaleLabel = _getScaleLabel(logLabels);
@@ -509,16 +534,18 @@
 		logFileChart.update();
     }
 
-    function updateUser(updatedata) {
-		const dataObj = updatedata ?? $('#logusercanvas').data('logs')
-        const logLabels = Object.keys(dataObj);
-        const _getTooltipsTitle = (idx) => logLabels[idx];
-
+    function updateUser() {
+        const dataObj = dataUser ?? $('#logusercanvas').data('logs')
         let logData = { 'totalUser':[], 'hourActiveUser':[] };
+        let logLabels = [];
         for (const [key, value] of Object.entries(dataObj)) {
+            if (needHide && (value['totalUser'] === null || value['hourActiveUser'] === null)) continue;
+            logLabels.push(key);
             logData['totalUser'].push(value['totalUser']);
             logData['hourActiveUser'].push(value['hourActiveUser']);
         }
+
+        const _getTooltipsTitle = (idx) => logLabels[idx];
 
 		let	stepSize = 0;
 		if (Math.max.apply(null, logData['totalUser']) < 10) {
@@ -603,7 +630,7 @@
                 },
             }
 			logUserChart = new Chart(ctx, chartConfig);
-		} else if (updatedata) {
+		} else {
             logUserChart.config.data.datasets[0].data = logData["hourActiveUser"];
             logUserChart.config.data.datasets[1].data = logData["totalUser"];
             logUserChart.config.data.labels = _formatLabels(logLabels);
@@ -613,29 +640,38 @@
 		logUserChart.update();
     }
 
-    function updateShare(type, updatedata) {
+    function updateShare(type) {
         let canvasId = null;
         let canvasTitle = '每小時分享數量';
+        let dataObj = null;
         switch (type) {
             case 'user':
                 canvasId = 'logshareusercanvas';
                 canvasTitle += ' (使用者)';
+                dataObj = dataShareUser ?? $('#' + canvasId).data('logs')
                 break;
             case 'group':
                 canvasId = 'logsharegroupcanvas';
                 canvasTitle += ' (群組)';
+                dataObj = dataShareGroup ?? $('#' + canvasId).data('logs')
                 break;
             case 'link':
                 canvasId = 'logsharelinkcanvas';
                 canvasTitle += ' (外部連結)';
+                dataObj = dataShareLink ?? $('#' + canvasId).data('logs')
                 break;
             default:
                 return;
         }
 
-		const dataObj = updatedata ?? $('#' + canvasId).data('logs')
-        const logData = Object.values(dataObj)
-        const logLabels = Object.keys(dataObj)
+        const logData = [];
+        const logLabels = [];
+        for (const [key, value] of Object.entries(dataObj)) {
+            if (needHide && value === null) continue;
+            logLabels.push(key);
+            logData.push(value);
+        }
+
         const _getTooltipsTitle = (idx) => logLabels[idx];
 
 		let	stepSize = 0;
@@ -719,7 +755,7 @@
             if (typeof logShareUserChart === 'undefined') {
                 var ctx = document.getElementById(canvasId);
                 logShareUserChart = new Chart(ctx, chartConfig);
-            } else if (updatedata) {
+            } else {
                 logShareUserChart.config.data.labels = newLabelItem;
                 logShareUserChart.config.data.datasets[0].data = logData;
                 logShareUserChart.config.options.scales['xAxes'][0].scaleLabel = newLabelTitle;
@@ -731,7 +767,7 @@
             if (typeof logShareGroupChart === 'undefined') {
                 var ctx = document.getElementById(canvasId);
                 logShareGroupChart = new Chart(ctx, chartConfig);
-            } else if (updatedata) {
+            } else {
                 logShareGroupChart.config.data.labels = newLabelItem;
                 logShareGroupChart.config.data.datasets[0].data = logData;
                 logShareGroupChart.config.options.scales['xAxes'][0].scaleLabel = newLabelTitle;
@@ -743,7 +779,7 @@
             if (typeof logShareLinkChart === 'undefined') {
                 var ctx = document.getElementById(canvasId);
                 logShareLinkChart = new Chart(ctx, chartConfig);
-            } else if (updatedata) {
+            } else {
                 logShareLinkChart.config.data.labels = newLabelItem;
                 logShareLinkChart.config.data.datasets[0].data = logData;
                 logShareLinkChart.config.options.scales['xAxes'][0].scaleLabel = newLabelTitle;
@@ -751,6 +787,5 @@
             }
             logShareLinkChart.update();
         }
-
     }
 })(jQuery, OC);
