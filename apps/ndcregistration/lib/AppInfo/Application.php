@@ -38,7 +38,9 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
-		$context->registerAlternativeLogin(NdcRegistrationLoginOption::class);
+		$registration_enabled = \OC::$server->getConfig()->getAppValue(self::APP_ID, 'registration_enabled', 'yes');
+		if ($registration_enabled === 'yes') $context->registerAlternativeLogin(NdcRegistrationLoginOption::class);
+
 		$context->registerCapability(Capabilities::class);
 	}
 

@@ -5,6 +5,8 @@
 return [
 	'routes' => [
 		['name' => 'settings#admin', 'url' => '/settings', 'verb' => 'POST'],
+		['name' => 'settings#status', 'url' => '/settings/status', 'verb' => 'POST'],
+
 		['name' => 'captcha#imageCode', 'url' => '/captcha', 'verb' => 'GET'],
 		['name' => 'register#askEmail', 'url' => '/', 'verb' => 'GET'],
 		['name' => 'register#validateEmail', 'url' => '/', 'verb' => 'POST'],

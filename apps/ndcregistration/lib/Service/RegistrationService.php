@@ -156,12 +156,19 @@ class RegistrationService {
 	 * @throws RegistrationException
 	 */
 	public function validateEmail($email) {
+		if ($email != trim($email)) {
+			throw new RegistrationException($this->l10n->t('The email address cannot start or end with space.'));
+		}
+
 		$this->mailService->validateEmail($email);
 
-		// check for pending registrations
-		try {
-			return $this->registrationMapper->find($email);//if not found DB will throw a exception
-		} catch (DoesNotExistException $e) {
+		if ($this->config->getAppValue($this->appName, 'allow_duplicate_email', "yes") === 'no') {
+			// check for pending registrations
+			try {
+				$isPending = $this->registrationMapper->find($email);
+				if (count($isPending) > 0) return $isPending;
+			} catch (DoesNotExistException $e) {
+			}
 		}
 
 		if ($this->userManager->getByEmail($email)) {
@@ -213,6 +220,10 @@ class RegistrationService {
 
 		if ($this->registrationMapper->usernameIsPending($username) || $this->userManager->get($username) !== null) {
 			throw new RegistrationException($this->l10n->t('The username you have chosen already exists.'));
+		}
+
+		if ($username != trim($username)) {
+			throw new RegistrationException($this->l10n->t('The username cannot start or end with space.'));
 		}
 	}
 
@@ -310,29 +321,33 @@ class RegistrationService {
 
 		// Add user to group
 		$registered_user_group = $registration->getGroup(); // 註冊暫存中是否有指定群駔
-		if (!empty($registered_user_group)) { // 有指定群駔
-			$group = $this->groupManager->get($registered_user_group);
-			// 如果群組不存在，自動建立
-			if ($group === null) {
-				$this->groupManager->createGroup($registered_user_group);
+		$registered_user_groupsArr = str_getcsv($registered_user_group , ',', '"'); // 有多筆指定群組
+		if (!empty($registered_user_group) && count($registered_user_groupsArr) > 0) { // 有指定群駔
+			foreach($registered_user_groupsArr as $gid) {
+				$group = $this->groupManager->get($gid);
+				// 如果群組不存在，自動建立
+				if ($group === null) {
+					$this->groupManager->createGroup($gid);
+				}
 			}
 		} else {
 			$registered_user_group = $this->config->getAppValue($this->appName, 'registered_user_group', 'none');
 		}
 
+		$mutipleGroupId = []; // 多筆群組的GroupId
 		if ($registered_user_group !== 'none') {
-			$group = $this->groupManager->get($registered_user_group);
-			if ($group === null) {
-				// This might happen if $registered_user_group is deleted after setting the value
-				// Here I choose to log error instead of stopping the user to register
-				$this->logger->error("You specified newly registered users be added to '$registered_user_group' group, but it does not exist.");
-				$groupId = '';
-			} else {
-				$group->addUser($user);
-				$groupId = $group->getGID();
+			// 逐一加入各群組
+			foreach($registered_user_groupsArr as $gid) {
+				$group = $this->groupManager->get($gid);
+				if ($group === null) {
+					// This might happen if $registered_user_group is deleted after setting the value
+					// Here I choose to log error instead of stopping the user to register
+					$this->logger->error("You specified newly registered users be added to '$registered_user_group' group, but it does not exist.");
+				} else {
+					$group->addUser($user);
+					$mutipleGroupId[] = $group->getGID();
+				}
 			}
-		} else {
-			$groupId = "";
 		}
 
 		// 設定使用者容量
@@ -356,7 +371,7 @@ class RegistrationService {
 			}
 		}
 
-		$this->mailService->notifyAdmins($userId, $user->isEnabled(), $groupId);
+		$this->mailService->notifyAdmins($userId, $user->isEnabled(), $mutipleGroupId);
 		return $user;
 	}
 
@@ -394,11 +409,17 @@ class RegistrationService {
 
 	/**
 	 * @param $email
+	 * @param $username
 	 */
-	public function deleteByEmail($email) {
+	public function deleteByEmailAndUsername($email, $username) {
 		try {
-			$registration =  $this->registrationMapper->find($email);//if not found DB will throw a exception
-			$this->registrationMapper->delete($registration);
+			$registrationsByMail = $this->registrationMapper->find($email);
+			// 有多筆同Email資料
+			foreach ($registrationsByMail as $registration) {
+				if ($registration->getUsername() === $username) {
+					$this->registrationMapper->delete($registration);
+				}
+			}
 		} catch (DoesNotExistException $e) {
 		}
 	}

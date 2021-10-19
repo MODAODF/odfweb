@@ -20,10 +20,10 @@
     "Create account" : "建立帳號",
     "Verify" : "核對",
     "Verification email successfully sent." : "驗證電子郵件已經成功傳送。",
-    "Default group that all registered users belong" : "新使用者屬群組",
-    "User preset storage capacity" : "使用者儲存空間配額",
+    "Default group that all registered users belong" : "新使用者預設群組",
+    "User preset storage capacity" : "使用者預設儲存空間配額",
     "Allowed mail address domains for registration" : "允許註冊的電子郵件網域名稱",
-    "Enter a semicolon-separated list of allowed domains. Example: owncloud.com;github.com" : "可以輸入多個域名，各域名間以分號「;」隔開。例如：ossii.com.tw;gmail.com",
+    "Enter a semicolon-separated list of allowed domains. Example: owncloud.com;github.com" : "可以輸入多個域名，各域名間以英文半形分號「;」隔開。例如：ossii.com.tw;gmail.com",
     "Require admin approval?" : "新註冊者需管理者審核啟用",
     "Automatic account activation" : "自動啟用帳號",
     "You will receive an email with a verification link" : "您將會收到要求驗證的電子郵件",
@@ -45,6 +45,7 @@
     "Confirm password" : "確認密碼",
     "Passwords do not match" : "兩次密碼不一致",
     "The account import is abnormal. The mail server may be set incorrectly." : "帳號匯入發生異常情況，可能是郵件伺服器設定不正確。",
-    "Batch import of accounts is complete" : "帳號批次匯入完畢","The following error occurred, please check before uploading" : "發生下列錯誤，請檢查後，再上傳"
+    "Batch import of accounts is complete" : "帳號批次匯入完畢","The following error occurred, please check before uploading" : "發生下列錯誤，請檢查後，再上傳",
+    "Enable Registration" : "啟用註冊功能"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

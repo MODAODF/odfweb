@@ -47,6 +47,7 @@ OC.L10N.register(
     "Passwords do not match" : "兩次密碼不一致",
     "The account import is abnormal. The mail server may be set incorrectly." : "帳號匯入發生異常情況，可能是郵件伺服器設定不正確。",
     "Batch import of accounts is complete" : "帳號批次匯入完畢",
-    "The following error occurred, please check before uploading" : "發生下列錯誤，請檢查後，再上傳"
+    "The following error occurred, please check before uploading" : "發生下列錯誤，請檢查後，再上傳",
+    "Enable Registration" : "啟用註冊功能"
 },
 "nplurals=1; plural=0;");

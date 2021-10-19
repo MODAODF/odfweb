@@ -69,7 +69,7 @@ class RegistrationMapper extends Mapper {
 	 */
 	public function find($email) {
 		$sql = 'SELECT * FROM `*PREFIX*registration` WHERE `email` = ? ';
-		return $this->findEntity($sql, [$email]);
+		return $this->findEntities($sql, [$email]);
 	}
 
 	/**

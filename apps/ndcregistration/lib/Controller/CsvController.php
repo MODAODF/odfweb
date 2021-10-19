@@ -11,6 +11,7 @@ use OCP\AppFramework\Controller;
 use OCP\IUserManager;
 use OCP\IGroupManager;
 use OCP\IL10N;
+use OCP\IConfig;
 
 class CsvController extends Controller {
 
@@ -41,13 +42,16 @@ class CsvController extends Controller {
 	private $mailService;
 	/** @var IL10N */
 	private $l10n;
+	/** @var IConfig */
+	private $config;
 
 	public function __construct(
 		$AppName,
 		IRequest $request ,
 		RegistrationService $registrationService,
 		MailService $mailService,
-		IL10N $l10n
+		IL10N $l10n,
+		IConfig $config
 	) {
 		parent::__construct($AppName, $request);
 
@@ -56,6 +60,7 @@ class CsvController extends Controller {
 		$this->registrationService = $registrationService;
 		$this->mailService = $mailService;
 		$this->l10n = $l10n;
+		$this->config = $config;
 
 		// CSV -> array
 		$this->csvArr = null;
@@ -165,8 +170,13 @@ class CsvController extends Controller {
 				// 2.檢查 email
 				try {
 					if ($this->registrationService->validateEmail($email) !== true) {
-						$msg[] = '#'.$lineNo.' ('.$email.') : '.'已被使用';
+						throw new RegistrationException('此Email已註冊');
 					}
+					// 檢查 CSV 重複Email
+					if ($this->config->getAppValue($this->appName, 'allow_duplicate_email', "yes") === 'no' && in_array($email, $this->emails, true)) {
+						throw new RegistrationException('CSV含重複的Email');
+					}
+					$this->emails[] = $email;
 				} catch (\Exception $e) {
 					$msg[] = '#'.$lineNo.' ('.$email.') : '.$e->getMessage();
 				}
@@ -174,11 +184,24 @@ class CsvController extends Controller {
 				// 3. 檢查 group
 				if ($group === '') {
 					$msg[] = '#'.$lineNo.' : 群組空白！';
-				} else { // 紀錄所有群組
-					// 沒有被紀錄過
-					if (!array_key_exists($group, $groupLists)) {
-						// 紀錄該群組是否已存在系統中
-						$groupLists[$group] = $this->groupManager->groupExists($group);
+				} else {
+					// 檢查群組陣列格式
+					if ($groupArr = str_getcsv($group, ',', '"')) {
+						foreach ($groupArr as $g) {
+							if ($g != trim($g)) {
+								$msg[] = '#'.$lineNo.' ('.$g.') : '.'The group name cannot start or end with space.';
+							} else if(strpos(trim($g), "\n") !== FALSE) {
+								$msg[] = '#'.$lineNo.' : 群組格式錯誤(雙引號)';
+							} else {  // 紀錄所有群組
+								// 沒有被紀錄過
+								if (!array_key_exists($g, $groupLists)) {
+									// 紀錄該群組是否已存在系統中
+									$groupLists[$g] = $this->groupManager->groupExists($g);
+								}
+							}
+						}
+					} else {
+						$msg[] = '#'.$lineNo.' : 群組格式錯誤';
 					}
 				}
 			} else if ($rowCount > 0) {
@@ -216,7 +239,7 @@ class CsvController extends Controller {
 		// 開始真正匯入資料
 		$result = true;
 		$resultMsg = $this->l10n->t('Batch import of accounts is complete');
-		$this->startTime = mktime();
+		$this->startTime = time();
 		foreach ($userLists as $user) {
 			$email = $user[SELF::EMAIL_NAME];
 			$username = $user[SELF::ID_NAME];
@@ -232,13 +255,14 @@ class CsvController extends Controller {
 				break;
 			}
 		}
-		$this->endTime = mktime();
+		$this->endTime = time();
 
 		// 匯入過程若發生錯誤，需將匯入的資料刪除
 		if (!$result) {
 			foreach ($userLists as $user) {
 				$email = $user[SELF::EMAIL_NAME];
-				$this->registrationService->deleteByEmail($email);
+				$username = $user[SELF::ID_NAME];
+				$this->registrationService->deleteByEmailAndUsername($email, $username);
 			}
 		}
 

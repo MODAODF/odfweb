@@ -1,10 +1,15 @@
-#alternative-logins .button.register-button {
-	color: var(--color-primary-element);
+#alternative-logins .register-button:only-child {
+    width: 220px;
+    margin-left: 70px !important;
+    color: #000;
+    background-color: #fff;
+    border-color: #808080;
+	opacity: 70%;
+	transition: 0.2s all;
 }
 
-#alternative-logins .register-button:only-child {
-	width: 220px;
-	margin-left: 70px !important;
+#alternative-logins .register-button:only-child:hover {
+	opacity: 100%;
 }
 
 #alternative-logins .register-button.hidden {

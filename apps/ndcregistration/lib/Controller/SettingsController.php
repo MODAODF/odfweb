@@ -51,7 +51,7 @@ class SettingsController extends Controller {
 	 * @param bool $auto_account_active newly registered users have to be validated by an admin
 	 * @return DataResponse
 	 */
-	public function admin($registered_user_group, $user_storage_capacity, $allowed_domains, $auto_account_active) {
+	public function admin($registered_user_group, $user_storage_capacity, $allowed_domains, $auto_account_active, $allow_duplicate_email) {
 		// handle domains
 		if (($allowed_domains==='') || ($allowed_domains === null)) {
 			$this->config->deleteAppValue($this->appName, 'allowed_domains');
@@ -64,6 +64,9 @@ class SettingsController extends Controller {
 
 		// handle admin validation
 		$this->config->setAppValue($this->appName, 'admin_approval_required', $auto_account_active ? "no" : "yes");
+
+		// handle registrate with same email via CSV
+		$this->config->setAppValue($this->appName, 'allow_duplicate_email', $allow_duplicate_email ? "yes" : "no");
 
 		// handle groups
 		$groups = $this->groupmanager->search('');
@@ -120,13 +123,35 @@ class SettingsController extends Controller {
 		// handle admin validation (預設需要管理者審核啟用)
 		$admin_approval_required = $this->config->getAppValue($this->appName, 'admin_approval_required', "yes");
 
+		$registration_enabled = $this->config->getAppValue($this->appName, 'registration_enabled', 'yes');
+
+		$allow_duplicate_email = $this->config->getAppValue($this->appName, 'allow_duplicate_email', "yes");
+
 		return new TemplateResponse('ndcregistration', 'admin', [
 			'groups' => $group_id_list,
 			'user_storage_capacity' => $user_storage_capacity,
 			'current' => $current_value,
 			'allowed' => $allowed_domains,
 			'approval_required' => $admin_approval_required,
-			'auto_account_active' => ($admin_approval_required === "yes" ? 'no' : 'yes')
+			'auto_account_active' => ($admin_approval_required === "yes" ? 'no' : 'yes'),
+			'registration_enabled' => $registration_enabled,
+			'allow_duplicate_email' => $allow_duplicate_email,
 		], '');
+	}
+
+	/**
+	 * @AdminRequired
+	 *
+	 * @param string $str
+	 * @return DataResponse
+	 */
+	public function status($str) {
+		$this->config->setAppValue($this->appName, 'registration_enabled', $str);
+		return new DataResponse([
+			'data' => [
+				'message' => (string) $this->l10n->t('Saved')
+			],
+			'status' => 'success'
+		]);
 	}
 }
