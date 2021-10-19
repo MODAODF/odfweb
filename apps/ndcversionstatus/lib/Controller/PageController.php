@@ -159,9 +159,8 @@ class PageController extends Controller {
 			} else {
 				$latestVersion = $releasedVersions[$key];
 			}
-			$stmt1 = $this->l10n->t('Current version: [ %s ]', [$usingVersion]);
-			$stmt2 = $this->l10n->t('the latest version: [ %s ]', [$latestVersion]);
-			$parameters[$key]['msg'] = $stmt1 . ', ' . $stmt2 . '. ';
+			$stmt = $this->l10n->t('Current version [ %1$s ], the latest version [ %2$s ].', [$usingVersion, $latestVersion]);
+			$parameters[$key]['msg'] = $stmt;
 
 			// 比較版號
 			if ( intval(str_replace(".", "", $latestVersion)) > 0 &&

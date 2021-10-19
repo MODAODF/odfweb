@@ -14,10 +14,10 @@ style('ndcversionstatus', 'index');
 	<h3><?php p($l->t('Version Infos')) ?></h3>
 	<ul>
 		<li>
-			<b><?php p($l->t('【NDCODFWEB】'))?></b> - <span><?php p($_['ndcodfweb'] ?? $l->t('Fail to get version.') )  ?></span>
+			<b><?php p($l->t('【Odfweb】'))?></b> - <span><?php p($_['odfweb'] ?? $l->t('Fail to get version.') )?></span>
 		</li>
 		<li>
-			<b><?php p($l->t('【Odfweb】'))?></b> - <span><?php p($_['odfweb'] ?? $l->t('Fail to get version.') )?></span>
+			<b><?php p($l->t('【NDCODFWEB】'))?></b> - <span><?php p($_['ndcodfweb'] ?? $l->t('Fail to get version.') )  ?></span>
 		</li>
 	</ul>
 	<br>

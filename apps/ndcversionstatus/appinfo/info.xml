@@ -5,7 +5,7 @@
     <name>Ndc Version Status</name>
     <summary>Check ndcodfweb &amp; odfweb version status</summary>
     <description><![CDATA[Check ndcodfweb &amp; odfweb version status]]></description>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <licence>agpl</licence>
     <author mail="sharon.wu@ossii.com.tw" homepage="http://www.ossii.com.tw">sharon wu</author>
     <namespace>NdcVersionStatus</namespace>
