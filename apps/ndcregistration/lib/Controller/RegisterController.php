@@ -17,6 +17,7 @@ use OCA\NdcRegistration\Service\MailService;
 use OCA\NdcRegistration\Service\RegistrationException;
 use OCA\NdcRegistration\Service\RegistrationService;
 use \OCP\IRequest;
+use \OCP\AppFramework\Http\ContentSecurityPolicy;
 use \OCP\AppFramework\Http\TemplateResponse;
 use \OCP\AppFramework\Http\RedirectResponse;
 use \OCP\AppFramework\Controller;
@@ -63,7 +64,11 @@ class RegisterController extends Controller {
 			'errormsg' => $errormsg ? $errormsg : $this->request->getParam('errormsg'),
 			'entered' => $entered ? $entered : $this->request->getParam('entered')
 		];
-		return new TemplateResponse('ndcregistration', 'register', $params, 'guest');
+		$response = new TemplateResponse('ndcregistration', 'register', $params, 'guest');
+		$policy = new ContentSecurityPolicy();
+		$policy->allowInlineStyle(false);
+		$response->setContentSecurityPolicy($policy);
+		return $response;
 	}
 
 	/**
