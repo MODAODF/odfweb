@@ -88,6 +88,7 @@ class OC_Response {
 			. 'frame-ancestors \'self\'; '
 			. 'img-src \'self\'; '
 			. 'font-src \'self\' data:; '
+			. 'form-action \'self\'; '
 			. 'media-src  \'self\'; '
 			. 'connect-src \'self\'; '
 			. 'object-src \'none\'; '
