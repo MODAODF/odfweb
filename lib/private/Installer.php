@@ -401,6 +401,8 @@ class Installer {
 	 * @return string|false false or the version number of the update
 	 */
 	public function isUpdateAvailable($appId, $allowUnstable = false) {
+		return false;
+
 		if ($this->isInstanceReadyForUpdates === null) {
 			$installPath = OC_App::getInstallPath();
 			if ($installPath === false || $installPath === null) {
