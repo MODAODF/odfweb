@@ -24,7 +24,7 @@ body {
 	text-align: center;
 	background-color: #ECECFF;
 	background-image: url('../img/background.png?v=2');
-	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #ECECFF 0%, rgba(28,175,255,1) 100%);
+	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #ECECFF 0%, #ECECFF 100%);
 	background-position: 50% 50%;
 	background-repeat: repeat;
 	background-size: 275px, contain;

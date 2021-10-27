@@ -238,7 +238,7 @@ class OC_Defaults {
 		} else {
 			if ($this->defaultSlogan === null) {
 				$l10n = \OC::$server->getL10N('lib', $lang);
-				$this->defaultSlogan = $l10n->t('a safe home for all your data');
+				$this->defaultSlogan = "ODF Web 文件應用";
 			}
 			return $this->defaultSlogan;
 		}
