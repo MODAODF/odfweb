@@ -32,7 +32,7 @@ export class SubmitInput extends Component<SubmitInputProps, SubmitInputState> {
 		const {initialValue, onSubmitValue, ...props} = this.props;
 
 		return <form onSubmit={this.onSubmit}>
-			<input type="text" value={this.state.value}
+			<input type="text" value={this.state.value} placeholder="127.0.0.1:9980"
 				   {...props}
 				   onChange={event => this.setState({value: event.currentTarget.value})}/>
 		</form>;

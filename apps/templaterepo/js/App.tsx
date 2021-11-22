@@ -73,11 +73,12 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
             return;
         }
         this.setState({ newMountPoint: '' });
-        this.api.createFolder(mountPoint).then((id) => {
+        this.api.createFolder(mountPoint).then((obj) => {
             const folders = this.state.folders;
+            const id = obj['id'];
             folders.push({
                 mount_point: mountPoint,
-                api_server: "https://127.0.0.1:9980",
+                api_server: obj['apiserver'],
                 groups: {admin:OC.PERMISSION_ALL ^ OC.PERMISSION_SHARE},
                 users: {},
                 quota: -3,
@@ -297,7 +298,7 @@ export class App extends Component<{}, AppState> implements OC.Plugin<OC.Search.
                                     this.setState({ editingAPIServer: id })
                                 }}
                             >
-                                {folder.api_server}
+                                {folder.api_server !== "" ? folder.api_server : <em>未設定</em>}
                             </a>
                         }
                     </td>
