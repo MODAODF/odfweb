@@ -92,7 +92,13 @@ export class Api {
 	createFolder(mountPoint: string): Thenable<number> {
 		return $.post(this.getUrl('folders'), {
 			mountpoint: mountPoint
-		}, null, 'json').then((data: OCSResult<{ id: number; }>) => data.ocs.data.id);
+		}, null, 'json').then((data: OCSResult<{ id: number, apiserver: string; }>) => {
+				return {
+					id: data.ocs.data.id,
+					apiserver: data.ocs.data.apiserver
+				}
+			}
+		);
 	}
 
 	deleteFolder(id: number): Thenable<void> {
