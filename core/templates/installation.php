@@ -178,6 +178,6 @@ script('core', [
 	<p class="info">
 		<span class="icon-info-white"></span>
 		<?php p($l->t('Need help?'));?>
-		<a target="_blank" rel="noreferrer noopener" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', '國發會ODF WEB文件應用元件伺服器佈署說明書.pdf')) ?>"><?php p($l->t('See the documentation'));?> ↗</a>
+		<a target="_blank" rel="noreferrer noopener" href="<?php p(\OC::$server->getURLGenerator()->linkTo('', '國發會ODF文件Web應用元件伺服器佈署說明書.pdf')) ?>"><?php p($l->t('See the documentation'));?> ↗</a>
 	</p>
 </form>

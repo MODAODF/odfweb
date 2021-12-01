@@ -292,7 +292,7 @@ class Updater {
 	private function getExpectedElementsList() {
 		$expected = [
 			// odfweb extra files and folders
-			'國發會ODF WEB文件應用元件伺服器佈署說明書.pdf',
+			'國發會ODF文件Web應用元件伺服器佈署說明書.pdf',
 			'TSCSSO.php',
 			'asetup.sh',
 			'ssotest.php',
