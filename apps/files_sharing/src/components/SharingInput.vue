@@ -102,6 +102,7 @@ export default {
 			ShareSearch: OCA.Sharing.ShareSearch.state,
 			suggestions: [],
 			value: null,
+			getgroupuser: false, // 搜尋群組使用者
 		}
 	},
 
@@ -161,6 +162,7 @@ export default {
 		},
 
 		async asyncFind(query) {
+			if (this.getgroupuser === true) return
 			// save current query to check if we display
 			// recommendations or search results
 			this.query = query.trim()
@@ -184,6 +186,8 @@ export default {
 			if (OC.getCapabilities().files_sharing.sharee.query_lookup_default === true) {
 				lookup = true
 			}
+			if (lookup) this.getgroupuser = false
+			const getgroupuser = this.getgroupuser
 
 			const shareType = [
 				this.SHARE_TYPES.SHARE_TYPE_USER,
@@ -211,6 +215,7 @@ export default {
 						lookup,
 						perPage: this.config.maxAutocompleteResults,
 						shareType,
+						getgroupuser,
 					},
 				})
 			} catch (error) {
@@ -239,7 +244,7 @@ export default {
 			// lookup clickable entry
 			// show if enabled and not already requested
 			const lookupEntry = []
-			if (data.lookupEnabled && !lookup) {
+			if (data.lookupEnabled && !lookup && !getgroupuser) {
 				lookupEntry.push({
 					id: 'global-lookup',
 					isNoUser: true,
@@ -251,7 +256,27 @@ export default {
 			// if there is a condition specified, filter it
 			const externalResults = this.externalResults.filter(result => !result.condition || result.condition(this))
 
-			const allSuggestions = exactSuggestions.concat(suggestions).concat(externalResults).concat(lookupEntry)
+			const tmpSuggestions = exactSuggestions.concat(suggestions).concat(externalResults).concat(lookupEntry)
+
+			let allSuggestions = []
+			if (getgroupuser) {
+				allSuggestions = tmpSuggestions
+			} else {
+				// 加入 搜尋群組使用者 選項
+				tmpSuggestions.forEach((item, idx) => {
+					allSuggestions.push(item)
+					if (item.shareType === 1) {
+						const newItem = {
+							isNoUser: true,
+							displayName: '搜尋' + item.displayName + '群組使用者',
+							getgroupuser: true,
+							gid: item.displayName
+						}
+						allSuggestions.push(newItem)
+					}
+				})
+			}
+			this.getgroupuser = false
 
 			// Count occurrences of display names in order to provide a distinguishable description if needed
 			const nameCounts = allSuggestions.reduce((nameCounts, result) => {
@@ -483,6 +508,17 @@ export default {
 				return true
 			}
 
+			if (value.getgroupuser) {
+				this.loading = true
+				this.getgroupuser = true
+
+				await this.getSuggestions(value.gid, false, true)
+				this.$nextTick(() => {
+					this.getgroupuser = false // value.gid.trim()
+					this.$refs.multiselect.$el.querySelector('.multiselect__input').focus()
+				})
+				return true
+			}
 			// handle externalResults from OCA.Sharing.ShareSearch
 			if (value.handler) {
 				const share = await value.handler(this)
@@ -560,6 +596,7 @@ export default {
 
 .vs__dropdown-menu {
 	// properly style the lookup entry
+	span[getgroupuser],
 	span[lookup] {
 		.avatardiv {
 			background-image: var(--icon-search-white);
