@@ -54,6 +54,10 @@ use OCP\IURLGenerator;
 use OCP\Share\IShare;
 use OCP\Share\IManager;
 use function usort;
+use OCP\IGroup;
+use OCP\IUser;
+use OCP\IGroupManager;
+use OCP\IUserManager;
 
 class ShareesAPIController extends OCSController {
 
@@ -68,6 +72,12 @@ class ShareesAPIController extends OCSController {
 
 	/** @var IManager */
 	protected $shareManager;
+
+	/** @var IGroupManager */
+	protected $groupManager;
+
+	/** @var IUserManager */
+	protected $userManager;
 
 	/** @var int */
 	protected $offset = 0;
@@ -110,6 +120,8 @@ class ShareesAPIController extends OCSController {
 	 * @param IConfig $config
 	 * @param IURLGenerator $urlGenerator
 	 * @param IManager $shareManager
+	 * @param IGroupManager $groupManager
+	 * @param IUserManager $userManager
 	 * @param ISearch $collaboratorSearch
 	 */
 	public function __construct(
@@ -119,6 +131,8 @@ class ShareesAPIController extends OCSController {
 		IConfig $config,
 		IURLGenerator $urlGenerator,
 		IManager $shareManager,
+		IGroupManager $groupManager,
+		IUserManager $userManager,
 		ISearch $collaboratorSearch
 	) {
 		parent::__construct($appName, $request);
@@ -127,6 +141,93 @@ class ShareesAPIController extends OCSController {
 		$this->urlGenerator = $urlGenerator;
 		$this->shareManager = $shareManager;
 		$this->collaboratorSearch = $collaboratorSearch;
+		$this->groupManager = $groupManager;
+		$this->userManager = $userManager;
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @param string $search
+	 * @param string $itemType
+	 * @param int $page
+	 * @param int $perPage
+	 * @param int|int[] $shareType
+	 * @param bool $lookup
+	 * @param bool $getgroupuser 搜尋群組使用者
+	 * @return DataResponse
+	 * @throws OCSBadRequestException
+	 */
+	public function search(string $search = '', string $itemType = null, int $page = 1, int $perPage = 200, $shareType = null, bool $lookup = false, bool $getgroupuser = false): DataResponse {
+		$args = func_get_args();
+
+		if ($getgroupuser) {
+			$odfwebResult = $this->search_groupUser(...$args);
+		}
+		if(!$getgroupuser && preg_match('/\*/i', $search)) {
+			$odfwebResult = $this->search_regExp(...$args);
+		}
+
+		$shareTypes = [
+			IShare::TYPE_USER,
+		];
+
+		if ($itemType === null) {
+			throw new OCSBadRequestException('Missing itemType');
+		} elseif ($itemType === 'file' || $itemType === 'folder') {
+			// 不允許搜尋群組
+			// if ($this->shareManager->allowGroupSharing()) {
+				$shareTypes[] = IShare::TYPE_GROUP;
+			// }
+
+			if ($this->isRemoteSharingAllowed($itemType)) {
+				$shareTypes[] = IShare::TYPE_REMOTE;
+			}
+
+			if ($this->isRemoteGroupSharingAllowed($itemType)) {
+				$shareTypes[] = IShare::TYPE_REMOTE_GROUP;
+			}
+
+			if ($this->shareManager->shareProviderExists(IShare::TYPE_EMAIL)) {
+				$shareTypes[] = IShare::TYPE_EMAIL;
+			}
+
+			if ($this->shareManager->shareProviderExists(IShare::TYPE_ROOM)) {
+				$shareTypes[] = IShare::TYPE_ROOM;
+			}
+		} else {
+			$shareTypes[] = IShare::TYPE_GROUP;
+			$shareTypes[] = IShare::TYPE_EMAIL;
+		}
+
+		// FIXME: DI
+		if (\OC::$server->getAppManager()->isEnabledForUser('circles') && class_exists('\OCA\Circles\ShareByCircleProvider')) {
+			$shareTypes[] = IShare::TYPE_CIRCLE;
+		}
+
+		if ($shareType !== null && is_array($shareType)) {
+			$shareTypes = array_intersect($shareTypes, $shareType);
+		} elseif (is_numeric($shareType)) {
+			$shareTypes = array_intersect($shareTypes, [(int) $shareType]);
+		}
+		sort($shareTypes);
+
+		if(isset($odfwebResult)) {
+			$response = $odfwebResult; // DataResponse
+			$response->addHeader('Link', $this->getPaginationLink($page, [
+				'search' => $search,
+				'itemType' => $itemType,
+				'shareType' => $shareTypes,
+				'perPage' => $perPage,
+			]));
+		} else {
+			try {
+				$response = $this->nc_search(...$args);
+			} catch (OCSBadRequestException $e) {
+				throw new OCSBadRequestException($e->getMessage());
+			}
+		}
+		return $response;
 	}
 
 	/**
@@ -141,7 +242,7 @@ class ShareesAPIController extends OCSController {
 	 * @return DataResponse
 	 * @throws OCSBadRequestException
 	 */
-	public function search(string $search = '', string $itemType = null, int $page = 1, int $perPage = 200, $shareType = null, bool $lookup = false): DataResponse {
+	public function nc_search(string $search = '', string $itemType = null, int $page = 1, int $perPage = 200, $shareType = null, bool $lookup = true): DataResponse {
 
 		// only search for string larger than a given threshold
 		$threshold = $this->config->getSystemValueInt('sharing.minSearchStringLength', 0);
@@ -168,9 +269,10 @@ class ShareesAPIController extends OCSController {
 		if ($itemType === null) {
 			throw new OCSBadRequestException('Missing itemType');
 		} elseif ($itemType === 'file' || $itemType === 'folder') {
-			if ($this->shareManager->allowGroupSharing()) {
+			// 不允許搜尋群組
+			// if ($this->shareManager->allowGroupSharing()) {
 				$shareTypes[] = IShare::TYPE_GROUP;
-			}
+			// }
 
 			if ($this->isRemoteSharingAllowed($itemType)) {
 				$shareTypes[] = IShare::TYPE_REMOTE;
@@ -244,6 +346,136 @@ class ShareesAPIController extends OCSController {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * 以正規表達式搜尋
+	 * @NoAdminRequired
+	 *
+	 * @param string $search
+	 * @param string $itemType
+	 * @param int $page
+	 * @param int $perPage
+	 * @param int|int[] $shareType
+	 * @param bool $lookup
+	 * @param bool $getgroupuser 搜尋群組使用者
+	 * @return DataResponse
+	 * @throws OCSBadRequestException
+	 */
+	private function search_regExp(string $search = '', string $itemType = null, int $page = 1, int $perPage = 200, $shareType = null, bool $lookup = true, bool $getgroupuser = false): DataResponse {
+		$allUsers = $this->userManager->search('');
+		$allGroups = $this->groupManager->search('');
+		foreach( $allGroups as $group) { $allGids[] = $group->getGid(); }
+		foreach( $allUsers as $user) { $allUids[] = $user->getUID(); }
+		// '/^'.str_replace('*', '(.+?)', $search).'$/i';
+		$regex = '/'.str_replace('*', '(.+?)', $search).'/i';
+		$matcheGids = preg_grep($regex, $allGids);
+		$matcheUids = preg_grep($regex, $allUids);
+		// nc搜尋批配的群組
+		if (isset($matcheGids) && count($matcheGids) > 0) {
+			foreach( $matcheGids as $gid) {
+				try {
+					$search = $gid;
+					$ncSearch = $this->nc_search(...func_get_args());
+					$data = $ncSearch->getData();
+				} catch (OCSBadRequestException $e) {
+					continue;
+				}
+				if (!isset($result)) {
+					$result = $data;
+				} else {
+					if(isset($data['exact']['groups'])) {
+						$result['exact']['groups'] = array_merge_recursive($result['exact']['groups'], $data['exact']['groups']);
+					}
+				}
+			}
+		}
+		// nc搜尋批配的使用者
+		if (isset($matcheUids) && count($matcheUids) > 0) {
+			foreach( $matcheUids as $uid) {
+				try {
+					$search = $uid;
+					$ncSearch = $this->nc_search(...func_get_args());
+					$data = $ncSearch->getData();
+				} catch (OCSBadRequestException $e) {
+					continue;
+				}
+				if (!isset($result)) {
+					$result = $data;
+				} else {
+					if(isset($data['exact']['users'])) {
+						$result['exact']['users'] = array_merge_recursive($result['exact']['users'], $data['exact']['users']);
+					}
+				}
+			}
+		}
+		return new DataResponse($result);
+	}
+
+	/**
+	 * 搜尋群組使用者
+	 * @NoAdminRequired
+	 *
+	 * @param string $search
+	 * @param string $itemType
+	 * @param int $page
+	 * @param int $perPage
+	 * @param int|int[] $shareType
+	 * @param bool $lookup
+	 * @param bool $getgroupuser 搜尋群組使用者
+	 * @return DataResponse
+	 * @throws OCSBadRequestException
+	 */
+	private function search_groupUser(string $search = '', string $itemType = null, int $page = 1, int $perPage = 200, $shareType = null, bool $lookup = true, bool $getgroupuser = false): DataResponse {
+		// group user
+		$gid = $search;
+		$targetGroup = $this->groupManager->get($gid);
+		if($targetGroup instanceof IGroup) {
+			foreach ($targetGroup->getUsers() as $user) {
+				try {
+					$search = $user->getUID();
+					$ncSearch = $this->nc_search(...func_get_args());
+					$data = $ncSearch->getData();
+				} catch (OCSBadRequestException $e) {
+					continue;
+				}
+				if (!isset($result)) {
+					$result = $data;
+				} else {
+					if(isset($data['exact']['users'])) {
+						$result['exact']['users'] = array_merge_recursive($result['exact']['users'], $data['exact']['users']);
+					}
+				}
+			}
+		}
+
+		if (!$result) {
+			$result = $this->result;
+		}
+
+		// 允許群組分享 -> 加入群組連結
+		if ($this->shareManager->allowGroupSharing()) {
+			try {
+				$search = $gid;
+				$ncSearch = $this->nc_search(...func_get_args());
+				$groupData = $ncSearch->getData();
+			} catch (OCSBadRequestException $e) {
+				throw new OCSBadRequestException($e->getMessage());
+			}
+
+			// 群組名稱完整符合的搜尋結果
+			foreach($groupData['groups'] as $group) {
+				if ($group['value']['shareWith'] === $gid) {
+					$result['groups'][] = $group;
+				}
+			}
+			foreach($groupData['exact']['groups'] as $group) {
+				if ($group['value']['shareWith'] === $gid) {
+					$result['exact']['groups'][] = $group;
+				}
+			}
+		}
+		return new DataResponse($result);
 	}
 
 	/**
