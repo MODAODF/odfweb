@@ -36,7 +36,7 @@ class SecuritySetting implements ISetting {
 	}
 
 	public function canChangeMail() {
-		return false;
+		return true;
 	}
 
 	public function canChangeStream() {
