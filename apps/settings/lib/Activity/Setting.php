@@ -85,7 +85,7 @@ class Setting implements ISetting {
 	 * @since 11.0.0
 	 */
 	public function canChangeMail() {
-		return false;
+		return true;
 	}
 
 	/**
