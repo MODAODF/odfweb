@@ -229,10 +229,10 @@ class Updater extends BasicEmitter {
 	 */
 	private function doUpgrade(string $currentVersion, string $installedVersion): void {
 		// Stop update if the update is over several major versions
-		$allowedPreviousVersions = $this->getAllowedPreviousVersions();
-		if (!$this->isUpgradePossible($installedVersion, $currentVersion, $allowedPreviousVersions)) {
-			throw new \Exception('Updates between multiple major versions and downgrades are unsupported.');
-		}
+		// $allowedPreviousVersions = $this->getAllowedPreviousVersions();
+		// if (!$this->isUpgradePossible($installedVersion, $currentVersion, $allowedPreviousVersions)) {
+		// 	throw new \Exception('Updates between multiple major versions and downgrades are unsupported.');
+		// }
 
 		// Update .htaccess files
 		try {
