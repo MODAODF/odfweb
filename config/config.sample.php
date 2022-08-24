@@ -306,7 +306,7 @@ $CONFIG = [
 /**
  * By default WebAuthn is available but it can be explicitly disabled by admins
  */
-'auth.webauthn.enabled' => true,
+'auth.webauthn.enabled' => false,
 
 /**
  * By default the login form is always available. There are cases (SSO) where an
