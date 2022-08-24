@@ -333,7 +333,7 @@ $CONFIG = [
 /**
  * By default, WebAuthn is available, but it can be explicitly disabled by admins
  */
-'auth.webauthn.enabled' => true,
+'auth.webauthn.enabled' => false,
 
 /**
  * Whether encrypted password should be stored in the database
