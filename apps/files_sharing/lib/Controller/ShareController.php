@@ -395,6 +395,9 @@ class ShareController extends AuthPublicShareController {
 			throw $e;
 		}
 
+		// 不論有沒有隱藏下載，都可以顯示 QR code
+		\OCP\Util::addScript('files_sharing', 'qrcode.min');
+		\OCP\Util::addScript('files_sharing', 'public_qrcode');
 
 		$this->emitAccessShareHook($share);
 		$this->emitShareAccessEvent($share, self::SHARE_ACCESS);
