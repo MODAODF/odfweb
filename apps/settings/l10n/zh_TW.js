@@ -760,6 +760,7 @@ OC.L10N.register(
     "User's table" : "使用者的表格",
     "Select user manager" : "選取使用者管理者",
     "Overwrite cli URL" : "覆寫 CLI URL",
-    "This instance is missing some recommended PHP modules. For improved performance and better compatibility it is highly recommended to install them: %s." : "此站台缺少一些建議的 PHP 模組。為了改善效能與相容性，強烈建立您安裝這些模組：%s。"
+    "This instance is missing some recommended PHP modules. For improved performance and better compatibility it is highly recommended to install them: %s." : "此站台缺少一些建議的 PHP 模組。為了改善效能與相容性，強烈建立您安裝這些模組：%s。",
+    "No apps found" : "沒有找到應用程式"
 },
 "nplurals=1; plural=0;");
