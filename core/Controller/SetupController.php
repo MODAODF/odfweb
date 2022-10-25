@@ -118,7 +118,7 @@ class SetupController {
 			}
 		}
 
-		header('Location: ' . \OC::$server->getURLGenerator()->getAbsoluteURL('index.php/core/apps/recommended'));
+		header('Location: ' . \OC::$server->getURLGenerator()->linkToDefaultPageUrl());
 		exit();
 	}
 
