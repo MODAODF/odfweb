@@ -74,9 +74,9 @@
 						:title="cat.displayName" />
 				</template>
 
-				<NcAppNavigationItem id="app-developer-docs"
+				<!-- <NcAppNavigationItem id="app-developer-docs"
 					:title="t('settings', 'Developer documentation') + ' ↗'"
-					@click="openDeveloperDocumentation" />
+					@click="openDeveloperDocumentation" /> -->
 			</template>
 		</NcAppNavigation>
 

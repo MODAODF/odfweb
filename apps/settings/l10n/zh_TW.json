@@ -561,6 +561,7 @@
     "Link https://…" : "連結 https://...",
     "Change privacy level of Twitter profile" : "變更 Twitter 個人資料的隱私等級",
     "Twitter handle @…" : "Twitter 使用者名稱 @...",
-    "Choose profile picture from files" : "從檔案中選擇個人檔案圖片"
+    "Choose profile picture from files" : "從檔案中選擇個人檔案圖片",
+    "No apps found" : "沒有找到應用程式"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
