@@ -74,9 +74,9 @@
 						:title="cat.displayName" />
 				</template>
 
-				<AppNavigationItem id="app-developer-docs"
+				<!-- <AppNavigationItem id="app-developer-docs"
 					:title="t('settings', 'Developer documentation') + ' ↗'"
-					@click="openDeveloperDocumentation" />
+					@click="openDeveloperDocumentation" /> -->
 			</template>
 		</AppNavigation>
 

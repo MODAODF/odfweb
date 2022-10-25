@@ -24,7 +24,7 @@
 	<div id="app-content-inner">
 		<div id="apps-list" class="apps-list" :class="{installed: (useBundleView || useListView), store: useAppStoreView}">
 			<template v-if="useListView">
-				<div v-if="showUpdateAll" class="toolbar">
+				<!-- <div v-if="showUpdateAll" class="toolbar">
 					{{ n('settings', '%n app has an update available', '%n apps have an update available', counter) }}
 					<Button v-if="showUpdateAll"
 						id="app-list-update-all"
@@ -32,11 +32,11 @@
 						@click="updateAll">
 						{{ n('settings', 'Update', 'Update all', counter) }}
 					</Button>
-				</div>
+				</div> -->
 
-				<div v-if="!showUpdateAll" class="toolbar">
+				<!-- <div v-if="!showUpdateAll" class="toolbar">
 					{{ t('settings', 'All apps are up-to-date.') }}
-				</div>
+				</div> -->
 
 				<transition-group name="app-list" tag="div" class="apps-list-container">
 					<AppItem v-for="app in apps"
@@ -96,9 +96,12 @@
 
 		<div v-if="search !== '' && !loading && searchApps.length === 0 && apps.length === 0" id="apps-list-empty" class="emptycontent emptycontent-search">
 			<div id="app-list-empty-icon" class="icon-settings-dark" />
-			<h2>{{ t('settings', 'No apps found for your version') }}</h2>
+			<h2>{{ t('settings', 'No apps found') }}</h2>
 		</div>
-
+		<div v-else-if="apps.length == 0 && search === ''" id="apps-list-empty" class="emptycontent">
+			<div id="app-list-empty-icon" class="icon-settings-dark" />
+			<h2>{{ t('settings', 'No apps found') }}</h2>
+		</div>
 		<div id="searchresults" />
 	</div>
 </template>
@@ -128,7 +131,7 @@ export default {
 			return this.apps.filter(app => app.update).length > 0
 		},
 		showUpdateAll() {
-			return this.hasPendingUpdate && this.useListView
+			return false // this.hasPendingUpdate && this.useListView
 		},
 		apps() {
 			const apps = this.$store.getters.getAllApps
