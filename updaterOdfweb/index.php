@@ -309,7 +309,7 @@ class Updater {
 	private function getExpectedElementsList() {
 		$expected = [
 			// odfweb extra files and folders
-			'國發會ODF WEB文件應用元件伺服器佈署說明書.pdf',
+			'ODF WEB文件應用元件伺服器佈署說明書.pdf',
 			'version-odfweb.txt',
 			'updaterOdfweb',
 			// Generic
@@ -1353,11 +1353,11 @@ if(strpos($updaterUrl, 'index.php') === false) {
 			right: 0;
 			height: 45px;
 			line-height: 2.5em;
-			background-color: #ECECFF;
+			background-color: #FFFA6E;
 			box-sizing: border-box;
 		}
 		.header-appname {
-			color: #fff;
+			color: #000;
 			font-size: 20px;
 			font-weight: 300;
 			line-height: 45px;
@@ -1583,7 +1583,25 @@ if(strpos($updaterUrl, 'index.php') === false) {
 </head>
 <body>
 <div id="header">
-	<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve" height="34" width="62" enable-background="new 0 0 196.6 72" y="0px" x="0px" viewBox="0 0 62.000002 34"><path style="color-rendering:auto;text-decoration-color:#000000;color:#000000;isolation:auto;mix-blend-mode:normal;shape-rendering:auto;solid-color:#000000;block-progression:tb;text-decoration-line:none;image-rendering:auto;white-space:normal;text-indent:0;enable-background:accumulate;text-transform:none;text-decoration-style:solid" fill="#fff" d="m31.6 4.0001c-5.95 0.0006-10.947 4.0745-12.473 9.5549-1.333-2.931-4.266-5.0088-7.674-5.0092-4.6384 0.0005-8.4524 3.8142-8.453 8.4532-0.0008321 4.6397 3.8137 8.4544 8.4534 8.455 3.4081-0.000409 6.3392-2.0792 7.6716-5.011 1.5261 5.4817 6.5242 9.5569 12.475 9.5569 5.918 0.000457 10.89-4.0302 12.448-9.4649 1.3541 2.8776 4.242 4.9184 7.6106 4.9188 4.6406 0.000828 8.4558-3.8144 8.4551-8.455-0.000457-4.6397-3.8154-8.454-8.4551-8.4533-3.3687 0.0008566-6.2587 2.0412-7.6123 4.9188-1.559-5.4338-6.528-9.4644-12.446-9.464zm0 4.9623c4.4687-0.000297 8.0384 3.5683 8.0389 8.0371 0.000228 4.4693-3.5696 8.0391-8.0389 8.0388-4.4687-0.000438-8.0375-3.5701-8.0372-8.0388 0.000457-4.4682 3.5689-8.0366 8.0372-8.0371zm-20.147 4.5456c1.9576 0.000226 3.4908 1.5334 3.4911 3.491 0.000343 1.958-1.533 3.4925-3.4911 3.4927-1.958-0.000228-3.4913-1.5347-3.4911-3.4927 0.0002284-1.9575 1.5334-3.4907 3.4911-3.491zm40.205 0c1.9579-0.000343 3.4925 1.533 3.4927 3.491 0.000457 1.9584-1.5343 3.493-3.4927 3.4927-1.958-0.000228-3.4914-1.5347-3.4911-3.4927 0.000221-1.9575 1.5335-3.4907 3.4911-3.491z"/></svg>
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" width="62.000004" height="34.026337" viewBox="0 0 16.404167 9.0028016" version="1.1" id="svg1454">
+	<defs id="defs6855"/>
+	<g id="layer1" transform="translate(-26.91169,-50.530674)">
+		<g id="g927" transform="matrix(2.1240209,0,0,2.1240209,-31.982694,-39.133894)">
+		<g id="g1335" transform="matrix(0.0504302,0,0,-0.0504302,31.526768,46.054765)" style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1">
+			<path d="M 0,0 C -11.575,0.206 -11.577,17.41 0,17.618 11.577,17.41 11.575,0.206 0,0 m 0,20.771 c -15.722,0 -16.196,-23.924 0,-23.925 16.196,10e-4 15.722,23.925 0,23.925" style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1" id="path4622"/>
+		</g>
+		<g id="g1339" transform="matrix(0.0504302,0,0,-0.0504302,32.911581,44.903364)" style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1">
+			<path d="m 0,0 c -5.788,0.104 -8.682,4.456 -8.682,8.809 0,4.353 2.894,8.705 8.682,8.809 C 5.788,17.514 8.682,13.162 8.682,8.809 8.682,4.456 5.788,0.104 0,0 M 10.348,30.321 C 9.443,30.321 8.71,29.588 8.71,28.684 V 16.76 C 6.837,19.106 3.965,20.771 0,20.771 -7.861,20.771 -11.91,14.79 -11.969,8.809 -11.91,2.828 -7.861,-3.153 0,-3.153 c 3.965,0 6.837,1.665 8.71,4.011 v -1.985 c 0,-0.904 0.733,-1.637 1.638,-1.637 0.904,0 1.637,0.733 1.637,1.637 v 29.811 c 0,0.904 -0.733,1.637 -1.637,1.637" style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1" id="path4619"/>
+		</g>
+		<g id="g1343" transform="matrix(0.0504302,0,0,-0.0504302,34.534467,43.501176)" style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1">
+			<path d="m 0,0 c -5.788,0.104 -8.682,4.456 -8.682,8.809 0,4.353 2.894,8.705 8.682,8.809 C 5.788,17.514 8.682,13.162 8.682,8.809 8.682,4.456 5.788,0.104 0,0 m 10.326,20.382 c -0.908,0 -1.644,-0.736 -1.644,-1.643 V 16.796 C 6.808,19.123 3.945,20.771 0,20.771 -7.861,20.771 -11.91,14.79 -11.969,8.809 -11.91,2.828 -7.861,-3.153 0,-3.153 c 3.945,0 6.808,1.648 8.682,3.975 v -1.981 c 0,-0.908 0.736,-1.644 1.644,-1.644 0.908,0 1.643,0.736 1.643,1.644 v 19.898 c 0,0.907 -0.735,1.643 -1.643,1.643" style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1" id="path4616"/>
+		</g>
+		<g id="g1347" transform="matrix(0.0504302,0,0,-0.0504302,29.685743,45.024965)" style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1">
+			<path d="M 0,0 C -5.001,0 -8.456,-2.421 -10.325,-5.723 -12.195,-2.421 -15.652,0 -20.654,0 c -3.625,0 -6.752,-1.557 -8.681,-4.188 v 2.003 c 0,0.906 -0.734,1.645 -1.64,1.645 -0.912,0 -1.646,-0.739 -1.646,-1.645 v -7.813 -1.964 -9.975 c 0,-0.906 0.734,-1.64 1.646,-1.64 0.906,0 1.64,0.734 1.64,1.64 0.06,1.922 -0.146,9.833 0.151,12.671 0.093,0.587 0.222,0.999 0.299,1.207 1.249,2.93 4.162,4.779 8.231,4.908 5.785,-0.108 8.682,-4.45 8.687,-8.801 v -9.982 c 0,-0.907 0.735,-1.643 1.642,-1.643 0.908,0 1.643,0.736 1.643,1.643 v 9.972 h 0.001 c 0,4.354 2.897,8.703 8.681,8.811 3.762,0 6.225,-1.785 7.536,-4.195 0.742,-1.467 1.129,-3.345 1.145,-5.63 l 0.006,-2.379 v -6.58 c 0,-0.906 0.733,-1.64 1.64,-1.64 0.906,0 1.645,0.734 1.645,1.64 v 6.58 3.393 C 11.972,-4.951 7.393,-0.128 0,0" style="fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2.48734;stroke-dasharray:none;stroke-opacity:1" id="path4613"/>
+		</g>
+		</g>
+	</g>
+	</svg>
 	<h1 class="header-appname">更新</h1>
 </div>
 <input type="hidden" id="updater-access-key" value="<?php echo htmlentities($password) ?>"/>

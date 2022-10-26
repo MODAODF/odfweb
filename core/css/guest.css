@@ -15,6 +15,7 @@ a, a *, input, input *, select, .button span, label { cursor:pointer; }
 ul { list-style:none; }
 
 body {
+	background-color: #ffffff;
 	font-weight: normal;
 	/* bring the default font size up to 14px */
 	font-size: .875em;
@@ -22,9 +23,9 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 	color: #000;
 	text-align: center;
-	background-color: #ECECFF;
+	background-color: #FFFA6E;
 	background-image: url('../img/background.png?v=2');
-	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #ECECFF 0%, #ECECFF 100%);
+	background-image: url('../img/background.png?v=2'), linear-gradient(40deg, #FFFA6E 0%, #FFFA6E 100%);
 	background-position: 50% 50%;
 	background-repeat: repeat;
 	background-size: 275px, contain;
@@ -81,13 +82,12 @@ body {
 #header .logo {
 	background-image: url('../img/logo/logo.svg?v=1');
 	background-repeat: no-repeat;
-	background-size: 200px;
+	background-size: 300px;
 	background-position: center;
-	width: 256px;
-	min-height: 200px;
-	max-height: 300px;
+	width: 300px;
+	min-height: 128px;
+	max-height: 200px;
 	margin: 0 auto;
-	margin-bottom: 22px;
 	position: relative;
 	left: unset;
 }
@@ -339,7 +339,7 @@ input.primary,
 button.primary,
 a.primary {
 	border: 1px solid #000;
-	background-color: #ECECFF;
+	background-color: #FFFA6E;
 	color: #000;
 	transition: color 100ms ease-in-out;
 }
@@ -350,8 +350,8 @@ button.primary:not(:disabled):hover,
 button.primary:not(:disabled):focus,
 a.primary:not(:disabled):hover,
 a.primary:not(:disabled):focus {
-	color: rgba(255, 255, 255, 1);
-	background-image: linear-gradient(40deg, #0082c9 0%, #30b6ff 100%);
+	color: #000;
+	background-image: linear-gradient(40deg, #fffb87 0%, #f1e92e 100%);
 	background-position: initial;
 }
 
@@ -420,7 +420,7 @@ input[type='checkbox'].checkbox--white:checked + label:before {
 }
 .tooltip-inner {
 	font-weight: bold;
-	color: #555;
+	color: #888;
 	padding: 3px 6px;
 	text-align: center;
 }
@@ -588,7 +588,7 @@ form .warning input[type='checkbox']+label {
 	text-align: center;
 	box-sizing: border-box;
 	border: 2px solid #ffffff;
-	background-color: #ECECFF;
+	background-color: #FFFA6E;
 	color: #ffffff;
 	border-radius: 100px; /* --border-radius-pill */
 }
@@ -596,7 +596,7 @@ form .warning input[type='checkbox']+label {
 .alternative-logins a.button:focus,
 .alternative-logins li a:focus {
 	border: 2px solid #000000;
-	background-image: linear-gradient(40deg, #0082c9 0%, #30b6ff 100%);
+	background-image: linear-gradient(40deg, #fffb87 0%, #f1e92e 100%);
 	background-position: initial;
 }
 
@@ -821,9 +821,6 @@ p.info {
 /* Icons */
 .icon-info-white {
 	background-image: url('../img/actions/info-white.svg?v=2');
-}
-.icon-error {
-	background-image: url('../img/actions/error.svg?v=1');
 }
 .icon-error-white {
 	background-image: url('../img/actions/error-white.svg?v=1');

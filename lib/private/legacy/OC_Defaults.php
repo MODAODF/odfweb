@@ -62,7 +62,7 @@ class OC_Defaults {
 		$this->defaultEntity = '政府 ODF Web 文件應用元件'; /* e.g. company name, used for footers and copyright notices */
 		$this->defaultName = '政府 ODF Web 文件應用元件'; /* short name, used when referring to the software */
 		$this->defaultTitle = '政府 ODF Web 文件應用元件'; /* can be a longer name, for titles */
-		$this->defaultBaseUrl = 'https://www.ndc.gov.tw';
+		$this->defaultBaseUrl = 'https://moda.gov.tw/';
 		$this->defaultSyncClientUrl = $config->getSystemValue('customclient_desktop', 'https://nextcloud.com/install/#install-clients');
 		$this->defaultiOSClientUrl = $config->getSystemValue('customclient_ios', 'https://geo.itunes.apple.com/us/app/nextcloud/id1125420102?mt=8');
 		$this->defaultiTunesAppId = $config->getSystemValue('customclient_ios_appid', '1125420102');
@@ -70,7 +70,7 @@ class OC_Defaults {
 		$this->defaultFDroidClientUrl = $config->getSystemValue('customclient_fdroid', 'https://f-droid.org/packages/com.nextcloud.client/');
 		$this->defaultDocBaseUrl = 'https://docs.nextcloud.com';
 		$this->defaultDocVersion = \OC_Util::getVersion()[0]; // used to generate doc links
-		$this->defaultColorPrimary = '#ECECFF';
+		$this->defaultColorPrimary = '#FFFA6E';
 		$this->defaultTextColorPrimary = '#000';
 		$this->defaultProductName = '政府 ODF Web 文件應用元件';
 

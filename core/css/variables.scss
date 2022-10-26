@@ -43,10 +43,10 @@ $color-background-darker: nc-darken($color-main-background, 14%) !default;
 $color-placeholder-light: nc-darken($color-main-background, 10%) !default;
 $color-placeholder-dark: nc-darken($color-main-background, 20%) !default;
 
-$color-primary: #ECECFF !default;
+$color-primary: #FFFA6E !default;
 $color-primary-hover: mix($color-primary, $color-main-background, 80%) !default;
 
-$color-primary-light: mix($color-primary, $color-main-background, 10%) !default;
+$color-primary-light: mix($color-primary, $color-main-background, 50%) !default;
 $color-primary-light-text: $color-primary !default;
 $color-primary-light-hover: mix($color-primary-light, $color-main-text, 95%) !default;
 
@@ -54,7 +54,7 @@ $color-primary-text: #000 !default;
 // do not use nc-darken/lighten in case of overriding because
 // primary-text is independent of color-main-text
 $color-primary-text-dark: darken($color-primary-text, 7%) !default;
-$color-primary-element: $color-primary !default;
+$color-primary-element: #5c6569 !default;
 $color-primary-element-hover: mix($color-primary-element, $color-main-background, 80%) !default;
 $color-primary-element-light: lighten($color-primary-element, 15%) !default;
 $color-primary-element-lighter: mix($color-primary-element, $color-main-background, 15%) !default;
