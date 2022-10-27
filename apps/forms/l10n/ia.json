@@ -1,0 +1,10 @@
+{ "translations": {
+    "Required" : "Requirite",
+    "Group" : "Gruppo",
+    "Description" : "Description",
+    "Summary" : "Summario",
+    "Settings" : "Configurationes",
+    "Set expiration date" : "Assignar data de expiration",
+    "Expiration date" : "Data de expiration"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

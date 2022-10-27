@@ -1,0 +1,12 @@
+{ "translations": {
+    "Required" : "Krævet",
+    "Searching …" : "Søger ...",
+    "Group" : "Gruppe",
+    "Description" : "Beskrivelse",
+    "Summary" : "Oversigt",
+    "Settings" : "Indstillinger",
+    "Set expiration date" : "Angiv udløbsdato",
+    "Expiration date" : "Udløbsdato",
+    "Submit" : "Tilføj"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

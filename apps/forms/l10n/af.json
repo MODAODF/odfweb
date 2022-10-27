@@ -1,0 +1,10 @@
+{ "translations": {
+    "Required" : "Vereis",
+    "Group" : "Groep",
+    "Description" : "Beskrywing",
+    "Summary" : "Opsomming",
+    "Settings" : "Instellings",
+    "Set expiration date" : "Stel vervaldatum",
+    "Expiration date" : "Vervaldatum"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

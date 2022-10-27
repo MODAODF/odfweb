@@ -1,0 +1,10 @@
+{ "translations": {
+    "Group" : "Grup",
+    "Description" : "Deskrisi",
+    "Summary" : "Kesimpulan",
+    "Options" : "Pilihan",
+    "Settings" : "Setelan",
+    "Set expiration date" : "Atur tanggal kedaluwarsa",
+    "Expiration date" : "Tanggal kadaluarsa"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

@@ -1,0 +1,11 @@
+{ "translations": {
+    "Required" : "Required",
+    "Group" : "Group",
+    "Description" : "Description",
+    "Summary" : "Summary",
+    "Settings" : "Settings",
+    "Set expiration date" : "Set expiration date",
+    "Expiration date" : "Expiration date",
+    "Submit" : "Submit"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
