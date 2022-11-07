@@ -173,6 +173,27 @@ class QuotaPlugin extends \Sabre\DAV\ServerPlugin {
 		return $this->checkQuota($path, $sourceNode->getSize());
 	}
 
+	/**
+	 * Check quota on the target destination before a copy.
+	 */
+	public function beforeCopy(string $sourcePath, string $destinationPath): bool {
+		$sourceNode = $this->server->tree->getNodeForPath($sourcePath);
+		if (!$sourceNode instanceof Node) {
+			return false;
+		}
+
+		// get target node for proper path conversion
+		if ($this->server->tree->nodeExists($destinationPath)) {
+			$destinationNode = $this->server->tree->getNodeForPath($destinationPath);
+			$path = $destinationNode->getPath();
+		} else {
+			$parentNode = $this->server->tree->getNodeForPath(dirname($destinationPath));
+			$path = $parentNode->getPath();
+		}
+
+		return $this->checkQuota($path, $sourceNode->getSize());
+	}
+
 
 	/**
 	 * This method is called before any HTTP method and validates there is enough free space to store the file
