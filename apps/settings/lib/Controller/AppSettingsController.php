@@ -202,8 +202,9 @@ class AppSettingsController extends Controller {
 			$this->allApps[$app['id']] = $app;
 		}
 
-		// 不載入 app store 模組
-		// $apps = $this->getAppsForCategory('');
+		if ($this->config->getSystemValue('load_app_store', false)) {
+			$apps = $this->getAppsForCategory('');
+		}
 		$supportedApps = $appClass->getSupportedApps();
 		foreach ($apps as $app) {
 			$app['appstore'] = true;
