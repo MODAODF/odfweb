@@ -68,7 +68,7 @@ class Get extends Command {
 				return 1;
 			}
 			$source = $node->fopen('r');
-			$target = (!$outputName || strtolower($outputName) === '-') ? STDOUT : fopen($outputName, 'w');
+			$target = (!$outputName || $outputName === '-') ? STDOUT : fopen($outputName, 'w');
 			stream_copy_to_stream($source, $target);
 			return 0;
 		} else {
