@@ -268,6 +268,7 @@
     "%s enter the database name." : "%s 輸入資料庫名稱",
     "%s you may not use dots in the database name" : "%s 資料庫名稱不能包含小數點",
     "The user limit has been reached and the user was not created. Check your notifications to learn more." : "已達使用者限制，所以未建立使用者。請檢查您的通知以取得更多資訊。",
-    "Only the following characters are allowed in a username: \"a-z\", \"A-Z\", \"0-9\", and \"_.@-'\"" : "使用者名稱當中只能包含下列字元：\"a-z\", \"A-Z\", \"0-9\", 和 \"_.@-'\""
+    "Only the following characters are allowed in a username: \"a-z\", \"A-Z\", \"0-9\", and \"_.@-'\"" : "使用者名稱當中只能包含下列字元：\"a-z\", \"A-Z\", \"0-9\", 和 \"_.@-'\"",
+    "No apps found": "沒有找到應用程式"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
