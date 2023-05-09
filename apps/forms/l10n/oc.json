@@ -1,0 +1,27 @@
+{ "translations": {
+    "Forms" : "Formularis",
+    "Copy" : "Copiar",
+    "Shared with you" : "Partejat amb vos",
+    "Loading forms …" : "Cargament del formulari...",
+    "No forms created yet" : "Cap de formulari pas encara creat",
+    "Description" : "Descripcion",
+    "Set expiration date" : "Especificar una data d'expiracion",
+    "Delete" : "Suprimir",
+    "Group" : "Grop",
+    "Share link" : "Partejar lo ligam",
+    "Add link" : "Apondre un ligam",
+    "Copy to clipboard" : "Copiar dins lo quichapapièrs",
+    "View" : "Veire",
+    "Edit" : "Modificar",
+    "Share" : "Partejar",
+    "Toggle settings" : "Bascular los paramètres",
+    "Options" : "Opcions",
+    "Sharing" : "Partiment",
+    "Settings" : "Paramètres",
+    "Submit" : "Transmetre",
+    "Date" : "Data",
+    "Pick a date" : "Causir una data",
+    "Time" : "Ora",
+    "Pick a time" : "Causir una ora"
+},"pluralForm" :"nplurals=2; plural=(n > 1);"
+}

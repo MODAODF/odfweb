@@ -1,0 +1,79 @@
+﻿<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>forms</id>
+	<name>Forms</name>
+	<summary>📝 Simple surveys and questionnaires, self-hosted</summary>
+	<description><![CDATA[**Simple surveys and questionnaires, self-hosted!**
+
+- **📝 Simple design:** No mass of options, only the essentials. Works well on mobile of course.
+- **📊 View & export results:** Results are visualized and can also be exported as CSV in the same format used by Google Forms.
+- **🔒 Data under your control!** Unlike in Google Forms, Typeform, Doodle and others, the survey info and responses are kept private on your instance.
+- **🧑‍💻 Connect to your software:** Easily integrate Forms into your service with our full-fledged [REST-API](https://github.com/nextcloud/forms/blob/main/docs/API.md).
+- **🙋 Get involved!** We have lots of stuff planned like more question types, collaboration on forms, [and much more](https://github.com/nextcloud/forms/milestones)!
+	]]></description>
+
+	<licence>agpl</licence>
+	<version>3.2.0</version>
+	<dependencies>
+		<nextcloud min-version="25" max-version="26" />
+	</dependencies>
+
+	<author>Affan Hussain</author>
+	<author>Ajfar Huq</author>
+	<author>Christian Hartmann</author>
+	<author>Inigo Jiron</author>
+	<author>Jan C. Borchardt</author>
+	<author>John Molakvoæ</author>
+	<author>Jonas Rittershofer</author>
+	<author>Kai Schröer</author>
+	<author>Kameron Sheppard</author>
+	<author>Natalie Gilbert</author>
+	<author>Nick Gallo</author>
+	<author>René Gieling</author>
+	<author>Stephan Link</author>
+	<author>Tim Sattizahn</author>
+	<author>Vinzenz Rosenkranz</author>
+
+	<category>tools</category>
+	<category>social</category>
+	<category>organization</category>
+
+	<website>https://github.com/nextcloud/forms</website>
+	<bugs>https://github.com/nextcloud/forms/issues</bugs>
+	<repository type="git">https://github.com/nextcloud/forms</repository>
+	<documentation>
+		<admin>https://github.com/nextcloud/forms/blob/main/README.md</admin>
+	</documentation>
+
+	<screenshot>https://raw.githubusercontent.com/nextcloud/forms/main/screenshots/forms1.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/forms/main/screenshots/forms2.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/forms/main/screenshots/forms3.png</screenshot>
+
+	<navigations>
+		<navigation>
+			<name>Forms</name>
+			<route>forms.page.index</route>
+			<icon>forms.svg</icon>
+			<order>77</order>
+		</navigation>
+	</navigations>
+
+	<settings>
+		<admin>OCA\Forms\Settings\Settings</admin>
+		<admin-section>OCA\Forms\Settings\SettingsSection</admin-section>
+	</settings>
+
+	<activity>
+		<filters>
+			<filter>OCA\Forms\Activity\Filter</filter>
+		</filters>
+		<providers>
+			<provider>OCA\Forms\Activity\Provider</provider>
+		</providers>
+		<settings>
+			<setting>OCA\Forms\Activity\Settings\NewShare</setting>
+			<setting>OCA\Forms\Activity\Settings\NewSubmission</setting>
+		</settings>
+	</activity>
+</info>
