@@ -1,8 +1,8 @@
 /* Copyright (c) 2011, Jan-Christoph Borchardt, http://jancborchardt.net
  This file is licensed under the Affero General Public License version 3 or later.
  See the COPYING-README file. */
-@use 'variables';
-@import 'functions';
+@use '../../../core/css/variables';
+@import '../../../core/css/functions';
 
 input {
 	&#openid, &#webdav {
@@ -129,7 +129,7 @@ select {
 	margin: 16px;
 	padding: 14px 20px;
 	background-color: var(--color-primary);
-	color: #fff;
+	color: #000;
 	border-radius: var(--border-radius-pill);
 	border: 1px solid var(--color-primary);
 	box-shadow: 0 2px 9px var(--color-box-shadow);

@@ -48,7 +48,7 @@ body {
 	background-color: var(--color-background-plain, var(--color-main-background));
 	// color-background-plain should always be defined. It is the primary user colour
 	background-image: var(--image-background, var(--image-background-default));
-	background-size: cover;
+	// background-size: cover;
 	background-position: center;
 	position: fixed;
 	width: 100%;
@@ -217,7 +217,7 @@ kbd {
 			a.active {
 				&,
 				> a {
-					background-color: var(--color-primary-light);
+					background-color: var(--color-primary);
 				}
 			}
 

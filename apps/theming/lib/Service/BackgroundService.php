@@ -53,7 +53,7 @@ class BackgroundService {
 	public const BACKGROUND_DEFAULT = 'default';
 	public const BACKGROUND_DISABLED = 'disabled';
 
-	public const DEFAULT_BACKGROUND_IMAGE = 'kamil-porembinski-clouds.jpg';
+	public const DEFAULT_BACKGROUND_IMAGE = 'background.png';
 	public const SHIPPED_BACKGROUNDS = [
 		'hannah-maclean-soft-floral.jpg' => [
 			'attribution' => 'Soft floral (Hannah MacLean, CC0)',

@@ -20,6 +20,7 @@ a, a *, input, input *, select, .button span, label { cursor:pointer; }
 ul { list-style:none; }
 
 body {
+	background-color: #ffffff;
 	font-weight: normal;
 	/* bring the default font size up to 14px */
 	font-size: .875em;
@@ -28,13 +29,13 @@ body {
 	color: var(--color-text);
 	text-align: center;
 	/* As guest, there is no color-background-plain */
-	background-color: var(--color-background-plain, var(--color-primary-default, #0082c9));
+	background-color: var(--color-background-plain, var(--color-primary-default, #FFFA6E));
 	/* As guest, there is no user background (--image-background)
 	1. User background if logged in ('no' if removed, that way the variable is _defined_)
 	2. Empty background if enabled ('yes' is used, that way the variable is _defined_)
 	3. Else default background
 	4. Finally default gradient (should not happened, the background is always defined anyway) */
-	background-image: var(--image-background, var(--image-background-plain, var(--image-background-default, linear-gradient(40deg, #0082c9 0%, #30b6ff 100%))));
+	background-image: var(--image-background, var(--image-background-plain, var(--image-background-default, linear-gradient(40deg, #FFFA6E 0%, #FFFA6E 100%))));
     background-attachment: fixed;
 	min-height: 100%; /* fix sticky footer */
 	height: auto;
@@ -72,7 +73,7 @@ h4 {
 }
 
 h2 {
-	font-size: 20px;
+	font-size: 18px;
 	margin-bottom: 12px;
 	line-height: 140%;
 }
@@ -95,10 +96,9 @@ body {
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: center;
-		width: 175px;
+		width: 300px;
 		height: 130px;
 		margin: 0 auto;
-		margin-bottom: 22px;
 		position: relative;
 		left: unset;
 	}
@@ -633,9 +633,6 @@ p.info {
 /* Icons */
 .icon-info-white {
 	background-image: url('../img/actions/info-white.svg?v=2');
-}
-.icon-error{
-	background-image: url('../img/actions/error.svg?v=1');
 }
 .icon-error-white {
 	background-image: url('../img/actions/error-white.svg?v=1');

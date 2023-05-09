@@ -188,6 +188,7 @@ $header-icon-size: 20px;
 			height: $header-icon-size;
 			padding: calc((100% - $header-icon-size) / 2);
 			box-sizing: content-box;
+			filter: grayscale(100%) invert(100%);
 		}
 
 		.app-menu-entry--label {

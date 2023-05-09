@@ -144,15 +144,6 @@ const textFields = [
 	{
 		name: 'name',
 		value: name,
-		defaultValue: 'Nextcloud',
-		type: 'text',
-		displayName: t('theming', 'Name'),
-		placeholder: t('theming', 'Name'),
-		maxlength: 250,
-	},
-	{
-		name: 'name',
-		value: name,
 		defaultValue: '政府 ODF Web 文件應用元件',
 		type: 'text',
 		displayName: t('theming', 'Name'),
@@ -162,7 +153,7 @@ const textFields = [
 	{
 		name: 'url',
 		value: url,
-		defaultValue: 'https://www.ndc.gov.tw',
+		defaultValue: 'https://moda.gov.tw/',
 		type: 'url',
 		displayName: t('theming', 'Web link'),
 		placeholder: 'https://…',
@@ -182,7 +173,7 @@ const textFields = [
 const colorPickerField = {
 	name: 'color',
 	value: color,
-	defaultValue: '#0082c9',
+	defaultValue: '#FFFA6E',
 	displayName: t('theming', 'Color'),
 }
 
@@ -308,12 +299,12 @@ export default {
 		/* This is basically https://github.com/nextcloud/server/blob/master/core/css/guest.css
 		   But without the user variables. That way the admin can preview the render as guest*/
 		/* As guest, there is no user color color-background-plain */
-		background-color: var(--color-primary-default, #0082c9);
+		background-color: var(--color-primary-default, #FFFA6E);
 		/* As guest, there is no user background (--image-background)
 		1. Empty background if defined
 		2. Else default background
 		3. Finally default gradient (should not happened, the background is always defined anyway) */
-		background-image: var(--image-background-plain, var(--image-background-default, linear-gradient(40deg, #0082c9 0%, #30b6ff 100%)));
+		background-image: var(--image-background-plain, var(--image-background-default, linear-gradient(40deg, #FFFA6E 0%, #FFFA6E 100%)));
 
 		&-logo {
 			width: 20%;
