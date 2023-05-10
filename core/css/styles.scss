@@ -1074,3 +1074,12 @@ fieldset {
 	height: 0;
 	opacity: 0;
 }
+
+/* apps/Forms's interface */
+button.button-vue.button-vue--icon-and-text.button-vue--vue-secondary {
+	background-color: var(--color-primary);
+}
+  
+li.list-item__wrapper.active.list-item__wrapper--active > a {
+	background-color: var(--color-primary) !important;
+}
