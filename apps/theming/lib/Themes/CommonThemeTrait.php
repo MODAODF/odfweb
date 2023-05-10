@@ -39,7 +39,7 @@ trait CommonThemeTrait {
 	 */
 	protected function generatePrimaryVariables(string $colorMainBackground, string $colorMainText): array {
 		$colorPrimaryLight = ($this->util->elementColor($this->primaryColor) == '#FFFA6E') ? '#FFFA6E' : $this->util->mix($this->primaryColor, $colorMainBackground, -5);
-		$colorPrimaryElement = $this->util->elementColor($this->primaryColor);
+		$colorPrimaryElement = ($this->util->elementColor($this->primaryColor) == '#FFFA6E') ? '#adb4b8' : $this->util->elementColor($this->primaryColor);
 		$colorPrimaryElementDefault = $this->util->elementColor($this->defaultPrimaryColor);
 		$colorPrimaryElementLight = $this->util->mix($colorPrimaryElement, $colorMainBackground, -80);
 
