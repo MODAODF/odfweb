@@ -1,0 +1,7 @@
+.resource-type-deck img {
+	opacity: 0.4 !important;
+}
+
+.resource-type-deck:hover img {
+	opacity: 0.7 !important;
+}
