@@ -248,7 +248,7 @@ export default {
 
 		async pickColor(event) {
 			this.loading = 'color'
-			const color = event?.target?.dataset?.color || this.Theming?.color || '#0082c9'
+			const color = event?.target?.dataset?.color || this.Theming?.color || '#f6e948'
 			const result = await axios.post(generateUrl('/apps/theming/background/color'), { color })
 			this.update(result.data)
 		},

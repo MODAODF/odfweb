@@ -57,7 +57,7 @@
   --background-image-invert-if-bright: no;
   --primary-invert-if-bright: no;
   --color-primary: #006aa3;
-  --color-primary-default: #0082c9;
+  --color-primary-default: #f6e948;
   --color-primary-text: #ffffff;
   --color-primary-hover: #3287b5;
   --color-primary-light: #e5f0f5;
@@ -74,5 +74,5 @@
   --color-primary-element-text-dark: #ededed;
   --gradient-primary-background: linear-gradient(40deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   --image-background-default: url('/apps/theming/img/background/kamil-porembinski-clouds.jpg');
-  --color-background-plain: #0082c9;
+  --color-background-plain: #f6e948;
 }

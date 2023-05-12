@@ -27,7 +27,7 @@ import { pickRandomColor, validateBodyThemingCss, validateUserThemingDefaultCss 
 
 const admin = new User('admin', 'admin')
 
-const defaultPrimary = '#0082c9'
+const defaultPrimary = '#f6e948'
 const defaultBackground = 'kamil-porembinski-clouds.jpg'
 
 describe('Admin theming settings', function() {

@@ -81,10 +81,10 @@ class Capabilities implements IPublicCapability {
 				'color-element-bright' => $this->util->elementColor($color),
 				'color-element-dark' => $this->util->elementColor($color, false),
 				'logo' => $this->url->getAbsoluteURL($this->theming->getLogo()),
-				'background' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#0082c9') ?
+				'background' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#f6e948') ?
 					$this->theming->getColorPrimary() :
 					$this->url->getAbsoluteURL($this->theming->getBackground()),
-				'background-plain' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#0082c9'),
+				'background-plain' => $backgroundLogo === 'backgroundColor' || ($backgroundLogo === '' && $this->theming->getColorPrimary() !== '#f6e948'),
 				'background-default' => !$this->util->isBackgroundThemed(),
 				'logoheader' => $this->url->getAbsoluteURL($this->theming->getLogo()),
 				'favicon' => $this->url->getAbsoluteURL($this->theming->getLogo()),
