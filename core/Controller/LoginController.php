@@ -221,9 +221,19 @@ class LoginController extends Controller {
 
 		$this->initialStateService->provideInitialState('core', 'countAlternativeLogins', count($parameters['alt_login']));
 
-		return new TemplateResponse(
-			$this->appName, 'login', $parameters, 'guest'
-		);
+		// 用戶登入失敗返回 Status 401
+		if ($errors[0] === 'invalidpassword') {
+			$response = new TemplateResponse(
+				$this->appName, 'login', $parameters, 'guest'
+			);
+			$response->setStatus(401);
+			$response->throttle(['user' => substr($user, 0, 64)]);
+		} else {
+			$response = new TemplateResponse(
+				$this->appName, 'login', $parameters, 'guest'
+			);	
+		}
+		return $response;
 	}
 
 	/**
@@ -304,13 +314,13 @@ class LoginController extends Controller {
 	 * @param string $timezone
 	 * @param string $timezone_offset
 	 *
-	 * @return RedirectResponse
+	 * @return RedirectResponse|TemplateResponse
 	 */
 	public function tryLogin(string $user,
 							 string $password,
 							 string $redirect_url = null,
 							 string $timezone = '',
-							 string $timezone_offset = ''): RedirectResponse {
+							 string $timezone_offset = ''): RedirectResponse|TemplateResponse {
 		if (!$this->request->passesCSRFCheck()) {
 			if ($this->userSession->isLoggedIn()) {
 				// If the user is already logged in and the CSRF check does not pass then
@@ -324,8 +334,6 @@ class LoginController extends Controller {
 			$this->userSession->logout();
 			return $this->createLoginFailedResponse(
 				$user,
-				$user,
-				$redirect_url,
 				$this->l10n->t('Please try again')
 			);
 		}
@@ -342,8 +350,6 @@ class LoginController extends Controller {
 		if (!$result->isSuccess()) {
 			return $this->createLoginFailedResponse(
 				$data->getUsername(),
-				$user,
-				$redirect_url,
 				$result->getErrorMessage()
 			);
 		}
@@ -362,24 +368,14 @@ class LoginController extends Controller {
 	 * @param string $redirect_url
 	 * @param string $loginMessage
 	 *
-	 * @return RedirectResponse
+	 * @return TemplateResponse
 	 */
 	private function createLoginFailedResponse(
-		$user, $originalUser, $redirect_url, string $loginMessage) {
-		// Read current user and append if possible we need to
-		// return the unmodified user otherwise we will leak the login name
-		$args = $user !== null ? ['user' => $originalUser, 'direct' => 1] : [];
-		if ($redirect_url !== null) {
-			$args['redirect_url'] = $redirect_url;
-		}
-		$response = new RedirectResponse(
-			$this->urlGenerator->linkToRoute('core.login.showLoginForm', $args)
-		);
-		$response->throttle(['user' => substr($user, 0, 64)]);
+		$user, string $loginMessage) {
 		$this->session->set('loginMessages', [
 			[$loginMessage], []
 		]);
-		return $response;
+		return $this->showLoginForm($user, null);
 	}
 
 	/**
