@@ -356,6 +356,7 @@ class OC {
 			$template->assign('productName', $odfwebProductName);
 			$template->assign('version', OC_Util::getVersionString());
 			$template->assign('tooBig', $tooBig);
+			$template->assign('cliUpgradeLink', $cliUpgradeLink);
 
 			$template->printPage();
 			die();
