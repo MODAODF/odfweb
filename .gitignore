@@ -20,6 +20,7 @@
 !/apps/contactsinteraction
 !/apps/dashboard
 !/apps/dav
+!/apps/deck
 !/apps/files
 !/apps/federation
 !/apps/federatedfilesharing
@@ -34,12 +35,14 @@
 !/apps/oauth2
 !/apps/provisioning_api
 !/apps/settings
+!/apps/spreed
 !/apps/systemtags
 !/apps/testing
 !/apps/admin_audit
 !/apps/updatenotification
 !/apps/theming
 !/apps/twofactor_backupcodes
+!/apps/user_saml
 !/apps/user_status
 !/apps/weather_status
 !/apps/workflowengine
