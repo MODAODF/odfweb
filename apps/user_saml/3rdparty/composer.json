@@ -1,0 +1,13 @@
+{
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true,
+		"platform": {
+			"php": "7.3"
+		}
+    },
+    "require": {
+        "onelogin/php-saml": "^4.0",
+        "firebase/php-jwt": "^4.0"
+    }
+}
