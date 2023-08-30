@@ -382,7 +382,6 @@ OC.L10N.register(
     "User actions" : "使用者動作",
     "Password or insufficient permissions message" : "密碼或權限不足訊息",
     "Loading user …" : "正在載入使用者……",
-    "Edit display name" : "編輯顯示名稱",
     "Add new password" : "新增密碼",
     "You do not have permissions to see the details of this user" : "您沒有檢視此使用者詳細資料的權限",
     "Add new email address" : "新增電子郵件",
@@ -591,6 +590,8 @@ OC.L10N.register(
     "Avatar" : "大頭照",
     "User actions" : "使用者動作",
     "Only applies when authentication is required" : "僅在需要身份驗證時套用",
+    "Edit display name" : "編輯顯示名稱",
+    "Select manager" : "選取管理者",
     "User's table" : "使用者的表格",
     "Select user manager" : "選取使用者管理者"
 },
