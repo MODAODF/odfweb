@@ -137,8 +137,8 @@ select {
 	&:active,
 	&:hover,
 	&:focus {
-		color: var(--color-primary);
-		background-color: var(--color-primary-text);
+		color: #000;
+		background-color: #f6e948;
 		border-color: var(--color-primary) !important;
 	}
 
