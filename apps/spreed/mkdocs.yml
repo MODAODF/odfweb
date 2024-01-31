@@ -1,0 +1,44 @@
+site_name: Nextcloud Talk API documentation
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - php
+    - js
+    - bash
+
+markdown_extensions:
+  - admonition
+  - def_list
+  - toc:
+      permalink: "#"
+      baselevel: 2
+
+nav:
+  - 'Nextcloud Talk API': 'index.md'
+  - 'Call experience': 'call-experience.md'
+  - 'User system requirements': 'user-requirements.md'
+  - 'Administration documentation':
+      - 'Server system requirements': 'system-requirements.md'
+      - 'Configuring coTURN': 'TURN.md'
+      - 'Occ commands': 'occ.md'
+      - 'Commands': 'commands.md'
+      - 'Matterbridge integration': 'matterbridge.md'
+  - 'Developer documentation':
+      - 'Constants': 'constants.md'
+      - 'Capabilities': 'capabilities.md'
+      - 'PHP events': 'events.md'
+  - 'API documentation':
+      - 'Conversations management': 'conversation.md'
+      - 'Participants management': 'participant.md'
+      - 'Call management': 'call.md'
+      - 'Call recording management': 'recording.md'
+      - 'Chat management': 'chat.md'
+      - 'Reaction management': 'reaction.md'
+      - 'Poll management': 'poll.md'
+      - 'Breakout rooms management': 'breakout-rooms.md'
+      - 'Webinar management': 'webinar.md'
+      - 'Settings': 'settings.md'
+      - 'Integration by other apps': 'integration.md'
+      - 'Signaling API': 'internal-signaling.md'

@@ -1,0 +1,136 @@
+<!--
+ - @copyright Copyright (c) 2019 Joas Schilling <coding@schilljs.com>
+ -
+ - @author Joas Schilling <coding@schilljs.com>
+ -
+ - @license GNU AGPL version 3 or any later version
+ -
+ - This program is free software: you can redistribute it and/or modify
+ - it under the terms of the GNU Affero General Public License as
+ - published by the Free Software Foundation, either version 3 of the
+ - License, or (at your option) any later version.
+ -
+ - This program is distributed in the hope that it will be useful,
+ - but WITHOUT ANY WARRANTY; without even the implied warranty of
+ - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ - GNU Affero General Public License for more details.
+ -
+ - You should have received a copy of the GNU Affero General Public License
+ - along with this program. If not, see <http://www.gnu.org/licenses/>.
+ -
+ -->
+
+<template>
+	<li class="stun-server">
+		<!-- "stun:" scheme is untranslated -->
+		<div class="stun-server__wrapper">
+			<label :for="`stun_server_${index}`">stun:</label>
+
+			<NcTextField ref="stun_server"
+				:input-id="`stun_server_${index}`"
+				name="stun_server"
+				placeholder="stunserver:port"
+				:value="server"
+				:disabled="loading"
+				:aria-label="t('spreed', 'STUN server URL')"
+				@update:value="update" />
+		</div>
+
+		<AlertCircle v-show="!isValidServer"
+			class="stun-server__alert"
+			:title="t('spreed', 'The server address is invalid')"
+			fill-color="#E9322D" />
+
+		<NcButton v-show="!loading"
+			type="tertiary-no-background"
+			:aria-label="t('spreed', 'Delete this server')"
+			@click="removeServer">
+			<template #icon>
+				<Delete :size="20" />
+			</template>
+		</NcButton>
+	</li>
+</template>
+
+<script>
+import AlertCircle from 'vue-material-design-icons/AlertCircle.vue'
+import Delete from 'vue-material-design-icons/Delete.vue'
+
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
+
+export default {
+	name: 'StunServer',
+
+	components: {
+		AlertCircle,
+		Delete,
+		NcButton,
+		NcTextField,
+	},
+
+	props: {
+		server: {
+			type: String,
+			default: '',
+			required: true,
+		},
+		index: {
+			type: Number,
+			default: -1,
+			required: true,
+		},
+		loading: {
+			type: Boolean,
+			default: false,
+		},
+	},
+
+	computed: {
+		isValidServer() {
+			let server = this.server
+
+			// Remove HTTP or HTTPS protocol, if provided
+			if (server.startsWith('https://')) {
+				server = server.slice(8)
+			} else if (server.startsWith('http://')) {
+				server = server.slice(7)
+			}
+
+			const parts = server.split(':')
+
+			return parts.length === 2
+				&& parts[1].match(/^([1-9]\d{0,4})$/) !== null
+				&& parseInt(parts[1]) <= Math.pow(2, 16)
+		},
+	},
+
+	methods: {
+		removeServer() {
+			this.$emit('remove-server', this.index)
+		},
+		update(value) {
+			this.$emit('update:server', value)
+		},
+	},
+}
+</script>
+
+<style lang="scss" scoped>
+.stun-server {
+	display: flex;
+	align-items: center;
+
+	&__wrapper {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		width: 300px;
+	}
+
+	&__alert {
+		width: 44px;
+		height: 44px;
+	}
+}
+</style>
