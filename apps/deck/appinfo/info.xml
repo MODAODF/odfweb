@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>deck</id>
+    <name>Deck</name>
+    <summary>Personal planning and team project organization</summary>
+    <description>Deck is a kanban style organization tool aimed at personal planning and project organization for teams integrated with Nextcloud.
+
+
+- 📥 Add your tasks to cards and put them in order
+- 📄 Write down additional notes in Markdown
+- 🔖 Assign labels for even better organization
+- 👥 Share with your team, friends or family
+- 📎 Attach files and embed them in your Markdown description
+- 💬 Discuss with your team using comments
+- ⚡ Keep track of changes in the activity stream
+- 🚀 Get your project organized
+
+</description>
+    <version>1.9.6</version>
+    <licence>agpl</licence>
+    <author>Julius Härtl</author>
+    <documentation>
+        <user>https://deck.readthedocs.io/en/latest/User_documentation_en/</user>
+        <developer>https://deck.readthedocs.io/en/latest/API/</developer>
+    </documentation>
+    <namespace>Deck</namespace>
+    <types>
+        <dav/>
+    </types>
+    <category>organization</category>
+    <category>office</category>
+    <website>https://github.com/nextcloud/deck</website>
+    <bugs>https://github.com/nextcloud/deck/issues</bugs>
+    <repository type="git">https://github.com/nextcloud/deck.git</repository>
+    <screenshot>https://download.bitgrid.net/nextcloud/deck/screenshots/1.0/Deck-1.png</screenshot>
+    <screenshot>https://download.bitgrid.net/nextcloud/deck/screenshots/1.0/Deck-2.png</screenshot>
+    <dependencies>
+        <database min-version="9.4">pgsql</database>
+        <database>sqlite</database>
+        <database min-version="8.0">mysql</database>
+        <nextcloud min-version="26" max-version="26"/>
+    </dependencies>
+    <background-jobs>
+        <job>OCA\Deck\Cron\DeleteCron</job>
+        <job>OCA\Deck\Cron\ScheduledNotifications</job>
+        <job>OCA\Deck\Cron\CardDescriptionActivity</job>
+        <job>OCA\Deck\Cron\SessionsCleanup</job>
+    </background-jobs>
+    <repair-steps>
+        <live-migration>
+            <step>OCA\Deck\Migration\DeletedCircleCleanup</step>
+        </live-migration>
+    </repair-steps>
+    <commands>
+        <command>OCA\Deck\Command\UserExport</command>
+        <command>OCA\Deck\Command\BoardImport</command>
+        <command>OCA\Deck\Command\TransferOwnership</command>
+    </commands>
+    <activity>
+        <settings>
+            <setting>OCA\Deck\Activity\Setting</setting>
+            <setting>OCA\Deck\Activity\SettingComment</setting>
+            <setting>OCA\Deck\Activity\DescriptionSetting</setting>
+        </settings>
+        <filters>
+            <filter>OCA\Deck\Activity\Filter</filter>
+        </filters>
+        <providers>
+            <provider>OCA\Deck\Activity\DeckProvider</provider>
+        </providers>
+    </activity>
+    <fulltextsearch>
+        <provider min-version="16">OCA\Deck\Provider\DeckProvider</provider>
+    </fulltextsearch>
+    <navigations>
+        <navigation>
+            <name>Deck</name>
+            <route>deck.page.index</route>
+            <icon>deck.svg</icon>
+            <order>10</order>
+        </navigation>
+    </navigations>
+    <sabre>
+        <calendar-plugins>
+            <plugin>OCA\Deck\DAV\CalendarPlugin</plugin>
+        </calendar-plugins>
+    </sabre>
+</info>

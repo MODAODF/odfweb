@@ -1,0 +1,27 @@
+{ "translations": {
+    "Personal" : "شەخسىي",
+    "Done" : "Done",
+    "No file was uploaded" : "ھېچقانداق ھۆججەت يۈكلەنمىدى",
+    "Missing a temporary folder" : "ۋاقىتلىق قىسقۇچ كەم.",
+    "Cancel" : "ۋاز كەچ",
+    "Sharing" : "ھەمبەھىر",
+    "Tags" : "بەلگەلەر",
+    "Can edit" : "Can edit",
+    "Can share" : "Can share",
+    "Owner" : "Owner",
+    "Delete" : "ئۆچۈر",
+    "Edit" : "تەھرىر",
+    "Download" : "چۈشۈر",
+    "Modified" : "ئۆزگەرتكەن",
+    "Save" : "ساقلا",
+    "Reply" : "جاۋاب قايتۇر",
+    "Update" : "يېڭىلا",
+    "Created:" : "قۇرۇلغان ۋاقتى:",
+    "Description" : "چۈشەندۈرۈش",
+    "Search" : "Search",
+    "Shared with you" : "Shared with you",
+    "Today" : "بۈگۈن",
+    "Close" : "ياپ",
+    "Share" : "ھەمبەھىر"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
