@@ -1,0 +1,6 @@
+{ "translations": {
+    "Search" : "Kërko",
+    "Search on %s" : "Kërkoni në %s",
+    "General" : "Të përgjithshme"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

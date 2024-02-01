@@ -1,0 +1,10 @@
+OC.L10N.register(
+    "fulltextsearch",
+    {
+    "Search" : "Pesquisar",
+    "Index not found" : "Índice não encontrado",
+    "Full text search" : "Pesquisa de texto completo ",
+    "Search on %s" : "Pesquisar em %s",
+    "General" : "Geral"
+},
+"nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
