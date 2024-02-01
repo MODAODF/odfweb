@@ -1,0 +1,35 @@
+{
+  "name": "nextcloud/fulltextsearch_elasticsearch",
+  "description": "fulltextsearch_elasticsearch",
+  "minimum-stability": "stable",
+  "license": "agpl",
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true,
+    "autoloader-suffix": "FullTextSearch_Elasticsearch",
+    "allow-plugins": {
+      "php-http/discovery": false
+    },
+    "platform": {
+      "php": "8.0"
+    }
+  },
+  "authors": [
+    {
+      "name": "Maxence Lange",
+      "email": "maxence@artificial-owl.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "OCA\\FullTextSearch_Elasticsearch\\": "lib/"
+    }
+  },
+  "require": {
+    "elasticsearch/elasticsearch": "^8.11"
+  },
+  "replace": {
+    "psr/log": "*",
+    "guzzlehttp/guzzle": "*"
+  }
+}
