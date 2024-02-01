@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.29.0@7ec5ffbd5f68ae03782d7fd33fff0c45a69f95b3">
+  <file src="lib/Controller/AlbumsController.php">
+    <UndefinedClass occurrences="2">
+      <code>SharedStorage</code>
+      <code>\OCA\GroupFolders\Mount\GroupFolderStorage</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Controller/PageController.php">
+    <InvalidArgument occurrences="1">
+      <code>new SearchQuery(new SearchComparison(ISearchComparison::COMPARE_EQUAL, 'systemtag', $tag-&gt;getName()), 0, 0, [], $user)</code>
+    </InvalidArgument>
+    <UndefinedClass occurrences="12">
+      <code>$e</code>
+      <code>LoadSidebar</code>
+      <code>LoadSidebar</code>
+      <code>LoadViewer</code>
+      <code>LoadViewer</code>
+      <code>NoUserException</code>
+      <code>SearchBinaryOperator</code>
+      <code>SearchComparison</code>
+      <code>SearchComparison</code>
+      <code>SearchComparison</code>
+      <code>SearchQuery</code>
+      <code>SearchQuery</code>
+    </UndefinedClass>
+  </file>
+  <file src="lib/Controller/PublicAlbumController.php">
+    <UndefinedClass occurrences="2">
+      <code>LoadViewer</code>
+      <code>LoadViewer</code>
+    </UndefinedClass>
+  </file>
+</files>
