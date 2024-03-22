@@ -59,8 +59,8 @@ trait CommonThemeTrait {
 			'--color-primary-text' => $this->util->invertTextColor($this->primaryColor) ? '#000000' : '#ffffff',
 			'--color-primary-hover' => $this->util->mix($this->primaryColor, $colorMainBackground, 60),
 			'--color-primary-light' => ($colorMainText === '#000000') || ($colorMainText === '#222222') ? '#FFFA6E' : $colorPrimaryLight,
-			'--color-primary-light-text' => $this->util->mix($this->primaryColor, $this->util->invertTextColor($colorPrimaryLight) ? '#000000' : '#ffffff', -20),
-			'--color-primary-light-hover' => $this->util->mix($colorPrimaryLight, $colorMainText, 90),
+			'--color-primary-light-text' => ($colorMainText === '#000000') || ($colorMainText === '#222222') ? '#000000' : $this->util->mix($this->primaryColor, $this->util->invertTextColor($colorPrimaryLight) ? '#000000' : '#ffffff', -20),
+			'--color-primary-light-hover' => ($colorMainText === '#000000') || ($colorMainText === '#222222') ? $this->util->mix($colorPrimaryElementLight, $colorMainText, 90) : $this->util->mix($colorPrimaryLight, $colorMainText, 90),
 
 			// used for buttons, inputs...
 			'--color-primary-element' => $colorPrimaryElement,
