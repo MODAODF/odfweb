@@ -793,7 +793,7 @@ class Crypt {
 		// check if RC4 is used
 		if (strcasecmp($cipher_algo, "rc4") === 0) {
 			// decrypt the intermediate key with RSA
-			if (openssl_private_decrypt($encrypted_key, $intermediate, $private_key, OPENSSL_PKCS1_PADDING)) {
+			if (openssl_private_decrypt($encrypted_key, $intermediate, $private_key, OPENSSL_PKCS1_OAEP_PADDING)) {
 				// decrypt the file key with the intermediate key
 				// using our own RC4 implementation
 				$output = $this->rc4Decrypt($data, $intermediate);
@@ -833,7 +833,7 @@ class Crypt {
 						// iterate over the public keys and encrypt the intermediate
 						// for each of them with RSA
 						foreach ($public_key as $tmp_key) {
-							if (openssl_public_encrypt($intermediate, $tmp_output, $tmp_key, OPENSSL_PKCS1_PADDING)) {
+							if (openssl_public_encrypt($intermediate, $tmp_output, $tmp_key, OPENSSL_PKCS1_OAEP_PADDING)) {
 								$encrypted_keys[] = $tmp_output;
 							}
 						}
