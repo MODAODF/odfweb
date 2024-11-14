@@ -1482,7 +1482,7 @@ body .nav-icon-systemtagsfilter {
     --icon-logout-white: var(--original-icon-logout-dark);
     --icon-logout-dark: var(--original-icon-logout-white);
     --icon-mail-white: var(--original-icon-mail-dark);
-    --icon-mail-dark: var(--original-icon-mail-dark);
+    --icon-mail-dark: var(--original-icon-mail-white);
     --icon-menu-sidebar-white: var(--original-icon-menu-sidebar-dark);
     --icon-menu-sidebar-dark: var(--original-icon-menu-sidebar-white);
     --icon-menu-white: var(--original-icon-menu-dark);
@@ -1526,7 +1526,7 @@ body .nav-icon-systemtagsfilter {
     --icon-settings-white: var(--original-icon-settings-dark);
     --icon-settings-dark: var(--original-icon-settings-white);
     --icon-share-white: var(--original-icon-share-dark);
-    --icon-share-dark: var(--original-icon-share-dark);
+    --icon-share-dark: var(--original-icon-share-white);
     --icon-shared-white: var(--original-icon-shared-dark);
     --icon-shared-dark: var(--original-icon-shared-white);
     --icon-sound-off-white: var(--original-icon-sound-off-dark);
